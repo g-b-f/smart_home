@@ -2,12 +2,17 @@ import flask
 from pywizlight import wizlight, PilotBuilder
 import logging
 import asyncio
+import os
+import sys
+
 logging.basicConfig(level=logging.WARNING)
 
-# Store connection details instead of the object
 LIGHT_IP = "192.168.1.100"
 LIGHT_PORT = 38899
 LIGHT_MAC = "cc408525d286"
+
+MIN_COLORTEMP = 2200
+MAX_COLORTEMP = 6500
 
 # https://sleep.urbandroid.org/docs/services/automation.html#events
 TRACKING_STARTED = "sleep_tracking_started"
@@ -17,8 +22,7 @@ ALARM_SNOOZED = "alarm_snooze_clicked"
 ALARM_DISMISSED = "alarm_alert_dismiss"
 BEDTIME_NOTIFICATION = "time_to_bed_alarm_alert"
 
-
-
+HIBERNATE_ON_SLEEP = False
 
 app = flask.Flask(__name__)
 
@@ -29,15 +33,15 @@ async def turn_off_light():
     await light.turn_off()
 
 async def bedtime():
-    """sset the light to a dim, warm color"""
+    """set the light to a dim, warm color"""
     light = wizlight(LIGHT_IP, port=LIGHT_PORT, mac=LIGHT_MAC)
     await light.turn_on(PilotBuilder(brightness=10, rgb=(255, 96, 0)))
 
-async def wake_up(total_time=60, time_step=0.1):
+async def wake_up(total_time=60, time_step=0.3):
     """gradually brighten the light over total_time seconds"""
     light = wizlight(LIGHT_IP, port=LIGHT_PORT, mac=LIGHT_MAC)
-    start = 2200
-    end = 6500
+    start = MIN_COLORTEMP
+    end = MAX_COLORTEMP
     temp_step = (end - start) / (total_time / time_step)
     
     for i in range(int(total_time/time_step)):
@@ -55,6 +59,10 @@ def sleep():
     if event == TRACKING_STARTED:
         logging.info("Turning off light")
         asyncio.run(turn_off_light())
+        if HIBERNATE_ON_SLEEP:
+            logging.info("hibernating")
+            os.system("shutdown.exe /h /t 10")
+            sys.exit()
         return "OK", 200
     elif event == ALARM_START:
         logging.info("waking up")
