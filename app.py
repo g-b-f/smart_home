@@ -1,11 +1,13 @@
 import flask
-from pywizlight import wizlight, PilotBuilder
+from pywizlight import wizlight, PilotBuilder, PilotParser
 import logging
 import asyncio
 import os
 import sys
+from typing import Optional
+from lighting_routines import Routine
 
-logging.basicConfig(level=logging.WARNING)
+logging.basicConfig(level=logging.INFO, datefmt="%H:%M:%S", format="%(asctime)s %(name)s - %(message)s")
 
 LIGHT_IP = "192.168.1.100"
 LIGHT_PORT = 38899
@@ -26,54 +28,34 @@ HIBERNATE_ON_SLEEP = False
 
 app = flask.Flask(__name__)
 
+if sys.platform == "win32":
+    asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
-async def turn_off_light():
-    """turn off the light"""
-    light = wizlight(LIGHT_IP, port=LIGHT_PORT, mac=LIGHT_MAC)
-    await light.turn_off()
-
-async def bedtime():
-    """set the light to a dim, warm color"""
-    light = wizlight(LIGHT_IP, port=LIGHT_PORT, mac=LIGHT_MAC)
-    await light.turn_on(PilotBuilder(brightness=10, rgb=(255, 96, 0)))
-
-async def wake_up(total_time=60, time_step=0.3):
-    """gradually brighten the light over total_time seconds"""
-    light = wizlight(LIGHT_IP, port=LIGHT_PORT, mac=LIGHT_MAC)
-    start = MIN_COLORTEMP
-    end = MAX_COLORTEMP
-    temp_step = (end - start) / (total_time / time_step)
-    
-    for i in range(int(total_time/time_step)):
-        temp = int(start + temp_step * i)
-        brightness = int(1 + (99 * i) / total_time)
-        await light.turn_on(PilotBuilder(brightness=brightness, colortemp=temp))
-        await asyncio.sleep(time_step)
 
 # point to http://192.168.1.110:5000/sleep
 @app.route("/sleep", methods=["POST"])
 def sleep():
-    logging.debug(flask.request.json)
+    logging.info(flask.request.json)
     request_data = flask.request.json or {}
     event = request_data.get("event")
     if event == TRACKING_STARTED:
         logging.info("Turning off light")
-        asyncio.run(turn_off_light())
+        asyncio.run(Routine.turn_off_light())
         if HIBERNATE_ON_SLEEP:
             logging.info("hibernating")
-            os.system("shutdown.exe /h /t 10")
+            os.system("shutdown.exe /h")
             sys.exit()
         return "OK", 200
     elif event == ALARM_START:
         logging.info("waking up")
-        asyncio.run(wake_up())
+        asyncio.run(Routine.wake_up())
         return "OK", 200
     elif event == BEDTIME_NOTIFICATION:
         logging.info("bedtime")
-        asyncio.run(bedtime())
+        asyncio.run(Routine.bedtime())
         return "OK", 200
     else:
-        return "Unknown event", 400
+        return "Unknown event", 200
 
 
 app.run(host="0.0.0.0")
