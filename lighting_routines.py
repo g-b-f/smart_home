@@ -1,8 +1,7 @@
-from pywizlight import wizlight, PilotBuilder, PilotParser
+from pywizlight import PilotParser
 import logging
-import asyncio
-from typing import Optional, Iterator
-import operator
+from typing import Optional
+from bulb_wrapper import Bulb
 SCALING_FACTOR = 1_000_000
 
 
@@ -15,36 +14,27 @@ light_kwargs = {
 MIN_COLORTEMP = 2200
 MAX_COLORTEMP = 6500
 TEMP_STEP = 100
+BEDTIME_COLORTEMP = 1320
 
 class Routine:
     @staticmethod
     async def turn_off_light():
         """turn off the light"""
-        light = wizlight(**light_kwargs)
-        await light.turn_off()
+        await Bulb().turn_off()
 
     @staticmethod
     async def bedtime():
         """set the light to a dim, warm color"""
-        light = wizlight(**light_kwargs)
-        await light.turn_on(PilotBuilder(brightness=10, rgb=(255, 96, 0)))
+        await Bulb().turn_on(brightness=10, colortemp=BEDTIME_COLORTEMP)
 
     @staticmethod
-    async def wake_up(total_time=300, time_step=0.3):
+    async def wake_up(total_time=300):
         """gradually brighten the light over total_time seconds"""
-        light = wizlight(**light_kwargs)
-        iterations = round(total_time/time_step)
-        temp_iter = get_range(MIN_COLORTEMP, MAX_COLORTEMP, iterations)
-        brightness_iter = get_range(10, 100, iterations)
-
-        for temp, brightness in zip(temp_iter, brightness_iter):
-            logging.info(f"setting brightness to {brightness} and temp to {temp}")
-            await light.turn_on(PilotBuilder(brightness=brightness, colortemp=temp))
-            await asyncio.sleep(time_step)
+        await Bulb().lerp_temp(10, BEDTIME_COLORTEMP, 100, MAX_COLORTEMP, total_time)
 
     @staticmethod
     async def sync_colour_temp(desired_temp: int):
-        light = wizlight(**light_kwargs)
+        light = Bulb()
         state: Optional[PilotParser] = await light.updateState()
         if state is None:
             logging.error("couldn't get state")
@@ -56,32 +46,5 @@ class Routine:
         if temp is None or brightness is None:
             logging.error("couldn't get color temp or brightness")
             return
-
-        if temp < desired_temp:
-            settings = PilotBuilder(brightness=brightness, colortemp=temp + TEMP_STEP)
-            await light.turn_on(settings)
-            return
-        elif temp > desired_temp:
-            settings = PilotBuilder(brightness=brightness, colortemp=temp - TEMP_STEP)
-            await light.turn_on(settings)
-            return
-        else: # current_temp == desired_temp
-            return
-
-
-def get_range(start:int, stop:int, length:int) -> Iterator[int]:
-    # multiply then divide by SCALING_FACTOR to avoid issues with `step` rounding to zero.
-    # it is possible to calculate the ideal SCALING_FACTOR,
-    # but is simpler to just use an arbitrarily large constant
-    start = start * SCALING_FACTOR
-    stop = stop * SCALING_FACTOR
-    span = abs(stop - start)
-    step = round((span / length))
-    assert step > 0
-    iterator = range(start, stop + step, step)
-    assert operator.length_hint(iterator) == length +1
-    ret =  map(lambda x: round(x/ SCALING_FACTOR), iterator)
-    # setattr(ret, "__length_hint__", length + 1)
-    return ret
-
-    
+        
+        await light.lerp_temp(brightness, temp, brightness, desired_temp, 10)

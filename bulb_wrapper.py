@@ -57,7 +57,7 @@ SceneType = Literal[
 class Bulb:
     MIN_COLORTEMP = 2200
     MAX_COLORTEMP = 6500
-    TIME_STEP = 0.3  # seconds
+    TIME_STEP = 0.25 # seconds per linear interpolation step
 
     _light_kwargs = {
     "ip": "192.168.1.100",
@@ -104,10 +104,14 @@ class Bulb:
         steps = round(duration / self.TIME_STEP)
         brightness_iter = get_range(start_brightness, end_brightness, steps)
         temp_iter = get_range(start_temp, end_temp, steps)
+        assert operator.length_hint(brightness_iter) == operator.length_hint(temp_iter)
 
         for brightness, temp in zip(brightness_iter, temp_iter):
             await self.turn_on(brightness=brightness, colortemp=temp)
             await asyncio.sleep(self.TIME_STEP)
+
+    async def updateState(self) -> Optional[PilotParser]:
+        return await self.light.updateState()
 
     @classmethod
     def temp_to_rgb(cls, temp) -> tuple[int, int, int]:
@@ -115,9 +119,9 @@ class Bulb:
 
         Algorithm from Tanner Helland (http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/)
         """
-        if temp < 1000 or temp > 40000:
-            cls.logger.warning("Color temperature should be between 1000 and 40000 Kelvin, got %d. " \
-            "You might get some weird results", temp)
+        # if temp < 1000 or temp > 40000:
+        #     cls.logger.warning("Color temperature should be between 1000 and 40000 Kelvin, got %d. " \
+        #     "You might get some weird results", temp)
         
         temp = temp / 100
 
@@ -156,5 +160,5 @@ def get_range(start: int, stop: int, length: int) -> Iterator[int]:
     iterator = range(start, stop + step, step)
     assert operator.length_hint(iterator) == length + 1
     ret = map(lambda x: round(x / SCALING_FACTOR), iterator)
-    # setattr(ret, "__length_hint__", length + 1)
+    setattr(ret, "__length_hint__", length + 1)
     return ret
