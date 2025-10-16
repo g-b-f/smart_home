@@ -57,6 +57,7 @@ SceneType = Literal[
 class Bulb:
     MIN_COLORTEMP = 2200
     MAX_COLORTEMP = 6500
+    TIME_STEP = 0.3  # seconds
 
     _light_kwargs = {
     "ip": "192.168.1.100",
@@ -78,12 +79,10 @@ class Bulb:
     async def turn_on(self, brightness: int, rgb: Optional[tuple[int, int, int]] = None, colortemp: Optional[int] = None):
         if rgb is not None:
             builder = PilotBuilder(brightness=brightness, rgb=rgb)
-        elif colortemp is not None:
-            if colortemp < self.MIN_COLORTEMP or colortemp > self.MAX_COLORTEMP:
-                # outside of supported range, convert to rgb
-                builder = PilotBuilder(brightness=brightness, rgb=self.temp_to_rgb(colortemp))
-            else:
-                builder = PilotBuilder(brightness=brightness, colortemp=colortemp)
+        if colortemp is not None:
+            if rgb is not None:
+                raise ValueError("cannot provide both rgb and colortemp")
+            builder = PilotBuilder(brightness=brightness, rgb=self.temp_to_rgb(colortemp))
         else:
             raise ValueError("must provide either rgb or colortemp")
         await self.light.turn_on(builder)
@@ -92,7 +91,24 @@ class Bulb:
         scene_id = get_id_from_scene_name(scene)
         await self.light.turn_on(PilotBuilder(scene=scene_id))
 
-    
+    async def lerp_temp(self, start_brightness: int, start_temp: int, end_brightness: int, end_temp: int, duration: int):
+        """Linearly interpolate between two color temperatures and brightnesses over a given duration.
+
+        Args:
+            start_brightness (int): The starting brightness (0-100).
+            start_temp (int): The starting color temperature in Kelvin.
+            end_brightness (int): The ending brightness (0-100).
+            end_temp (int): The ending color temperature in Kelvin.
+            duration (int): The total time in seconds over which to perform the interpolation.
+        """
+        steps = round(duration / self.TIME_STEP)
+        brightness_iter = get_range(start_brightness, end_brightness, steps)
+        temp_iter = get_range(start_temp, end_temp, steps)
+
+        for brightness, temp in zip(brightness_iter, temp_iter):
+            await self.turn_on(brightness=brightness, colortemp=temp)
+            await asyncio.sleep(self.TIME_STEP)
+
     @classmethod
     def temp_to_rgb(cls, temp) -> tuple[int, int, int]:
         """Convert color temperature in Kelvin to RGB values.
@@ -127,3 +143,18 @@ class Bulb:
 
         return round(red), round(green), round(blue)
     
+
+def get_range(start: int, stop: int, length: int) -> Iterator[int]:
+    # multiply then divide by SCALING_FACTOR to avoid issues with `step` rounding to zero.
+    # it is possible to calculate the ideal SCALING_FACTOR,
+    # but is simpler to just use an arbitrarily large constant
+    start = start * SCALING_FACTOR
+    stop = stop * SCALING_FACTOR
+    span = abs(stop - start)
+    step = round((span / length))
+    assert step > 0
+    iterator = range(start, stop + step, step)
+    assert operator.length_hint(iterator) == length + 1
+    ret = map(lambda x: round(x / SCALING_FACTOR), iterator)
+    # setattr(ret, "__length_hint__", length + 1)
+    return ret
