@@ -9,13 +9,6 @@ from lighting_routines import Routine
 
 logging.basicConfig(level=logging.INFO, datefmt="%H:%M:%S", format="%(asctime)s %(name)s - %(message)s")
 
-LIGHT_IP = "192.168.1.100"
-LIGHT_PORT = 38899
-LIGHT_MAC = "cc408525d286"
-
-MIN_COLORTEMP = 2200
-MAX_COLORTEMP = 6500
-
 # https://sleep.urbandroid.org/docs/services/automation.html#events
 TRACKING_STARTED = "sleep_tracking_started"
 TRACKING_STOPPED = "sleep_tracking_stopped"

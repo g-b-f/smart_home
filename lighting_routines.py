@@ -2,7 +2,8 @@ from pywizlight import wizlight, PilotBuilder, PilotParser
 import logging
 import asyncio
 from typing import Optional, Iterator
-RANGE_MULTIPLIER = 1_000_000
+import operator
+SCALING_FACTOR = 1_000_000
 
 
 light_kwargs = {
@@ -35,8 +36,9 @@ class Routine:
         iterations = round(total_time/time_step)
         temp_iter = get_range(MIN_COLORTEMP, MAX_COLORTEMP, iterations)
         brightness_iter = get_range(10, 100, iterations)
-        
+
         for temp, brightness in zip(temp_iter, brightness_iter):
+            logging.info(f"setting brightness to {brightness} and temp to {temp}")
             await light.turn_on(PilotBuilder(brightness=brightness, colortemp=temp))
             await asyncio.sleep(time_step)
 
@@ -67,14 +69,19 @@ class Routine:
             return
 
 
-def get_range(start:int, stop:int, iterations:int) -> Iterator[int]:
-    # multiply then divide by RANGE_MULTIPLIER to avoid issues with `step` rounding to zero.
-    # it is possible to calculate the ideal RANGE_MULTIPLIER,
+def get_range(start:int, stop:int, length:int) -> Iterator[int]:
+    # multiply then divide by SCALING_FACTOR to avoid issues with `step` rounding to zero.
+    # it is possible to calculate the ideal SCALING_FACTOR,
     # but is simpler to just use an arbitrarily large constant
-    start = start * RANGE_MULTIPLIER
-    stop = stop * RANGE_MULTIPLIER
+    start = start * SCALING_FACTOR
+    stop = stop * SCALING_FACTOR
     span = abs(stop - start)
-    step = round((span / iterations))
+    step = round((span / length))
     assert step > 0
-    iterator = range(start, stop +step, step)
-    return map(lambda x: round(x/ RANGE_MULTIPLIER), iterator)
+    iterator = range(start, stop + step, step)
+    assert operator.length_hint(iterator) == length +1
+    ret =  map(lambda x: round(x/ SCALING_FACTOR), iterator)
+    # setattr(ret, "__length_hint__", length + 1)
+    return ret
+
+    
