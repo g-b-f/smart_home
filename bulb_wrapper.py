@@ -6,7 +6,7 @@ import time
 from pathlib import Path
 from threading import Lock
 from typing import Iterator, Optional, cast
-
+import sys
 import yaml
 from pywizlight import (  # type: ignore[import-untyped]
     PilotBuilder,
@@ -15,7 +15,8 @@ from pywizlight import (  # type: ignore[import-untyped]
     wizlight,
 )
 
-from .types import RGBtype, SceneType
+sys.path.append(str(Path(__file__).parent))
+from extra_types import RGBtype, SceneType
 
 SCALING_FACTOR = 1_000_000
 
