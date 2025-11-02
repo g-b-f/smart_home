@@ -1,18 +1,7 @@
 import logging
-from typing import Optional
-
-from pywizlight import PilotParser  # type: ignore[import-untyped]
-
 from bulb_wrapper import Bulb
 
 SCALING_FACTOR = 1_000_000
-
-
-light_kwargs = {
-    "ip": "192.168.1.100",
-    "port": 38899,
-    "mac": "cc408525d286",
-}
 
 MIN_COLORTEMP = 2200
 MAX_COLORTEMP = 6500
@@ -38,7 +27,7 @@ class Routine:
     @staticmethod
     async def sync_colour_temp(desired_temp: int):
         light = Bulb()
-        state: Optional[PilotParser] = await light.updateState()
+        state = await light.updateState()
         if state is None:
             logging.error("couldn't get state")
             return
