@@ -4,6 +4,8 @@ from pywizlight import wizlight, PilotBuilder, PilotParser
 from pywizlight.scenes import get_id_from_scene_name
 
 from threading import Lock
+from pathlib import Path
+import yaml
 
 import logging
 import asyncio
@@ -11,11 +13,14 @@ from typing import Literal, Optional, Iterator
 import operator
 SCALING_FACTOR = 1_000_000
 
-light_kwargs = {
-    "ip": "192.168.1.100",
-    "port": 38899,
-    "mac": "cc408525d286",
-}
+with open(Path(__file__).parent / "object.yaml") as f:
+    bulbs = yaml.safe_load(f)
+    bedroom_light = bulbs["bedroom_light"]
+    light_kwargs = {
+        "ip": bedroom_light["ip"],
+        "port": 38899,
+        "mac": bedroom_light["mac"],
+    }
 
 SceneType = Literal[
     "Alarm",
@@ -62,17 +67,11 @@ class Bulb:
     MAX_COLORTEMP = 6500
     TIME_STEP = 0.25 # seconds per linear interpolation step
 
-    _light_kwargs = {
-    "ip": "192.168.1.100",
-    "port": 38899,
-    "mac": "cc408525d286",
-    }
-
     logger = logging.getLogger("BulbWrapper")
 
     def __init__(self, ip: Optional[str] = None, port: Optional[int] = None, mac: Optional[str] = None):
         if ip is None or port is None or mac is None:
-            self.light = wizlight(**self._light_kwargs)
+            self.light = wizlight(**light_kwargs)
         else:
             self.light = wizlight(ip=ip, port=port, mac=mac)
 

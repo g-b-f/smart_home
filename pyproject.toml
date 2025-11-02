@@ -8,4 +8,5 @@ dependencies = [
     "colour>=0.1.5",
     "flask>=3.1.2",
     "pywizlight>=0.6.3",
+    "pyyaml>=6.0.3",
 ]
