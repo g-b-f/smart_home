@@ -1,6 +1,9 @@
 import math
+import time
 from pywizlight import wizlight, PilotBuilder, PilotParser
 from pywizlight.scenes import get_id_from_scene_name
+
+from threading import Lock
 
 import logging
 import asyncio
@@ -73,6 +76,8 @@ class Bulb:
         else:
             self.light = wizlight(ip=ip, port=port, mac=mac)
 
+        self._lock = Lock()
+
     async def turn_off(self):
         await self.light.turn_off()
 
@@ -85,11 +90,24 @@ class Bulb:
             builder = PilotBuilder(brightness=brightness, rgb=self.temp_to_rgb(colortemp))
         else:
             raise ValueError("must provide either rgb or colortemp")
+        
+        self.last_accessed = time.time()
         await self.light.turn_on(builder)
 
-    async def set_scene(self, scene: SceneType):
+    async def set_scene(self, scene: SceneType, brightness: Optional[int] = None, speed: Optional[int] = None):
+        """Set the bulb to a predefined scene.
+
+        Args:
+            scene (SceneType): Name of the scene to set.
+            brightness (int, optional): Brightness (10-100). Defaults to None.
+            speed (int, optional): Speed of effect (10-200). Defaults to None.
+        """
         scene_id = get_id_from_scene_name(scene)
-        await self.light.turn_on(PilotBuilder(scene=scene_id))
+        if brightness is not None:
+            brightness = max(10, min(100, brightness))
+        if speed is not None:
+            speed = max(10, min(200, speed))
+        await self.light.turn_on(PilotBuilder(scene=scene_id, brightness=brightness, speed=speed))
 
     async def lerp_temp(self, start_brightness: int, start_temp: int, end_brightness: int, end_temp: int, duration: int):
         """Linearly interpolate between two color temperatures and brightnesses over a given duration.
@@ -107,6 +125,10 @@ class Bulb:
         assert operator.length_hint(brightness_iter) == operator.length_hint(temp_iter)
 
         for brightness, temp in zip(brightness_iter, temp_iter):
+            if not self._lock.acquire(blocking=False):
+                self.logger.info("lerp interrupted")
+                return
+            self._lock.release()
             await self.turn_on(brightness=brightness, colortemp=temp)
             await asyncio.sleep(self.TIME_STEP)
 
