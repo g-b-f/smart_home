@@ -1,4 +1,4 @@
-from pywizlight import PilotParser
+from pywizlight import PilotParser  # type: ignore[import-untyped]
 import logging
 from typing import Optional
 from bulb_wrapper import Bulb

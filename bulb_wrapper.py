@@ -1,16 +1,18 @@
 import math
 import time
-from pywizlight import wizlight, PilotBuilder, PilotParser
-from pywizlight.scenes import get_id_from_scene_name
-
+from pywizlight import wizlight, PilotBuilder, PilotParser, scenes # type: ignore[import-untyped]
 from threading import Lock
+
 from pathlib import Path
 import yaml
 
 import logging
 import asyncio
-from typing import Literal, Optional, Iterator
+from typing import Optional, Iterator, cast
 import operator
+
+from .types import SceneType, RGBtype
+
 SCALING_FACTOR = 1_000_000
 
 with open(Path(__file__).parent / "object.yaml") as f:
@@ -21,46 +23,6 @@ with open(Path(__file__).parent / "object.yaml") as f:
         "port": 38899,
         "mac": bedroom_light["mac"],
     }
-
-SceneType = Literal[
-    "Alarm",
-    "Bedtime",
-    "Candlelight",
-    "Christmas",
-    "Cozy",
-    "Cool white",
-    "Daylight",
-    "Diwali",
-    "Deep dive",
-    "Fall",
-    "Fireplace",
-    "Forest",
-    "Focus",
-    "Golden white",
-    "Halloween",
-    "Jungle",
-    "Mojito",
-    "Night light",
-    "Ocean",
-    "Party",
-    "Pulse",
-    "Pastel colors",
-    "Plantgrowth",
-    "Romance",
-    "Relax",
-    "Sunset",
-    "Spring",
-    "Summer",
-    "Steampunk",
-    "True colors",
-    "TV time",
-    "White",
-    "Wake-up",
-    "Warm white",
-    "Rhythm",
-]
-
-
 
 class Bulb:
     MIN_COLORTEMP = 2200
@@ -80,7 +42,7 @@ class Bulb:
     async def turn_off(self):
         await self.light.turn_off()
 
-    async def turn_on(self, brightness: int, rgb: Optional[tuple[int, int, int]] = None, colortemp: Optional[int] = None):
+    async def turn_on(self, brightness: int, rgb: Optional[RGBtype] = None, colortemp: Optional[int] = None):
         if rgb is not None:
             builder = PilotBuilder(brightness=brightness, rgb=rgb)
         if colortemp is not None:
@@ -101,7 +63,7 @@ class Bulb:
             brightness (int, optional): Brightness (10-100). Defaults to None.
             speed (int, optional): Speed of effect (10-200). Defaults to None.
         """
-        scene_id = get_id_from_scene_name(scene)
+        scene_id = scenes.get_id_from_scene_name(scene)
         if brightness is not None:
             brightness = max(10, min(100, brightness))
         if speed is not None:
@@ -135,7 +97,7 @@ class Bulb:
         return await self.light.updateState()
 
     @classmethod
-    def temp_to_rgb(cls, temp) -> tuple[int, int, int]:
+    def temp_to_rgb(cls, temp: int|float) -> RGBtype:
         """Convert color temperature in Kelvin to RGB values.
 
         Algorithm from Tanner Helland (http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/)
@@ -144,10 +106,10 @@ class Bulb:
         #     cls.logger.warning("Color temperature should be between 1000 and 40000 Kelvin, got %d. " \
         #     "You might get some weird results", temp)
         
-        temp = temp / 100
+        temp = cast(float, temp / 100)
 
         if temp <= 66:
-            red = 255
+            red = 255.0
             green = temp
             green = 99.4708025861 * math.log(green) - 161.1195681661
             if temp <= 19:
