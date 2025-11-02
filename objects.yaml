@@ -1,14 +1,12 @@
-- bedroom_light:
-    ip: "192.168.1.100"
+bedroom_light:
+    ip: "192.168.1.110"
     mac: cc408525d286
     type: bulb
-
-- tallha_lamp:
-  ip: "192.168.1.104"
+tallha_lamp:
+  ip: "192.168.1.102"
   mac: cc408514bf60
   type: bulb
-
-- tallha_big_light:
-  ip: "192.168.1.101"
+tallha_big_light:
+  ip: "192.168.1.107"
   mac: cc40852685f6
   type: bulb
