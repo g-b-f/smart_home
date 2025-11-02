@@ -1,17 +1,21 @@
-import math
-import time
-from pywizlight import wizlight, PilotBuilder, PilotParser, scenes # type: ignore[import-untyped]
-from threading import Lock
-
-from pathlib import Path
-import yaml
-
-import logging
 import asyncio
-from typing import Optional, Iterator, cast
+import logging
+import math
 import operator
+import time
+from pathlib import Path
+from threading import Lock
+from typing import Iterator, Optional, cast
 
-from .types import SceneType, RGBtype
+import yaml
+from pywizlight import (  # type: ignore[import-untyped]
+    PilotBuilder,
+    PilotParser,
+    scenes,
+    wizlight,
+)
+
+from .types import RGBtype, SceneType
 
 SCALING_FACTOR = 1_000_000
 

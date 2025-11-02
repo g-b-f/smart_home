@@ -1,10 +1,10 @@
-import flask
-from pywizlight import wizlight, PilotBuilder, PilotParser
-import logging
 import asyncio
+import logging
 import os
 import sys
-from typing import Optional
+
+import flask
+
 from lighting_routines import Routine
 
 logging.basicConfig(level=logging.INFO, datefmt="%H:%M:%S", format="%(asctime)s %(name)s - %(message)s")

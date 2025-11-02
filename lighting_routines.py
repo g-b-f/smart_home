@@ -1,7 +1,10 @@
-from pywizlight import PilotParser  # type: ignore[import-untyped]
 import logging
 from typing import Optional
+
+from pywizlight import PilotParser  # type: ignore[import-untyped]
+
 from bulb_wrapper import Bulb
+
 SCALING_FACTOR = 1_000_000
 
 

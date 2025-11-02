@@ -1,5 +1,6 @@
-import socket
 import asyncio
+import socket
+
 
 async def query_bulb(ip):
     UDP_PORT = 38899
