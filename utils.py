@@ -1,6 +1,7 @@
 import logging
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
+import globals
 
 import astral
 import astral.sun
@@ -20,6 +21,25 @@ def get_logger(name: str, level=logging.INFO) -> logging.Logger:
     logger.addHandler(handler)
 
     return logger
+
+def get_zenith(location = astral.LocationInfo()) -> float:
+    return astral.sun.zenith(location.observer)
+
+
+def get_colourtemp_for_time(location = astral.LocationInfo(), date=None) -> int:
+    sun = Sun(location, date)
+    now = astral.now(location.tzinfo)
+
+    if now < sun.dawn or now > sun.dusk:
+        return globals.NIGHT_COLOURTEMP
+    elif sun.dawn <= now < sun.sunrise:
+        return globals.SUNRISE_COLOURTEMP
+    elif sun.sunrise <= now < sun.sunset:
+        return globals.DAY_COLOURTEMP
+    elif sun.sunset <= now < sun.dusk:
+        return globals.SUNSET_COLOURTEMP
+    else:
+        return globals.SUNSET_COLOURTEMP
 
 class Sun:
     def __init__(self, location = astral.LocationInfo(), date=None):

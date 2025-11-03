@@ -5,9 +5,11 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "apscheduler>=3.11.1",
     "astral>=3.2",
     "colour>=0.1.5",
     "flask>=3.1.2",
+    "hypercorn>=0.17.3",
     "ipykernel>=7.1.0",
     "pywizlight>=0.6.3",
     "pyyaml>=6.0.3",
@@ -36,6 +38,5 @@ extend-select = [
 ]
 
 extend-ignore = [
-    "C417",  # map object used where list is expected
     "PTH123" # allow `open()`
 ]
