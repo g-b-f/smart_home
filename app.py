@@ -3,8 +3,8 @@ import os
 import sys
 import flask
 
-from hypercorn.config import Config
-from hypercorn.asyncio import serve
+from hypercorn.config import Config as hypercorn_Config
+from hypercorn.asyncio import serve as hypercorn_serve
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from lighting_routines import Routine
@@ -61,15 +61,15 @@ async def main():
     scheduler = AsyncIOScheduler(timezone="Europe/London")
     scheduler.add_job(periodic_light_check, 'interval', minutes=COLOR_TEMP_SYNC_INTERVAL)
     
+    logger.info("starting scheduler")
     scheduler.start()
-    logger.info("APScheduler started with periodic job.")
-    
-    config = Config()
-    config.bind = ["0.0.0.0:5000"] # Binds to all interfaces on port 5000
-    logger.info("Starting Hypercorn ASGI server at http://0.0.0.0:5000")
     
     try:
-        await serve(app, config)
+        bind = "0.0.0.0:5000" # Binds to all interfaces on port 5000
+        config = hypercorn_Config()
+        config.bind = [bind]
+        logger.info("Starting Hypercorn ASGI server at http://%s", bind)
+        await hypercorn_serve(app, config)
     finally:
         logger.info("Shutting down scheduler...")
         scheduler.shutdown()
