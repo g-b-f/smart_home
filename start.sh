@@ -1,5 +1,3 @@
-. .venv/bin/activate
+kill $(pgrep python)
 rm nohup.out
-nohup python app.py &
-pgrep python
-
+nohup uv run app.py &

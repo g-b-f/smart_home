@@ -47,7 +47,7 @@ class Bulb:
             self.light = wizlight(ip=ip, port=port, mac=mac)
         self._lock = Lock()
 
-        asyncio.run(self.light.updateState()) # check connection
+        # asyncio.run(self.light.updateState()) # check connection
         self.last_accessed = time.time()
 
     async def turn_off(self):
@@ -95,7 +95,7 @@ class Bulb:
         steps = round(duration / self.TIME_STEP)
         brightness_iter = get_range(start_brightness, end_brightness, steps)
         temp_iter = get_range(start_temp, end_temp, steps)
-        assert operator.length_hint(brightness_iter) == operator.length_hint(temp_iter)
+        # assert operator.length_hint(brightness_iter) == operator.length_hint(temp_iter)
 
         for brightness, temp in zip(brightness_iter, temp_iter):
             if not self._lock.acquire(blocking=False):
@@ -154,7 +154,7 @@ def get_range(start: int, stop: int, length: int) -> Iterator[int]:
     iterator = range(start, stop + step, step)
     assert operator.length_hint(iterator) == length + 1
     ret = map(lambda x: round(x / SCALING_FACTOR), iterator)
-    setattr(ret, "__length_hint__", length + 1)
+    # setattr(ret, "__length_hint__", length + 1)
     return ret
 
 
