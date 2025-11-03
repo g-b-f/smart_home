@@ -1,11 +1,11 @@
 import asyncio
 import math
 import operator
+import sys
 import time
 from pathlib import Path
-from threading import Lock
 from typing import Iterator, Optional, cast
-import sys
+
 import yaml
 from pywizlight import (  # type: ignore[import-untyped]
     PilotBuilder,
@@ -15,6 +15,7 @@ from pywizlight import (  # type: ignore[import-untyped]
 )
 
 from utils import get_logger
+
 sys.path.append(str(Path(__file__).parent))
 from extra_types import RGBtype, SceneType
 
@@ -171,5 +172,3 @@ def get_range(start: int, stop: int, length: int) -> Iterator[int]:
     ret = map(lambda x: round(x / SCALING_FACTOR), iterator)
     # setattr(ret, "__length_hint__", length + 1)
     return ret
-
-

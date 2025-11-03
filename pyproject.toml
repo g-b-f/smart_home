@@ -34,3 +34,8 @@ extend-select = [
     "I",    # isort
     "C901", # flake8-c901 complexity
 ]
+
+extend-ignore = [
+    "C417",  # map object used where list is expected
+    "PTH123" # allow `open()`
+]

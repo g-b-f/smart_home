@@ -1,5 +1,5 @@
-from utils import get_logger
 from bulb_wrapper import Bulb
+from utils import get_logger
 
 logger = get_logger(__name__)
 
@@ -19,7 +19,7 @@ class Routine:
     @staticmethod
     async def bedtime():
         """set the light to a dim, warm color"""
-        await Bulb().turn_on(brightness=10, colortemp=BEDTIME_COLORTEMP)
+        await Bulb().turn_on(brightness=20, colortemp=BEDTIME_COLORTEMP)
 
     @staticmethod
     async def wake_up(total_time=300):
