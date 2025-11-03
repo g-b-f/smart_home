@@ -26,6 +26,7 @@ class Bulb:
     MIN_COLORTEMP = 2200
     MAX_COLORTEMP = 6500
     TIME_STEP = 0.25 # seconds per linear interpolation step
+    BULB_NAME = "bedroom_light"
 
     logger = get_logger(__name__)
 
@@ -43,7 +44,7 @@ class Bulb:
     def __init__(self, ip: Optional[str] = None, port: Optional[int] = None, mac: Optional[str] = None):
 
         if ip is None or port is None or mac is None:
-            self.light:wizlight = self.from_yaml("bedroom_light").light
+            self.light:wizlight = self.from_yaml(self.BULB_NAME).light
         else:
             self.light = wizlight(ip=ip, port=port, mac=mac)
 
@@ -108,7 +109,7 @@ class Bulb:
                 await self.turn_on(brightness=end_brightness, colortemp=end_temp)
                 return
             
-            same_brightness = brightness == state.get_brightness()
+            same_brightness = brightness == state.get_brightness() and state.get_brightness() is not None
             same_rgb = state.get_rgb() == self.last_state.get_rgb() and state.get_rgb() is not None
             same_temp = state.get_colortemp() == self.last_state.get_colortemp() and state.get_colortemp() is not None
 
@@ -169,6 +170,6 @@ def get_range(start: int, stop: int, length: int) -> Iterator[int]:
     assert step > 0
     iterator = range(start, stop + step, step)
     assert operator.length_hint(iterator) == length + 1
-    ret = map(lambda x: round(x / SCALING_FACTOR), iterator)
+    ret = (round(x / SCALING_FACTOR) for x in iterator)
     # setattr(ret, "__length_hint__", length + 1)
     return ret

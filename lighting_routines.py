@@ -1,14 +1,12 @@
 from bulb_wrapper import Bulb
 from utils import get_logger
+import globals
 
 logger = get_logger(__name__)
 
 SCALING_FACTOR = 1_000_000
 
-MIN_COLORTEMP = 2200
-MAX_COLORTEMP = 6500
 TEMP_STEP = 100
-BEDTIME_COLORTEMP = 1320
 
 class Routine:
     @staticmethod
@@ -19,12 +17,12 @@ class Routine:
     @staticmethod
     async def bedtime():
         """set the light to a dim, warm color"""
-        await Bulb().turn_on(brightness=20, colortemp=BEDTIME_COLORTEMP)
+        await Bulb().turn_on(brightness=20, colortemp=globals.BEDTIME_COLORTEMP)
 
     @staticmethod
     async def wake_up(total_time=300):
         """gradually brighten the light over total_time seconds"""
-        await Bulb().turn_on(brightness=100, colortemp=MAX_COLORTEMP)
+        await Bulb().turn_on(brightness=100, colortemp=globals.MAX_COLORTEMP)
         # await Bulb().lerp(10, BEDTIME_COLORTEMP, 100, MAX_COLORTEMP, total_time)
 
     @staticmethod
