@@ -1,5 +1,7 @@
-import logging
+from utils import get_logger
 from bulb_wrapper import Bulb
+
+logger = get_logger(__name__)
 
 SCALING_FACTOR = 1_000_000
 
@@ -30,14 +32,14 @@ class Routine:
         light = Bulb()
         state = await light.updateState()
         if state is None:
-            logging.error("couldn't get state")
+            logger.error("couldn't get state")
             return
         if not state.get_state():
             return
         brightness = state.get_brightness()
         temp = state.get_colortemp()
         if temp is None or brightness is None:
-            logging.error("couldn't get color temp or brightness")
+            logger.error("couldn't get color temp or brightness")
             return
         
         await light.lerp(brightness, temp, brightness, desired_temp, 10)

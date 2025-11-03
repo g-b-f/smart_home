@@ -1,5 +1,4 @@
 import asyncio
-import logging
 import math
 import operator
 import time
@@ -15,6 +14,7 @@ from pywizlight import (  # type: ignore[import-untyped]
     wizlight,
 )
 
+from utils import get_logger
 sys.path.append(str(Path(__file__).parent))
 from extra_types import RGBtype, SceneType
 
@@ -26,7 +26,7 @@ class Bulb:
     MAX_COLORTEMP = 6500
     TIME_STEP = 0.25 # seconds per linear interpolation step
 
-    logger = logging.getLogger("BulbWrapper")
+    logger = get_logger(__name__)
 
     @staticmethod
     def from_yaml(name: str, yaml_file="objects.yaml") -> "Bulb":

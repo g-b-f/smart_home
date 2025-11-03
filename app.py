@@ -1,13 +1,13 @@
 import asyncio
-import logging
 import os
 import sys
 
 import flask
 
 from lighting_routines import Routine
+from utils import get_logger
 
-logging.basicConfig(level=logging.INFO, datefmt="%H:%M:%S", format="%(asctime)s %(name)s - %(message)s")
+logger = get_logger(__name__)
 
 # https://sleep.urbandroid.org/docs/services/automation.html#events
 TRACKING_STARTED = "sleep_tracking_started"
@@ -28,23 +28,23 @@ if sys.platform == "win32":
 # point to http://192.168.1.117:5000/sleep
 @app.route("/sleep", methods=["POST"])
 def sleep():
-    logging.info(flask.request.json)
+    logger.info(flask.request.json)
     request_data = flask.request.json or {}
     event = request_data.get("event")
     if event == TRACKING_STARTED:
-        logging.info("Turning off light")
+        logger.info("Turning off light")
         asyncio.run(Routine.turn_off_light())
         if HIBERNATE_ON_SLEEP:
-            logging.info("hibernating")
+            logger.info("hibernating")
             os.system("shutdown.exe /h")
             sys.exit()
         return "OK", 200
     elif event == ALARM_START:
-        logging.info("waking up")
+        logger.info("waking up")
         asyncio.run(Routine.wake_up())
         return "OK", 200
     elif event == BEDTIME_NOTIFICATION:
-        logging.info("bedtime")
+        logger.info("bedtime")
         asyncio.run(Routine.bedtime())
         return "OK", 200
     else:

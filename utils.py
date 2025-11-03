@@ -4,13 +4,13 @@ from pathlib import Path
 import astral
 import astral.sun
 
-MAX_LOG_SIZE_BYTES = 1024 * 1024
+MAX_LOG_SIZE_BYTES = 1024 * 1024 # 1 MB
 
 def get_logger(name: str, level=logging.INFO) -> logging.Logger:
     log_file = Path(__file__).parent / "log.txt"
     handler = RotatingFileHandler(log_file, maxBytes=MAX_LOG_SIZE_BYTES, backupCount=2)
     handler.setLevel(level)
-    formatter = logging.Formatter('%(asctime)s %(levelname)s - %(message)s')
+    formatter = logging.Formatter("%(asctime)s %(levelname)s - %(message)s", datefmt="%H:%M:%S")
     handler.setFormatter(formatter)
 
     logger = logging.getLogger(name)
