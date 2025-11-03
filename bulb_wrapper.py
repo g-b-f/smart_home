@@ -82,7 +82,7 @@ class Bulb:
             speed = max(10, min(200, speed))
         await self.light.turn_on(PilotBuilder(scene=scene_id, brightness=brightness, speed=speed))
 
-    async def lerp_temp(self, start_brightness: int, start_temp: int, end_brightness: int, end_temp: int, duration: int):
+    async def lerp(self, start_brightness: int, start_temp: int, end_brightness: int, end_temp: int, duration: int):
         """Linearly interpolate between two color temperatures and brightnesses over a given duration.
 
         Args:

@@ -22,7 +22,8 @@ class Routine:
     @staticmethod
     async def wake_up(total_time=300):
         """gradually brighten the light over total_time seconds"""
-        await Bulb().lerp_temp(10, BEDTIME_COLORTEMP, 100, MAX_COLORTEMP, total_time)
+        await Bulb().turn_on(brightness=100, colortemp=MAX_COLORTEMP)
+        # await Bulb().lerp(10, BEDTIME_COLORTEMP, 100, MAX_COLORTEMP, total_time)
 
     @staticmethod
     async def sync_colour_temp(desired_temp: int):
@@ -39,4 +40,4 @@ class Routine:
             logging.error("couldn't get color temp or brightness")
             return
         
-        await light.lerp_temp(brightness, temp, brightness, desired_temp, 10)
+        await light.lerp(brightness, temp, brightness, desired_temp, 10)
