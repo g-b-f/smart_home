@@ -37,22 +37,19 @@ async def sleep():
     request_data = await flask.request.get_json() or {}
     logger.info(request_data)
     event = request_data.get("event")
+
     if event == TRACKING_STARTED:
-        logger.info("Turning off light")
-        await Routine.turn_off_light()
-        if HIBERNATE_ON_SLEEP:
-            logger.info("hibernating")
-            os.system("shutdown.exe /h")
-            sys.exit()
+        await Routine.tracking_start()
         return "OK", 200
+    
     elif event == ALARM_START:
-        logger.info("waking up")
         await Routine.wake_up()
         return "OK", 200
+    
     elif event == BEDTIME_NOTIFICATION:
-        logger.info("bedtime")
         await Routine.bedtime()
-        return "OK", 200  
+        return "OK", 200
+    
     else:
         return "Unknown event", 200
 
@@ -71,7 +68,7 @@ async def main():
         logger.info("Starting Hypercorn ASGI server at http://%s", bind)
         await hypercorn_serve(app, config)
     finally:
-        logger.info("Shutting down scheduler...")
+        logger.info("Shutting down scheduler")
         scheduler.shutdown()
 
 if __name__ == "__main__":

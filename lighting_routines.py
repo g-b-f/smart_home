@@ -4,24 +4,24 @@ import globals
 
 logger = get_logger(__name__)
 
-SCALING_FACTOR = 1_000_000
-
-TEMP_STEP = 100
-
 class Routine:
     @staticmethod
-    async def turn_off_light():
+    async def tracking_start():
         """turn off the light"""
+        logger.info("Turning off light")
         await Bulb().turn_off()
 
     @staticmethod
     async def bedtime():
         """set the light to a dim, warm color"""
+        logger.info("bedtime")
         await Bulb().turn_on(brightness=20, colortemp=globals.BEDTIME_COLORTEMP)
 
     @staticmethod
     async def wake_up(total_time=300):
         """gradually brighten the light over total_time seconds"""
+        logger.info("waking up")
+        
         await Bulb().turn_on(brightness=100, colortemp=globals.MAX_COLORTEMP)
         # await Bulb().lerp(10, BEDTIME_COLORTEMP, 100, MAX_COLORTEMP, total_time)
 
