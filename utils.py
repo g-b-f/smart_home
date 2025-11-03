@@ -2,7 +2,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 import astral
-from astral.sun import sun
+import astral.sun
 
 MAX_LOG_SIZE_BYTES = 1024 * 1024
 
@@ -20,9 +20,17 @@ def get_logger(name: str, level=logging.INFO) -> logging.Logger:
 
     return logger
 
-def get_sun():
-    location = astral.LocationInfo()
-    observer = location.observer
-    return sun(observer, tzinfo = location.tzinfo)
+class Sun:
+    def __init__(self, location = astral.LocationInfo(), date=None):
+        self.location = location
+        if date is None:
+            self.date = astral.today(location.tzinfo)
+        self.sun = astral.sun.sun(location.observer, date, tzinfo=self.location.tzinfo)
 
+    def __getattribute__(self, name: str):
+        if name in {"dawn", "sunrise", "noon", "sunset", "dusk"}:
+            return self.sun[name]
+        return super().__getattribute__(name)
 
+    def __repr__(self):
+        return f"Sun({self.location}): {self.sun}"
