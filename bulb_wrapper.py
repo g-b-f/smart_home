@@ -45,9 +45,12 @@ class Bulb:
             self.light:wizlight = self.from_yaml("bedroom_light").light
         else:
             self.light = wizlight(ip=ip, port=port, mac=mac)
-        self._lock = Lock()
 
-        # asyncio.run(self.light.updateState()) # check connection
+        try:
+            self.last_state = asyncio.run(self.light.updateState()) # check connection
+        except RuntimeError: # event loop already running
+            self.last_state = None
+
         self.last_accessed = time.time()
 
     async def turn_off(self):
@@ -98,11 +101,23 @@ class Bulb:
         # assert operator.length_hint(brightness_iter) == operator.length_hint(temp_iter)
 
         for brightness, temp in zip(brightness_iter, temp_iter):
-            if not self._lock.acquire(blocking=False):
-                self.logger.info("lerp interrupted")
+            state = await self.updateState()
+            if state is None or self.last_state is None:
+                self.logger.error("couldn't get state during lerp, setting to final values")
+                await self.turn_on(brightness=end_brightness, colortemp=end_temp)
                 return
-            self._lock.release()
+            
+            same_brightness = brightness == state.get_brightness()
+            same_rgb = state.get_rgb() == self.last_state.get_rgb() and state.get_rgb() is not None
+            same_temp = state.get_colortemp() == self.last_state.get_colortemp() and state.get_colortemp() is not None
+
+            if not (state.get_state() and same_brightness and (same_rgb or same_temp)):
+                self.logger.info("lerp interrupted due to external change")
+                return
+
             await self.turn_on(brightness=brightness, colortemp=temp)
+            self.last_state = await self.updateState()
+
             await asyncio.sleep(self.TIME_STEP)
 
     async def updateState(self) -> Optional[PilotParser]:
@@ -114,9 +129,9 @@ class Bulb:
 
         Algorithm from Tanner Helland (http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/)
         """
-        # if temp < 1000 or temp > 40000:
-        #     cls.logger.warning("Color temperature should be between 1000 and 40000 Kelvin, got %d. " \
-        #     "You might get some weird results", temp)
+        if temp < 1000 or temp > 40000:
+            cls.logger.warning("Color temperature should be between 1000 and 40000 Kelvin, got %d. " \
+            "You might get some weird results", temp)
         
         temp = cast(float, temp / 100)
 
