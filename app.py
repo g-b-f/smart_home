@@ -4,7 +4,7 @@ import sys
 import flask
 
 from hypercorn.config import Config as hypercorn_Config
-from hypercorn.asyncio import serve as hypercorn_serve
+from hypercorn.asyncio import serve
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from lighting_routines import Routine
@@ -66,7 +66,10 @@ async def main():
         config = hypercorn_Config()
         config.bind = [bind]
         logger.info("Starting Hypercorn ASGI server at http://%s", bind)
-        await hypercorn_serve(app, config)
+        await serve(app, config)
+        logger.info("finished serving")
+    except Exception as e:
+        logger.info(f"exception {e}") 
     finally:
         logger.info("Shutting down scheduler")
         scheduler.shutdown()
@@ -79,3 +82,4 @@ if __name__ == "__main__":
         asyncio.run(main())
     except KeyboardInterrupt:
         logger.info("Application shut down by user.")
+
