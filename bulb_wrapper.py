@@ -34,7 +34,7 @@ class Bulb:
     def from_yaml(name: str, yaml_file="objects.yaml") -> "Bulb":
         with open(Path(__file__).parent / yaml_file) as f:
             bulbs = yaml.safe_load(f)
-            bulb_info = bulbs[name]
+            bulb_info:dict = bulbs[name]
             return Bulb(
                 ip=bulb_info["ip"],
                 port=bulb_info.get("port", 38899),
@@ -47,6 +47,9 @@ class Bulb:
             self.light:wizlight = self.from_yaml(self.BULB_NAME).light
         else:
             self.light = wizlight(ip=ip, port=port, mac=mac)
+            self.ip = ip
+            self.port = port
+            self.mac = mac
 
 #        try:
 #            self.last_state = asyncio.run(self.light.updateState()) # check connection
