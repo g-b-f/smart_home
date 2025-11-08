@@ -35,7 +35,7 @@ async def periodic_light_check():
 # point to http://192.168.1.117:5000/sleep
 @app.route("/sleep", methods=["POST"])
 async def sleep():
-    request_data = await flask.request.get_json() or {}
+    request_data = flask.request.get_json() or {}
     logger.info(request_data)
     event = request_data.get("event")
 

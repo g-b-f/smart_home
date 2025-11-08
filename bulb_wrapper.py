@@ -48,9 +48,9 @@ class Bulb:
         else:
             self.light = wizlight(ip=ip, port=port, mac=mac)
 
-        try:
-            self.last_state = asyncio.run(self.light.updateState()) # check connection
-        except RuntimeError: # event loop already running
+#        try:
+#            self.last_state = asyncio.run(self.light.updateState()) # check connection
+#        except RuntimeError: # event loop already running
             self.last_state = None
 
         self.last_accessed = time.time()
