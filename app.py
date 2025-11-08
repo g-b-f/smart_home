@@ -1,16 +1,17 @@
 import asyncio
-import os
 import sys
 import flask
+import logging
 
 from hypercorn.config import Config as hypercorn_Config
 from hypercorn.asyncio import serve
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
 from lighting_routines import Routine
-import utils 
+import utils
 
-logger = utils.get_logger(__name__)
+
+logger = utils.get_logger(__name__, level=logging.DEBUG)
 
 # https://sleep.urbandroid.org/docs/services/automation.html#events
 TRACKING_STARTED = "sleep_tracking_started"
@@ -60,14 +61,17 @@ async def main():
     
     logger.info("starting scheduler")
     scheduler.start()
+    logger.info("scheduler started")
     
     try:
+        logger.info("setting up server")
         bind = "0.0.0.0:5000" # Binds to all interfaces on port 5000
         config = hypercorn_Config()
+        logger.debug("setting up config")
         config.bind = [bind]
         logger.info("Starting Hypercorn ASGI server at http://%s", bind)
         await serve(app, config)
-        logger.info("finished serving")
+        logger.debug("finished serving")
     except Exception as e:
         logger.info(f"exception {e}") 
     finally:
