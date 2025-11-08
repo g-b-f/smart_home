@@ -64,7 +64,7 @@ async def main():
     logger.info("scheduler started")
     
     try:
-        logger.info("setting up server")
+        logger.debug("setting up server")
         bind = "0.0.0.0:5000" # Binds to all interfaces on port 5000
         config = hypercorn_Config()
         logger.debug("setting up config")
