@@ -54,6 +54,10 @@ async def sleep():
     else:
         return "Unknown event", 200
 
+@app.route("/test", methods=["POST"])
+async def test():
+    logger.info("test endpoint hit with args:\n%s", flask.request.get_json() or {})
+    return "OK", 200
 
 async def main():
     scheduler = AsyncIOScheduler(timezone="Europe/London")
