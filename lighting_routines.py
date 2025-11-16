@@ -41,3 +41,13 @@ class Routine:
             return
         
         await light.lerp(brightness, temp, brightness, desired_temp, 10)
+
+    @staticmethod
+    async def set_temp_on_switch():
+        try:
+            bulb = Bulb()
+        except: # need more descriptive error
+            return
+
+       # state = await bulb.updateState()
+       # temp = state.get_temperature()
