@@ -1,10 +1,10 @@
 import asyncio
 from pathlib import Path
-from pytest_mock import MockerFixture
 
 import pytest
 import yaml
-from pywizlight import PilotBuilder, PilotParser, scenes, wizlight
+from pytest_mock import MockerFixture
+from pywizlight import PilotBuilder, PilotParser, wizlight
 
 from bulb_wrapper import Bulb, get_range
 
@@ -55,7 +55,7 @@ class TestBulbFromYaml:
         mock_light = mocker.MagicMock()
         mock_bulb.light = mock_light
         mock_from_yaml = mocker.patch("bulb_wrapper.Bulb.from_yaml", return_value=mock_bulb)
-        mock_run = mocker.patch("bulb_wrapper.asyncio.run", return_value=mocker.MagicMock())
+        mocker.patch("bulb_wrapper.asyncio.run", return_value=mocker.MagicMock())
 
         bulb = Bulb()
         mock_from_yaml.assert_called_once_with("bedroom_light")
@@ -91,7 +91,7 @@ class TestBulbFromYaml:
         assert bulb.port == 38899  # default port
         assert bulb.mac == "aabbccddeeff"
 
-    def test_from_yaml_custom_file(self, mocker, tmp_path):
+    def test_from_yaml_custom_file(self, tmp_path):
         """Test loading from custom YAML file."""
         yaml_file = tmp_path / "custom.yaml"
         yaml_file.write_text(yaml.dump({

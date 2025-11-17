@@ -1,10 +1,11 @@
 import logging
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
-import globals
 
 import astral
 import astral.sun
+
+import global_vars as gbl
 
 MAX_LOG_SIZE_BYTES = 1024 * 1024 # 1 MB
 
@@ -31,15 +32,15 @@ def get_colourtemp_for_time(location = astral.LocationInfo(), date=None) -> int:
     now = astral.now(location.tzinfo)
 
     if now < sun.dawn or now > sun.dusk:
-        return globals.NIGHT_COLOURTEMP
+        return gbl.NIGHT_COLOURTEMP
     elif sun.dawn <= now < sun.sunrise:
-        return globals.SUNRISE_COLOURTEMP
+        return gbl.SUNRISE_COLOURTEMP
     elif sun.sunrise <= now < sun.sunset:
-        return globals.DAY_COLOURTEMP
+        return gbl.DAY_COLOURTEMP
     elif sun.sunset <= now < sun.dusk:
-        return globals.SUNSET_COLOURTEMP
+        return gbl.SUNSET_COLOURTEMP
     else:
-        return globals.SUNSET_COLOURTEMP
+        return gbl.SUNSET_COLOURTEMP
 
 class Sun:
     def __init__(self, location = astral.LocationInfo(), date=None):

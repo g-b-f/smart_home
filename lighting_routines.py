@@ -1,6 +1,6 @@
+import global_vars as gbl
 from bulb_wrapper import Bulb
 from utils import get_logger
-import globals
 
 logger = get_logger(__name__)
 
@@ -15,14 +15,14 @@ class Routine:
     async def bedtime():
         """set the light to a dim, warm color"""
         logger.info("bedtime")
-        await Bulb().turn_on(brightness=20, colortemp=globals.BEDTIME_COLORTEMP)
+        await Bulb().turn_on(brightness=20, colortemp=gbl.BEDTIME_COLORTEMP)
 
     @staticmethod
     async def wake_up(total_time=300):
         """gradually brighten the light over total_time seconds"""
         logger.info("waking up")
         
-        await Bulb().turn_on(brightness=100, colortemp=globals.MAX_COLORTEMP)
+        await Bulb().turn_on(brightness=100, colortemp=gbl.MAX_COLORTEMP)
         # await Bulb().lerp(10, BEDTIME_COLORTEMP, 100, MAX_COLORTEMP, total_time)
 
     @staticmethod
@@ -46,7 +46,7 @@ class Routine:
     async def set_temp_on_switch():
         try:
             bulb = Bulb()
-        except: # need more descriptive error
+        except Exception: # need more descriptive error
             return
 
        # state = await bulb.updateState()

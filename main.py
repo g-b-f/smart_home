@@ -1,5 +1,6 @@
 import argparse
 import asyncio
+
 from bulb_wrapper import Bulb
 
 parser = argparse.ArgumentParser()

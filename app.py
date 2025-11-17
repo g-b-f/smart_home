@@ -1,15 +1,14 @@
 import asyncio
-import sys
-import flask
 import logging
+import sys
 
-from hypercorn.config import Config as hypercorn_Config
-from hypercorn.asyncio import serve
+import flask
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from hypercorn.asyncio import serve
+from hypercorn.config import Config as hypercorn_Config
 
-from lighting_routines import Routine
 import utils
-
+from lighting_routines import Routine
 
 logger = utils.get_logger(__name__, level=logging.DEBUG)
 
@@ -76,8 +75,8 @@ async def main():
         logger.info("Starting Hypercorn ASGI server at http://%s", bind)
         await serve(app, config)
         logger.debug("finished serving")
-    except Exception as e:
-        logger.info(f"exception {e}") 
+    except Exception as e: # noqa: BLE001
+        logger.info("exception %s", e) 
     finally:
         logger.info("Shutting down scheduler")
         scheduler.shutdown()
