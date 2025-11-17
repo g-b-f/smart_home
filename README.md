@@ -1,4 +1,7 @@
-# Things to do
+# Smart Home control
+
+
+## Todo list
 
 Change temp on switch
 

@@ -4,6 +4,10 @@ version = "0.2.0"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
+
+[project.scripts]
+bulb = "smart_home.cli.bulb:bulb"
+
 dependencies = [
     "apscheduler>=3.11.1",
     "astral>=3.2",
