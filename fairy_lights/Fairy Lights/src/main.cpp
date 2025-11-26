@@ -4,7 +4,7 @@
 // Taken from https://github.com/FastLED/PlatformIO-Starter
 
 #define LED_PIN         10
-#define NUM_LEDS        1
+#define NUM_LEDS        10
 #define BRIGHTNESS      128
 #define LED_TYPE        WS2812
 #define COLOR_ORDER     RGB
@@ -16,10 +16,12 @@ void setup() {
 }
 
 void setColor(int color) {
-    leds[0] = color;
+    fill_solid(leds, NUM_LEDS, color);
+    // leds[0] = color;
     FastLED.show();
     delay(1000);
-    leds[0] = CRGB::Black;
+    fill_solid(leds, NUM_LEDS, CRGB::Black);
+    // leds[0] = CRGB::Black;
     FastLED.show();
     delay(1000);
 }
