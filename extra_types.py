@@ -1,4 +1,5 @@
-from typing import Literal
+from typing import TypedDict, List, Literal
+
 
 RGBtype = tuple[int, int, int]
 SceneType = Literal[
@@ -39,3 +40,70 @@ SceneType = Literal[
     "Rhythm",
 ]
 
+
+
+class Nightlight(TypedDict):
+    on: bool
+    dur: int
+    fade: bool
+    tbri: int
+
+class UDPn(TypedDict):
+    send: bool
+    recv: bool
+
+class Segment(TypedDict):
+    start: int
+    stop: int
+    len: int
+    col: List[List[int]] # [r, g, b, w]
+    fx: int
+    sx: int
+    ix: int
+    pal: int
+    sel: bool
+    rev: bool
+    cln: int
+
+class State(TypedDict):
+    on: bool
+    bri: int
+    transition: int
+    ps: int
+    pl: int
+    nl: Nightlight
+    udpn: UDPn
+    seg: List[Segment]
+
+class LEDs(TypedDict):
+    count: int
+    rgbw: bool
+    pin: List[int]
+    pwr: int
+    maxpwr: int
+    maxseg: int
+
+class Info(TypedDict):
+    ver: str
+    vid: int
+    leds: LEDs
+    name: str
+    udpport: int
+    live: bool
+    fxcount: int
+    palcount: int
+    arch: str
+    core: str
+    freeheap: int
+    uptime: int
+    opt: int
+    brand: str
+    product: str
+    btype: str
+    mac: str
+
+class WLEDResponse(TypedDict):
+    state: State
+    info: Info
+    effects: List[str]
+    palettes: List[str]
