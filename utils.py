@@ -9,16 +9,20 @@ import global_vars as gbl
 
 MAX_LOG_SIZE_BYTES = 1024 * 1024 # 1 MB
 
-def get_logger(name: str, level=logging.INFO) -> logging.Logger:
+def get_logger(name: str, level="INFO") -> logging.Logger:
+    if level.upper() not in logging._nameToLevel:
+        raise ValueError(f"Invalid log level: {level}")
+    level_int = logging._nameToLevel[level.upper()]
+
     log_file = Path(__file__).parent / "log.txt"
     handler = RotatingFileHandler(log_file, maxBytes=MAX_LOG_SIZE_BYTES, backupCount=2)
-    handler.setLevel(level)
+    handler.setLevel(level_int)
     formatter = logging.Formatter("%(asctime)s %(levelname)s - %(message)s", datefmt="%H:%M:%S")
     handler.setFormatter(formatter)
 
     logger = logging.getLogger(name)
     logger.handlers.clear()
-    logger.setLevel(level)
+    logger.setLevel(level_int)
     logger.addHandler(handler)
 
     return logger
