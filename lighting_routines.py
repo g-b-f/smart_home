@@ -1,5 +1,6 @@
 import global_vars as gbl
 from bulb_wrapper import Bulb
+from WLED_wrapper import WLED
 from utils import get_logger
 
 logger = get_logger(__name__)
@@ -9,6 +10,7 @@ class Routine:
     async def tracking_start():
         """turn off the light"""
         logger.info("Turning off light")
+        WLED().turn_off()
         await Bulb().turn_off()
 
     @staticmethod
@@ -45,7 +47,7 @@ class Routine:
     @staticmethod
     async def set_temp_on_switch():
         try:
-            bulb = Bulb()
+            bulb = Bulb() # noqa: F841
         except Exception: # need more descriptive error
             return
 

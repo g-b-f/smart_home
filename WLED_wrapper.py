@@ -39,6 +39,12 @@ class WLED:
         state = self.info.get("state", {})
         return state.get("on", False)
     
+    def turn_on(self):
+        self._set(on=True)
+    
+    def turn_off(self):
+        self._set(on=False)
+
     def toggle(self):
         self._set(on=TOGGLE)
 
@@ -59,8 +65,10 @@ class WLED:
             effect_index = effect
         self._set_seg(fx=effect_index)
     
-    def set_solid(self):
+    def set_solid(self, colour: list[int] | None = None):
         self.set_effect("Solid")
+        if colour is not None:
+            self.colour = colour
 
     @property
     def colour(self) -> list:
@@ -76,12 +84,14 @@ class WLED:
         else:
             raise ValueError("Colours must be a list of integers or a list of list of integers")
 
-LedStrip = WLED()
+
 
 # print(LedStrip.toggle())
 
 if __name__ == "__main__":
+    LedStrip = WLED()
     # print(LedStrip.info)
     # print(LedStrip.is_on)
     # LedStrip.set_solid()
-    LedStrip.set_effect(1)
+    # LedStrip.set_effect(1)
+    LedStrip.turn_on()
