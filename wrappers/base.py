@@ -10,18 +10,18 @@ _logger = get_logger(__name__)
 class WrapperBase(metaclass=ABCMeta):
  
     @abstractmethod
-    def turn_on(self) -> None:
+    async def turn_on(self) -> None:
         pass
     @abstractmethod
-    def turn_off(self) -> None:
+    async def turn_off(self) -> None:
         pass
     @abstractmethod
-    def toggle(self) -> None:
+    async def toggle(self) -> None:
         pass
 
     @property
     @abstractmethod
-    def is_on(self) -> bool:
+    async def is_on(self) -> bool:
         pass
 
     @staticmethod

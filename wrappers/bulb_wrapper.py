@@ -58,11 +58,11 @@ class Bulb(WrapperBase):
 
         self.last_accessed = time.time()
 
-    def turn_off(self):
-        self.async_to_sync(self.light.turn_off())
+    async def turn_off(self):
+        await self.light.turn_off()
         self.last_accessed = time.time()
 
-    def turn_on(self, brightness: Optional[int] = None, rgb: Optional[RGBtype] = None, colortemp: Optional[int] = None):
+    async def turn_on(self, brightness: Optional[int] = None, rgb: Optional[RGBtype] = None, colortemp: Optional[int] = None):
         if brightness is not None:
             brightness = self.clamp_brightness(brightness)
         if rgb is not None:
@@ -74,10 +74,10 @@ class Bulb(WrapperBase):
         else:
             builder = PilotBuilder()
         
-        self.async_to_sync(self.light.turn_on(builder))
+        await self.light.turn_on(builder)
         self.last_accessed = time.time()
 
-    def set_scene(self, scene: SceneType, brightness: Optional[int] = None, speed: Optional[int] = None):
+    async def set_scene(self, scene: SceneType, brightness: Optional[int] = None, speed: Optional[int] = None):
         """Set the bulb to a predefined scene.
 
         Args:
@@ -90,7 +90,7 @@ class Bulb(WrapperBase):
             brightness = self.clamp_brightness(brightness)
         if speed is not None:
             speed = self.clamp_speed(speed)
-        self.async_to_sync(self.light.turn_on(PilotBuilder(scene=scene_id, brightness=brightness, speed=speed)))
+        await self.light.turn_on(PilotBuilder(scene=scene_id, brightness=brightness, speed=speed))
 
     async def lerp(self, start_brightness: int, start_temp: int, end_brightness: int, end_temp: int, duration: int):
         """Linearly interpolate between two color temperatures and brightnesses over a given duration.
@@ -113,7 +113,7 @@ class Bulb(WrapperBase):
             state = await self.updateState()
             if state is None or self.last_state is None:
                 self.logger.error("couldn't get state during lerp, setting to final values")
-                self.turn_on(brightness=end_brightness, colortemp=end_temp)
+                await self.turn_on(brightness=end_brightness, colortemp=end_temp)
                 return
             
             same_brightness = brightness == state.get_brightness() and state.get_brightness() is not None
@@ -124,7 +124,7 @@ class Bulb(WrapperBase):
                 self.logger.info("lerp interrupted due to external change")
                 return
 
-            self.turn_on(brightness=brightness, colortemp=temp)
+            await self.turn_on(brightness=brightness, colortemp=temp)
             self.last_state = await self.updateState()
 
             await asyncio.sleep(self.TIME_STEP)
@@ -133,8 +133,8 @@ class Bulb(WrapperBase):
         return await self.light.updateState()
 
     @property
-    def is_on(self) -> bool:
-        state = self.async_to_sync(self.light.updateState())
+    async def is_on(self) -> bool:
+        state = await self.light.updateState()
         if state is None:
             self.logger.error("couldn't get state in is_on")
             return False
@@ -144,22 +144,17 @@ class Bulb(WrapperBase):
             return False
         return ret
     
-    def toggle(self):
+    async def toggle(self):
         if self.is_on:
-            self.turn_off()
+            await self.turn_off()
         else:
-            self.turn_on()  
+            await self.turn_on()  
 
     def clamp_brightness(self, value: int) -> int:
         return clamp(value, 10, 100)
 
     def clamp_speed(self, value: int) -> int: 
         return clamp(value, 10, 200)
-    
-    def async_to_sync(self, func, *args, **kwargs):
-        loop = asyncio.get_event_loop()
-        return loop.run_until_complete(func)
-
   
 
 def get_range(start: int, stop: int, length: int) -> Iterator[int]:

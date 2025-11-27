@@ -1,6 +1,7 @@
 from typing import cast
 
 import requests
+import asyncio
 
 from extra_types import RGBtype, WLEDResponse
 from utils import get_logger
@@ -39,17 +40,17 @@ class WLED(WrapperBase):
         return cast(WLEDResponse, self._get())
 
     @property
-    def is_on(self) -> bool:
+    async def is_on(self) -> bool:
         state = self.info.get("state", {})
         return state.get("on", False)
     
-    def turn_on(self):
+    async def turn_on(self):
         self._set(on=True)
     
-    def turn_off(self):
+    async def turn_off(self):
         self._set(on=False)
 
-    def toggle(self):
+    async def toggle(self):
         self._set(on=TOGGLE)
 
     def _set_seg(self, **kwargs):
@@ -98,4 +99,4 @@ if __name__ == "__main__":
     # print(LedStrip.is_on)
     # LedStrip.set_solid()
     # LedStrip.set_effect(1)
-    LedStrip.turn_on()
+    asyncio.run(LedStrip.turn_on())

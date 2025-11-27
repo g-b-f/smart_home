@@ -10,21 +10,21 @@ class Routine:
     async def tracking_start():
         """turn off the light"""
         logger.info("Turning off light")
-        WLED().turn_off()
-        Bulb().turn_off()
+        await WLED().turn_off()
+        await Bulb().turn_off()
 
     @staticmethod
     async def bedtime():
         """set the light to a dim, warm color"""
         logger.info("bedtime")
-        Bulb().turn_on(brightness=20, colortemp=gbl.BEDTIME_COLORTEMP)
+        await Bulb().turn_on(brightness=20, colortemp=gbl.BEDTIME_COLORTEMP)
 
     @staticmethod
     async def wake_up(total_time=300):
         """gradually brighten the light over total_time seconds"""
         logger.info("waking up")
         
-        Bulb().turn_on(brightness=100, colortemp=gbl.MAX_COLORTEMP)
+        await Bulb().turn_on(brightness=100, colortemp=gbl.MAX_COLORTEMP)
         # await Bulb().lerp(10, BEDTIME_COLORTEMP, 100, MAX_COLORTEMP, total_time)
 
     @staticmethod

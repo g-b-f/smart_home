@@ -120,7 +120,7 @@ class TestBulbMethods:
         initial_time = bulb.last_accessed
 
         await asyncio.sleep(0.01)
-        bulb.turn_off()
+        await bulb.turn_off()
 
         mock_wizlight.turn_off.assert_called_once()
         assert bulb.last_accessed > initial_time
@@ -132,7 +132,7 @@ class TestBulbMethods:
         mocker.patch("wrappers.bulb_wrapper.asyncio.run")
         bulb = Bulb(ip="192.168.1.100", port=38899, mac="aabbccddeeff")
 
-        bulb.turn_on(brightness=80, rgb=(255, 0, 0))
+        await bulb.turn_on(brightness=80, rgb=(255, 0, 0))
 
         mock_wizlight.turn_on.assert_called_once()
         call_args = mock_wizlight.turn_on.call_args[0][0]
@@ -146,7 +146,7 @@ class TestBulbMethods:
         mock_temp_to_rgb = mocker.patch.object(Bulb, "temp_to_rgb", return_value=(255, 200, 150))
         bulb = Bulb(ip="192.168.1.100", port=38899, mac="aabbccddeeff")
 
-        bulb.turn_on(brightness=70, colortemp=4000)
+        await bulb.turn_on(brightness=70, colortemp=4000)
 
         mock_wizlight.turn_on.assert_called_once()
         mock_temp_to_rgb.assert_called_once_with(4000)
@@ -159,7 +159,7 @@ class TestBulbMethods:
         bulb = Bulb(ip="192.168.1.100", port=38899, mac="aabbccddeeff")
 
         with pytest.raises(ValueError, match="cannot provide both rgb and colortemp"):
-            bulb.turn_on(rgb=(255, 0, 0), colortemp=4000)
+            await bulb.turn_on(rgb=(255, 0, 0), colortemp=4000)
 
     @pytest.mark.asyncio
     async def test_turn_on_no_params(self, mock_wizlight, mocker):
@@ -168,7 +168,7 @@ class TestBulbMethods:
         mocker.patch("wrappers.bulb_wrapper.asyncio.run")
         bulb = Bulb(ip="192.168.1.100", port=38899, mac="aabbccddeeff")
 
-        bulb.turn_on()
+        await bulb.turn_on()
 
         mock_wizlight.turn_on.assert_called_once()
 
@@ -180,7 +180,7 @@ class TestBulbMethods:
         mock_get_scene = mocker.patch("wrappers.bulb_wrapper.scenes.get_id_from_scene_name", return_value=5)
         bulb = Bulb(ip="192.168.1.100", port=38899, mac="aabbccddeeff")
 
-        bulb.set_scene("Ocean", brightness=75, speed=100)
+        await bulb.set_scene("Ocean", brightness=75, speed=100)
 
         mock_wizlight.turn_on.assert_called_once()
         mock_get_scene.assert_called_once_with("Ocean")
@@ -194,9 +194,9 @@ class TestBulbMethods:
         bulb = Bulb(ip="192.168.1.100", port=38899, mac="aabbccddeeff")
 
         # Test brightness too low
-        bulb.set_scene("Ocean", brightness=5, speed=100)
+        await bulb.set_scene("Ocean", brightness=5, speed=100)
         # Test brightness too high
-        bulb.set_scene("Ocean", brightness=150, speed=100)
+        await bulb.set_scene("Ocean", brightness=150, speed=100)
 
         # Should have been called twice
         assert mock_wizlight.turn_on.call_count == 2
@@ -210,9 +210,9 @@ class TestBulbMethods:
         bulb = Bulb(ip="192.168.1.100", port=38899, mac="aabbccddeeff")
 
         # Test speed too low
-        bulb.set_scene("Ocean", brightness=50, speed=5)
+        await bulb.set_scene("Ocean", brightness=50, speed=5)
         # Test speed too high
-        bulb.set_scene("Ocean", brightness=50, speed=250)
+        await bulb.set_scene("Ocean", brightness=50, speed=250)
 
         assert mock_wizlight.turn_on.call_count == 2
 
