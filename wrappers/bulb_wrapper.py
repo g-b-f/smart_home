@@ -52,14 +52,14 @@ class Bulb(WrapperBase):
             self.mac = mac
 
 #        try:
-#            self.last_state = asyncio.run(self.light.updateState()) # check connection
+#            self.last_state = self.async_to_sync(self.light.updateState()) # check connection
 #        except RuntimeError: # event loop already running
             self.last_state = None
 
         self.last_accessed = time.time()
 
     def turn_off(self):
-        asyncio.run(self.light.turn_off())
+        self.async_to_sync(self.light.turn_off())
         self.last_accessed = time.time()
 
     def turn_on(self, brightness: Optional[int] = None, rgb: Optional[RGBtype] = None, colortemp: Optional[int] = None):
@@ -74,7 +74,7 @@ class Bulb(WrapperBase):
         else:
             builder = PilotBuilder()
         
-        asyncio.run(self.light.turn_on(builder))
+        self.async_to_sync(self.light.turn_on(builder))
         self.last_accessed = time.time()
 
     def set_scene(self, scene: SceneType, brightness: Optional[int] = None, speed: Optional[int] = None):
@@ -90,7 +90,7 @@ class Bulb(WrapperBase):
             brightness = self.clamp_brightness(brightness)
         if speed is not None:
             speed = self.clamp_speed(speed)
-        asyncio.run(self.light.turn_on(PilotBuilder(scene=scene_id, brightness=brightness, speed=speed)))
+        self.async_to_sync(self.light.turn_on(PilotBuilder(scene=scene_id, brightness=brightness, speed=speed)))
 
     async def lerp(self, start_brightness: int, start_temp: int, end_brightness: int, end_temp: int, duration: int):
         """Linearly interpolate between two color temperatures and brightnesses over a given duration.
@@ -134,7 +134,7 @@ class Bulb(WrapperBase):
 
     @property
     def is_on(self) -> bool:
-        state = asyncio.run(self.light.updateState())
+        state = self.async_to_sync(self.light.updateState())
         if state is None:
             self.logger.error("couldn't get state in is_on")
             return False
@@ -155,6 +155,11 @@ class Bulb(WrapperBase):
 
     def clamp_speed(self, value: int) -> int: 
         return clamp(value, 10, 200)
+    
+    def async_to_sync(self, func, *args, **kwargs):
+        loop = asyncio.get_event_loop()
+        return loop.run_until_complete(func)
+
   
 
 def get_range(start: int, stop: int, length: int) -> Iterator[int]:
