@@ -31,8 +31,8 @@ class Bulb:
     logger = get_logger(__name__)
 
     @staticmethod
-    def from_yaml(name: str, yaml_file="objects.yaml") -> "Bulb":
-        with open(Path(__file__).parent / yaml_file) as f:
+    def from_yaml(name: str, yaml_file=Path(__file__).parents[1] / "objects.yaml") -> "Bulb":
+        with open(yaml_file) as f:
             bulbs = yaml.safe_load(f)
             bulb_info:dict = bulbs[name]
             return Bulb(

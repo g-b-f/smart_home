@@ -54,8 +54,8 @@ class TestBulbFromYaml:
         mock_bulb = mocker.MagicMock()
         mock_light = mocker.MagicMock()
         mock_bulb.light = mock_light
-        mock_from_yaml = mocker.patch("bulb_wrapper.Bulb.from_yaml", return_value=mock_bulb)
-        mocker.patch("bulb_wrapper.asyncio.run", return_value=mocker.MagicMock())
+        mock_from_yaml = mocker.patch("wrappers.bulb_wrapper.Bulb.from_yaml", return_value=mock_bulb)
+        mocker.patch("wrappers.bulb_wrapper.asyncio.run", return_value=mocker.MagicMock())
 
         bulb = Bulb()
         mock_from_yaml.assert_called_once_with("bedroom_light")
@@ -114,8 +114,8 @@ class TestBulbMethods:
     @pytest.mark.asyncio
     async def test_turn_off(self, mock_wizlight, mocker):
         """Test turning off the bulb."""
-        mocker.patch("bulb_wrapper.wizlight", return_value=mock_wizlight)
-        mocker.patch("bulb_wrapper.asyncio.run")
+        mocker.patch("wrappers.bulb_wrapper.wizlight", return_value=mock_wizlight)
+        mocker.patch("wrappers.bulb_wrapper.asyncio.run")
         bulb = Bulb(ip="192.168.1.100", port=38899, mac="aabbccddeeff")
         initial_time = bulb.last_accessed
 
@@ -128,8 +128,8 @@ class TestBulbMethods:
     @pytest.mark.asyncio
     async def test_turn_on_with_rgb(self, mock_wizlight, mocker):
         """Test turning on with RGB color."""
-        mocker.patch("bulb_wrapper.wizlight", return_value=mock_wizlight)
-        mocker.patch("bulb_wrapper.asyncio.run")
+        mocker.patch("wrappers.bulb_wrapper.wizlight", return_value=mock_wizlight)
+        mocker.patch("wrappers.bulb_wrapper.asyncio.run")
         bulb = Bulb(ip="192.168.1.100", port=38899, mac="aabbccddeeff")
 
         await bulb.turn_on(brightness=80, rgb=(255, 0, 0))
@@ -141,8 +141,8 @@ class TestBulbMethods:
     @pytest.mark.asyncio
     async def test_turn_on_with_colortemp(self, mock_wizlight, mocker):
         """Test turning on with color temperature."""
-        mocker.patch("bulb_wrapper.wizlight", return_value=mock_wizlight)
-        mocker.patch("bulb_wrapper.asyncio.run")
+        mocker.patch("wrappers.bulb_wrapper.wizlight", return_value=mock_wizlight)
+        mocker.patch("wrappers.bulb_wrapper.asyncio.run")
         mock_temp_to_rgb = mocker.patch.object(Bulb, "temp_to_rgb", return_value=(255, 200, 150))
         bulb = Bulb(ip="192.168.1.100", port=38899, mac="aabbccddeeff")
 
@@ -154,8 +154,8 @@ class TestBulbMethods:
     @pytest.mark.asyncio
     async def test_turn_on_rgb_and_colortemp_raises_error(self, mock_wizlight, mocker):
         """Test that providing both RGB and colortemp raises ValueError."""
-        mocker.patch("bulb_wrapper.wizlight", return_value=mock_wizlight)
-        mocker.patch("bulb_wrapper.asyncio.run")
+        mocker.patch("wrappers.bulb_wrapper.wizlight", return_value=mock_wizlight)
+        mocker.patch("wrappers.bulb_wrapper.asyncio.run")
         bulb = Bulb(ip="192.168.1.100", port=38899, mac="aabbccddeeff")
 
         with pytest.raises(ValueError, match="cannot provide both rgb and colortemp"):
@@ -164,8 +164,8 @@ class TestBulbMethods:
     @pytest.mark.asyncio
     async def test_turn_on_no_params(self, mock_wizlight, mocker):
         """Test turning on with no parameters."""
-        mocker.patch("bulb_wrapper.wizlight", return_value=mock_wizlight)
-        mocker.patch("bulb_wrapper.asyncio.run")
+        mocker.patch("wrappers.bulb_wrapper.wizlight", return_value=mock_wizlight)
+        mocker.patch("wrappers.bulb_wrapper.asyncio.run")
         bulb = Bulb(ip="192.168.1.100", port=38899, mac="aabbccddeeff")
 
         await bulb.turn_on()
@@ -175,9 +175,9 @@ class TestBulbMethods:
     @pytest.mark.asyncio
     async def test_set_scene(self, mock_wizlight, mocker):
         """Test setting a scene."""
-        mocker.patch("bulb_wrapper.wizlight", return_value=mock_wizlight)
-        mocker.patch("bulb_wrapper.asyncio.run")
-        mock_get_scene = mocker.patch("bulb_wrapper.scenes.get_id_from_scene_name", return_value=5)
+        mocker.patch("wrappers.bulb_wrapper.wizlight", return_value=mock_wizlight)
+        mocker.patch("wrappers.bulb_wrapper.asyncio.run")
+        mock_get_scene = mocker.patch("wrappers.bulb_wrapper.scenes.get_id_from_scene_name", return_value=5)
         bulb = Bulb(ip="192.168.1.100", port=38899, mac="aabbccddeeff")
 
         await bulb.set_scene("Ocean", brightness=75, speed=100)
@@ -188,9 +188,9 @@ class TestBulbMethods:
     @pytest.mark.asyncio
     async def test_set_scene_clamps_brightness(self, mock_wizlight, mocker):
         """Test that set_scene clamps brightness to valid range."""
-        mocker.patch("bulb_wrapper.wizlight", return_value=mock_wizlight)
-        mocker.patch("bulb_wrapper.asyncio.run")
-        mocker.patch("bulb_wrapper.scenes.get_id_from_scene_name", return_value=5)
+        mocker.patch("wrappers.bulb_wrapper.wizlight", return_value=mock_wizlight)
+        mocker.patch("wrappers.bulb_wrapper.asyncio.run")
+        mocker.patch("wrappers.bulb_wrapper.scenes.get_id_from_scene_name", return_value=5)
         bulb = Bulb(ip="192.168.1.100", port=38899, mac="aabbccddeeff")
 
         # Test brightness too low
@@ -204,9 +204,9 @@ class TestBulbMethods:
     @pytest.mark.asyncio
     async def test_set_scene_clamps_speed(self, mock_wizlight, mocker):
         """Test that set_scene clamps speed to valid range."""
-        mocker.patch("bulb_wrapper.wizlight", return_value=mock_wizlight)
-        mocker.patch("bulb_wrapper.asyncio.run")
-        mocker.patch("bulb_wrapper.scenes.get_id_from_scene_name", return_value=5)
+        mocker.patch("wrappers.bulb_wrapper.wizlight", return_value=mock_wizlight)
+        mocker.patch("wrappers.bulb_wrapper.asyncio.run")
+        mocker.patch("wrappers.bulb_wrapper.scenes.get_id_from_scene_name", return_value=5)
         bulb = Bulb(ip="192.168.1.100", port=38899, mac="aabbccddeeff")
 
         # Test speed too low
@@ -220,8 +220,8 @@ class TestBulbMethods:
     async def test_updateState(self, mock_wizlight, mock_pilot_state, mocker):
         """Test updateState method."""
         mock_wizlight.updateState.return_value = mock_pilot_state
-        mocker.patch("bulb_wrapper.wizlight", return_value=mock_wizlight)
-        mocker.patch("bulb_wrapper.asyncio.run")
+        mocker.patch("wrappers.bulb_wrapper.wizlight", return_value=mock_wizlight)
+        mocker.patch("wrappers.bulb_wrapper.asyncio.run")
         bulb = Bulb(ip="192.168.1.100", port=38899, mac="aabbccddeeff")
 
         state = await bulb.updateState()
@@ -249,8 +249,8 @@ class TestBulbLerp:
         changed_state.get_rgb.return_value = (255, 0, 0)  # Different RGB
         changed_state.get_colortemp.return_value = 6000  # Different temp
 
-        mocker.patch("bulb_wrapper.wizlight", return_value=mock_wizlight)
-        mocker.patch("bulb_wrapper.asyncio.run")
+        mocker.patch("wrappers.bulb_wrapper.wizlight", return_value=mock_wizlight)
+        mocker.patch("wrappers.bulb_wrapper.asyncio.run")
         bulb = Bulb(ip="192.168.1.100", port=38899, mac="aabbccddeeff")
         bulb.last_state = initial_state
         bulb.TIME_STEP = 0.05
@@ -282,8 +282,8 @@ class TestBulbLerp:
         """Test lerp when state cannot be retrieved."""
         mock_wizlight.updateState.return_value = None
         
-        mocker.patch("bulb_wrapper.wizlight", return_value=mock_wizlight)
-        mocker.patch("bulb_wrapper.asyncio.run")
+        mocker.patch("wrappers.bulb_wrapper.wizlight", return_value=mock_wizlight)
+        mocker.patch("wrappers.bulb_wrapper.asyncio.run")
         bulb = Bulb(ip="192.168.1.100", port=38899, mac="aabbccddeeff")
         bulb.last_state = None
         bulb.TIME_STEP = 0.05
@@ -312,8 +312,8 @@ class TestBulbLerp:
         off_state.get_rgb.return_value = (0, 0, 0)
         off_state.get_colortemp.return_value = 0
 
-        mocker.patch("bulb_wrapper.wizlight", return_value=mock_wizlight)
-        mocker.patch("bulb_wrapper.asyncio.run")
+        mocker.patch("wrappers.bulb_wrapper.wizlight", return_value=mock_wizlight)
+        mocker.patch("wrappers.bulb_wrapper.asyncio.run")
         bulb = Bulb(ip="192.168.1.100", port=38899, mac="aabbccddeeff")
         bulb.last_state = off_state
         bulb.TIME_STEP = 0.05
