@@ -10,7 +10,7 @@ from hypercorn.config import Config as hypercorn_Config
 import utils
 from lighting_routines import Routine
 
-logger = utils.get_logger(__name__, level=logging.DEBUG)
+logger = utils.get_logger(__name__, level="INFO")
 
 # https://sleep.urbandroid.org/docs/services/automation.html#events
 TRACKING_STARTED = "sleep_tracking_started"
