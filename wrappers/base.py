@@ -1,13 +1,30 @@
 import math
 from abc import ABCMeta, abstractmethod
-from typing import cast
+from typing import cast, Optional
+from pathlib import Path
+import yaml
 
 from extra_types import RGBtype
 from utils import clamp, get_logger
 
+
 _logger = get_logger(__name__)
 
 class WrapperBase(metaclass=ABCMeta):
+
+    def __init__(self, ip: Optional[str] = None, port: Optional[int] = None, mac: Optional[str] = None):
+        pass
+
+    @classmethod
+    def from_yaml(cls, name: str, yaml_file:str|Path = Path(__file__).parents[1] / "objects.yaml"):
+        with open(yaml_file) as f:
+            bulbs = yaml.safe_load(f)
+            bulb_info:dict = bulbs[name]
+            return cls(
+                ip=bulb_info["ip"],
+                port=bulb_info.get("port", 38899),
+                mac=bulb_info["mac"],
+            )
  
     @abstractmethod
     async def turn_on(self) -> None:

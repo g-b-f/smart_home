@@ -12,12 +12,26 @@ TOGGLE = "t"
 class WLED(WrapperBase):
     logger = get_logger(__name__, "INFO")
 
-    def __init__(self, ip="http://192.168.1.121"):
+    def __init__(self, ip="http://192.168.1.121", **kwargs):
+        
         self.url = ip.rstrip('/') + '/json/'
         self._session = requests.Session()
         self._session.headers.update({'Content-Type': 'application/json'})
 
-        self._effects = self.info["effects"]
+        info = self.info
+        self._effects = info["effects"]
+
+        try:
+            if "mac" in kwargs:
+                expected_mac = kwargs["mac"]
+                assert isinstance(expected_mac, str), "MAC address must be a string"
+                expected_mac = expected_mac.lower().replace(":", "")
+                actual_mac = info["info"]["mac"].lower().replace(":", "")
+                if expected_mac != actual_mac:
+                    self.logger.warning("MAC address mismatch: expected %s but got %s", expected_mac, actual_mac)
+        except KeyError as e:
+            self.logger.error("Couldn't verify MAC address; '%s' field missing in WLED response", e)
+
 
     def _request(self, method:str, endpoint="", **kwargs) -> dict:
         if method.lower() not in {"get", "post"}:

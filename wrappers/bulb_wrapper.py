@@ -30,19 +30,7 @@ class Bulb(WrapperBase):
 
     logger = get_logger(__name__)
 
-    @staticmethod
-    def from_yaml(name: str, yaml_file:str|Path = Path(__file__).parents[1] / "objects.yaml") -> "Bulb":
-        with open(yaml_file) as f:
-            bulbs = yaml.safe_load(f)
-            bulb_info:dict = bulbs[name]
-            return Bulb(
-                ip=bulb_info["ip"],
-                port=bulb_info.get("port", 38899),
-                mac=bulb_info["mac"],
-            )
-
     def __init__(self, ip: Optional[str] = None, port: Optional[int] = None, mac: Optional[str] = None):
-
         if ip is None or port is None or mac is None:
             self.light:wizlight = self.from_yaml(self.BULB_NAME).light
         else:
