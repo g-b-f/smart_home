@@ -1,12 +1,14 @@
+import math
 from abc import ABCMeta, abstractmethod
 from typing import cast
-from utils import get_logger, clamp
-import math
+
 from extra_types import RGBtype
+from utils import clamp, get_logger
+
+_logger = get_logger(__name__)
 
 class WrapperBase(metaclass=ABCMeta):
-    logger = get_logger(__name__)
-
+ 
     @abstractmethod
     def turn_on(self) -> None:
         pass
@@ -22,15 +24,14 @@ class WrapperBase(metaclass=ABCMeta):
     def is_on(self) -> bool:
         pass
 
-    
-    @classmethod
-    def temp_to_rgb(cls, temp: int|float) -> RGBtype:
+    @staticmethod
+    def temp_to_rgb(temp: int|float) -> RGBtype:
         """Convert color temperature in Kelvin to RGB values.
 
         Algorithm from Tanner Helland (http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/)
         """
         if temp < 1000 or temp > 40000:
-            cls.logger.warning("Color temperature should be between 1000 and 40000 Kelvin, got %d. " \
+            _logger.info("Color temperature should be between 1000 and 40000 Kelvin, got %d. " \
             "You might get some weird results", temp)
         
         temp = cast(float, temp / 100)

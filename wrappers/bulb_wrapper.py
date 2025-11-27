@@ -13,7 +13,7 @@ from pywizlight import (  # type: ignore[import-untyped]
     wizlight,
 )
 
-from utils import get_logger, clamp
+from utils import clamp, get_logger
 
 sys.path.append(str(Path(__file__).parent))
 from extra_types import RGBtype, SceneType
