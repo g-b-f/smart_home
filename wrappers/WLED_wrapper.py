@@ -63,7 +63,7 @@ class WLED(WrapperBase):
             try:
                 effect_index = self._effects.index(effect)
             except ValueError:
-                self.logger.error(f"Effect '{effect}' not found")
+                self.logger.error("Effect '%s' not found", effect)
                 return
         else:
             effect_index = effect

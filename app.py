@@ -5,16 +5,11 @@ import flask
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from hypercorn.asyncio import serve
 from hypercorn.config import Config as HypercornConfig
+
 import utils
 from lighting_routines import Routine
 
 logger = utils.get_logger(__name__, level="INFO")
-access_logger = utils.get_logger("hypercorn.access", level="WARNING")
-error_logger = utils.get_logger("hypercorn.error", level="WARNING")
-
-hypercorn_config = HypercornConfig()
-
-
 
 # https://sleep.urbandroid.org/docs/services/automation.html#events
 TRACKING_STARTED = "sleep_tracking_started"
@@ -24,16 +19,13 @@ ALARM_SNOOZED = "alarm_snooze_clicked"
 ALARM_DISMISSED = "alarm_alert_dismiss"
 BEDTIME_NOTIFICATION = "time_to_bed_alarm_alert"
 
-HIBERNATE_ON_SLEEP = False
 COLOR_TEMP_SYNC_INTERVAL = 10  # minutes
 
 app = flask.Flask(__name__)
 
-
 async def periodic_light_check():
     zen = utils.get_zenith()
-    logger.info("Current zenith: %f", zen)
-
+    logger.debug("Current zenith: %f", zen)
 
 # point to http://192.168.1.117:5000/sleep
 @app.route("/sleep", methods=["POST"])
@@ -55,6 +47,7 @@ async def sleep():
         return "OK", 200
     
     else:
+        logger.debug("unknown event: %s", event)
         return "Unknown event", 200
 
 @app.route("/test", methods=["POST"])
@@ -77,8 +70,8 @@ async def main():
         logger.debug("setting up hypercorn config")
         config = HypercornConfig()
         config.bind = [bind]
-        config.accesslog = access_logger
-        config.errorlog = error_logger
+        config.accesslog = utils.get_logger("hypercorn.access", level="WARNING")
+        config.errorlog = utils.get_logger("hypercorn.error", level="WARNING")
 
         logger.info("Starting Hypercorn ASGI server at http://%s", bind)
         await serve(app, config)
@@ -92,9 +85,7 @@ async def main():
 if __name__ == "__main__":
     if sys.platform == "win32":
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-    
     try:
         asyncio.run(main())
     except KeyboardInterrupt:
         logger.info("Application shut down by user.")
-

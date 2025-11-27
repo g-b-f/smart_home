@@ -6,7 +6,7 @@ import pywizlight
 
 from wrappers.bulb_wrapper import Bulb
 
-if os.name == "nt" or True:
+if os.name == "nt":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
 
 parser = argparse.ArgumentParser(description="Control smart bulb")
