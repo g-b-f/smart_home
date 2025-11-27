@@ -1,6 +1,7 @@
 import argparse
 import asyncio
 import os
+
 import pywizlight
 
 from wrappers.bulb_wrapper import Bulb
@@ -13,15 +14,12 @@ parser.add_argument("-t", "--temp", help="Color temperature to set", type=int)
 parser.add_argument("-b", "--brightness", help="Brightness to set", type=int)
 args = parser.parse_args()
 
-async def bulb_control():
+def bulb_control():
+    del pywizlight.wizlight.__del__
     if args.temp is None and args.brightness is None:
         parser.error("must provide at least one of --temp or --brightness")
     bulb = Bulb()
-    await bulb.turn_on(brightness=args.brightness, colortemp=args.temp)
-
-def bulb():
-    del pywizlight.wizlight.__del__
-    asyncio.run(bulb_control())
+    bulb.turn_on(brightness=args.brightness, colortemp=args.temp)
 
 if __name__ == "__main__":
-    bulb()
+    bulb_control()

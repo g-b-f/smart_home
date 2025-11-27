@@ -1,10 +1,14 @@
+from typing import cast
+
 import requests
-from typing import Any, cast
-from extra_types import WLEDResponse
+
+from extra_types import RGBtype, WLEDResponse
 from utils import get_logger
+from wrappers.base import WrapperBase
+
 TOGGLE = "t"
 
-class WLED:
+class WLED(WrapperBase):
     logger = get_logger(__name__, "INFO")
 
     def __init__(self, ip="http://192.168.1.121"):
@@ -65,10 +69,10 @@ class WLED:
             effect_index = effect
         self._set_seg(fx=effect_index)
     
-    def set_solid(self, colour: list[int] | None = None):
+    def set_solid(self, colour: RGBtype | None = None):
         self.set_effect("Solid")
         if colour is not None:
-            self.colour = colour
+            self.colour = list(colour)
 
     @property
     def colour(self) -> list:

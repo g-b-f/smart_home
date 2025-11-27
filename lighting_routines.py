@@ -1,7 +1,7 @@
 import global_vars as gbl
+from utils import get_logger
 from wrappers.bulb_wrapper import Bulb
 from wrappers.WLED_wrapper import WLED
-from utils import get_logger
 
 logger = get_logger(__name__)
 
@@ -11,20 +11,20 @@ class Routine:
         """turn off the light"""
         logger.info("Turning off light")
         WLED().turn_off()
-        await Bulb().turn_off()
+        Bulb().turn_off()
 
     @staticmethod
     async def bedtime():
         """set the light to a dim, warm color"""
         logger.info("bedtime")
-        await Bulb().turn_on(brightness=20, colortemp=gbl.BEDTIME_COLORTEMP)
+        Bulb().turn_on(brightness=20, colortemp=gbl.BEDTIME_COLORTEMP)
 
     @staticmethod
     async def wake_up(total_time=300):
         """gradually brighten the light over total_time seconds"""
         logger.info("waking up")
         
-        await Bulb().turn_on(brightness=100, colortemp=gbl.MAX_COLORTEMP)
+        Bulb().turn_on(brightness=100, colortemp=gbl.MAX_COLORTEMP)
         # await Bulb().lerp(10, BEDTIME_COLORTEMP, 100, MAX_COLORTEMP, total_time)
 
     @staticmethod
