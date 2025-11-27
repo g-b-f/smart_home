@@ -1,10 +1,8 @@
-import math
 from abc import ABCMeta, abstractmethod
 from typing import cast
-
+from utils import get_logger, clamp
+import math
 from extra_types import RGBtype
-from utils import get_logger
-
 
 class WrapperBase(metaclass=ABCMeta):
     logger = get_logger(__name__)
@@ -51,10 +49,10 @@ class WrapperBase(metaclass=ABCMeta):
             red = 329.698727446 * (red ** -0.1332047592)
             green = temp - 60
             green = 288.1221695283 * (green ** -0.0755148492)
-            blue = 255
+            blue = 255.0
 
-        red = max(0, min(255, red))
-        green = max(0, min(255, green))
-        blue = max(0, min(255, blue))
+        red = clamp(red, 0.0, 255.0)
+        green = clamp(green, 0.0, 255.0)
+        blue = clamp(blue, 0.0, 255.0)
 
         return round(red), round(green), round(blue)  

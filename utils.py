@@ -27,6 +27,10 @@ def get_logger(name: str, level="INFO") -> logging.Logger:
 
     return logger
 
+
+def clamp(value, min_value, max_value):
+    return max(min_value, min(value, max_value))
+
 def get_zenith(location = astral.LocationInfo()) -> float:
     return astral.sun.zenith(location.observer)
 

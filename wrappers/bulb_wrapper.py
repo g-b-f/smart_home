@@ -13,7 +13,7 @@ from pywizlight import (  # type: ignore[import-untyped]
     wizlight,
 )
 
-from utils import get_logger
+from utils import get_logger, clamp
 
 sys.path.append(str(Path(__file__).parent))
 from extra_types import RGBtype, SceneType
@@ -63,6 +63,8 @@ class Bulb(WrapperBase):
         self.last_accessed = time.time()
 
     def turn_on(self, brightness: Optional[int] = None, rgb: Optional[RGBtype] = None, colortemp: Optional[int] = None):
+        if brightness is not None:
+            brightness = self.clamp_brightness(brightness)
         if rgb is not None:
             builder = PilotBuilder(brightness=brightness, rgb=rgb)
         if colortemp is not None:
@@ -85,9 +87,9 @@ class Bulb(WrapperBase):
         """
         scene_id = scenes.get_id_from_scene_name(scene)
         if brightness is not None:
-            brightness = max(10, min(100, brightness))
+            brightness = self.clamp_brightness(brightness)
         if speed is not None:
-            speed = max(10, min(200, speed))
+            speed = self.clamp_speed(speed)
         asyncio.run(self.light.turn_on(PilotBuilder(scene=scene_id, brightness=brightness, speed=speed)))
 
     async def lerp(self, start_brightness: int, start_temp: int, end_brightness: int, end_temp: int, duration: int):
@@ -100,6 +102,8 @@ class Bulb(WrapperBase):
             end_temp (int): The ending color temperature in Kelvin.
             duration (int): The total time in seconds over which to perform the interpolation.
         """
+        start_brightness = self.clamp_brightness(start_brightness)
+        end_brightness = self.clamp_brightness(end_brightness)
         steps = round(duration / self.TIME_STEP)
         brightness_iter = get_range(start_brightness, end_brightness, steps)
         temp_iter = get_range(start_temp, end_temp, steps)
@@ -145,6 +149,12 @@ class Bulb(WrapperBase):
             self.turn_off()
         else:
             self.turn_on()  
+
+    def clamp_brightness(self, value: int) -> int:
+        return clamp(value, 10, 100)
+
+    def clamp_speed(self, value: int) -> int: 
+        return clamp(value, 10, 200)
   
 
 def get_range(start: int, stop: int, length: int) -> Iterator[int]:
