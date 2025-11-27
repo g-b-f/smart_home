@@ -6,7 +6,7 @@ import yaml
 from pytest_mock import MockerFixture
 from pywizlight import PilotBuilder, PilotParser, wizlight
 
-from bulb_wrapper import Bulb, get_range
+from wrappers.bulb_wrapper import Bulb, get_range
 
 
 @pytest.fixture

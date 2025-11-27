@@ -5,7 +5,7 @@ from utils import get_logger
 TOGGLE = "t"
 
 class WLED:
-    logger = get_logger(__name__, "DEBUG")
+    logger = get_logger(__name__, "INFO")
 
     def __init__(self, ip="http://192.168.1.121"):
         self.url = ip.rstrip('/') + '/json/'

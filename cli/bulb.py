@@ -3,7 +3,7 @@ import asyncio
 import os
 import pywizlight
 
-from bulb_wrapper import Bulb
+from wrappers.bulb_wrapper import Bulb
 
 if os.name == "nt" or True:
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())

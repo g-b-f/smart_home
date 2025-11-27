@@ -1,6 +1,6 @@
 import global_vars as gbl
-from bulb_wrapper import Bulb
-from WLED_wrapper import WLED
+from wrappers.bulb_wrapper import Bulb
+from wrappers.WLED_wrapper import WLED
 from utils import get_logger
 
 logger = get_logger(__name__)
