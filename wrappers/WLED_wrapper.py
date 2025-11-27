@@ -50,6 +50,10 @@ class WLED(WrapperBase):
         self._post("", json_data=kwargs)
 
     @property
+    def config(self) -> dict:
+        return self._get("cfg")
+
+    @property
     def info(self) -> WLEDResponse:
         return cast(WLEDResponse, self._get())
 
