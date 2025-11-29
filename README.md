@@ -3,6 +3,12 @@
 
 ## Todo list
 
+Errors and logging
+
+- Change all loggers to fit basicConfig
+- wrap `Routine.turn_off()` in try/ except
+- make wrappers throw same exceptions
+
 Change temp on switch
 
 - refactor state checking from lines 109-121 in `bulb_wrapper.py` into function 
