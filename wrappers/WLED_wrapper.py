@@ -12,9 +12,8 @@ TOGGLE = "t"
 class WLED(WrapperBase):
     logger = get_logger(__name__, "INFO")
 
-    def __init__(self, ip="http://192.168.1.121", **kwargs):
-        
-        self.url = ip.rstrip('/') + '/json/'
+    def __init__(self, ip="192.168.1.121", **kwargs):
+        self.url = f"http//{ip.rstrip('/')}/json/"
         self._session = requests.Session()
         self._session.headers.update({'Content-Type': 'application/json'})
 

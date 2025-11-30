@@ -1,5 +1,5 @@
 bedroom_light:
-  ip: "192.168.1.110"
+  ip: "192.168.1.107"
   mac: cc408525d286
   type: bulb
   class: wizlight
@@ -11,13 +11,13 @@ tallha_lamp:
   class: wizlight
 
 tallha_big_light:
-  ip: "192.168.1.107"
+  ip: "192.168.1.103"
   mac: cc40852685f6
   type: bulb
   class: wizlight
 
 fairy_lights:
-  ip: "http://192.168.1.121"
+  ip: "192.168.1.121"
   mac: dcda0ca15f34
   type: led_strip
   class: WLED
