@@ -34,6 +34,8 @@ async def sleep():
     logger.info(request_data)
     event = request_data.get("event")
 
+    logger.info("Received sleep event: %s", event)
+
     if event == TRACKING_STARTED:
         await Routine.tracking_start()
         return "OK", 200
@@ -61,19 +63,16 @@ async def main():
     
     logger.info("starting scheduler")
     scheduler.start()
-    logger.info("scheduler started")
+    logger.debug("scheduler started")
     
     try:
         logger.debug("setting up server")
-        bind = "0.0.0.0:5000" # Binds to all interfaces on port 5000
-    
-        logger.debug("setting up hypercorn config")
         config = HypercornConfig()
-        config.bind = [bind]
+        config.bind = ["0.0.0.0:5000"] # Binds to all interfaces on port 5000
         config.accesslog = utils.get_logger("hypercorn.access", level="WARNING")
         config.errorlog = utils.get_logger("hypercorn.error", level="WARNING")
 
-        logger.info("Starting Hypercorn ASGI server at http://%s", bind)
+        logger.info("Starting Hypercorn ASGI server at http://%s", config.bind)
         await serve(app, config)
         logger.debug("finished serving")
     except Exception as e: # noqa: BLE001
