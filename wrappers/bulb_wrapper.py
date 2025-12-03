@@ -5,7 +5,6 @@ import time
 from pathlib import Path
 from typing import Iterator, Optional
 
-import yaml
 from pywizlight import (  # type: ignore[import-untyped]
     PilotBuilder,
     PilotParser,

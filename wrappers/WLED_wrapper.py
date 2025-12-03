@@ -1,7 +1,7 @@
+import asyncio
 from typing import cast
 
 import requests
-import asyncio
 
 from extra_types import RGBtype, WLEDResponse
 from utils import get_logger

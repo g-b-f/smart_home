@@ -1,12 +1,12 @@
 import logging
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
-from extra_types import RGBtype
 
 import astral
 import astral.sun
 
 import global_vars as gbl
+from extra_types import RGBtype
 
 MAX_LOG_SIZE_BYTES = 1024 * 1024 # 1 MB
 

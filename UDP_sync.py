@@ -1,8 +1,8 @@
-import socket
-from utils import get_logger
-
-from dataclasses import dataclass
 import json
+import socket
+from dataclasses import dataclass
+
+from utils import get_logger
 
 logger = get_logger(__name__, "DEBUG")
 
@@ -102,8 +102,8 @@ class WLEDPacket(Packet):
         transition_hi = data[17]
         transition_lo = data[18]
         effect_palette = data[19]
-        
         transition_duration = (transition_hi << 8) | transition_lo
+
         return WLEDPacket(
             _call_num=call_mode,
             brightness=brightness,
@@ -137,4 +137,3 @@ def listen_udp():
 
 if __name__ == "__main__":
     listen_udp()
-

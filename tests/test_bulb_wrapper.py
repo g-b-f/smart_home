@@ -1,4 +1,5 @@
 import asyncio
+import sys
 from pathlib import Path
 
 import pytest
@@ -6,7 +7,6 @@ import yaml
 from pytest_mock import MockerFixture
 from pywizlight import PilotBuilder, PilotParser, wizlight
 
-import sys
 sys.path.append(str(Path(__file__).parent))
 
 from wrappers.bulb_wrapper import Bulb, get_range

@@ -1,12 +1,12 @@
 import math
 from abc import ABCMeta, abstractmethod
-from typing import cast, Optional
 from pathlib import Path
+from typing import Optional, cast
+
 import yaml
 
 from extra_types import RGBtype
 from utils import clamp, get_logger
-
 
 _logger = get_logger(__name__)
 

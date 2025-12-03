@@ -1,5 +1,7 @@
 from pytest import fixture
-from UDP_sync import WLEDPacket, Colour, Effect, Nightlight
+
+from UDP_sync import Colour, Effect, Nightlight, WLEDPacket
+
 
 @fixture
 def mock_packet() -> WLEDPacket:
