@@ -65,8 +65,11 @@ class WLED(WrapperBase):
         self._set(on=True)
     
     async def turn_off(self):
-        self._set(on=False)
-
+        try:
+            self._set(on=False)
+        except Exception as e:
+            self.logger.error("couldn't turn off WLED: %s", e)
+        
     async def toggle(self):
         self._set(on=TOGGLE)
 

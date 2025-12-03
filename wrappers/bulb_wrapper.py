@@ -46,8 +46,11 @@ class Bulb(WrapperBase):
         self.last_accessed = time.time()
 
     async def turn_off(self):
-        await self.light.turn_off()
-        self.last_accessed = time.time()
+        try:
+            await self.light.turn_off()
+            self.last_accessed = time.time()
+        except Exception as e:
+            self.logger.error("couldn't turn off Bulb: %s", e)
 
     async def turn_on(self, brightness: Optional[int] = None, rgb: Optional[RGBtype] = None, colortemp: Optional[int] = None):
         if brightness is not None:
@@ -61,7 +64,10 @@ class Bulb(WrapperBase):
         else:
             builder = PilotBuilder()
         
-        await self.light.turn_on(builder)
+        try:
+            await self.light.turn_on(builder)
+        except Exception as e:
+            self.logger.error("couldn't turn on Bulb: %s", e)
         self.last_accessed = time.time()
 
     async def set_scene(self, scene: SceneType, brightness: Optional[int] = None, speed: Optional[int] = None):
@@ -138,9 +144,11 @@ class Bulb(WrapperBase):
             await self.turn_on()  
 
     def clamp_brightness(self, value: int) -> int:
+        """Clamp brightness value between 10 and 100."""
         return clamp(value, 10, 100)
 
-    def clamp_speed(self, value: int) -> int: 
+    def clamp_speed(self, value: int) -> int:
+        """Clamp speed value between 10 and 200."""
         return clamp(value, 10, 200)
   
 
