@@ -1,5 +1,5 @@
 import asyncio
-from typing import cast
+from typing import cast, Optional
 
 import requests
 
@@ -10,10 +10,15 @@ from wrappers.base import WrapperBase
 TOGGLE = "t"
 
 class WLED(WrapperBase):
+    STRIP_NAME = "fairy_lights"
     logger = get_logger(__name__, "INFO")
 
-    def __init__(self, ip="192.168.1.121", **kwargs):
-        self.url = f"http//{ip.rstrip('/')}/json/"
+    def __init__(self, ip:Optional[str]=None, **kwargs):
+        if ip is None:
+            self.url = self.from_yaml(self.STRIP_NAME).url
+        else:
+            self.url = f"http//{ip.rstrip('/')}/json/"
+
         self._session = requests.Session()
         self._session.headers.update({'Content-Type': 'application/json'})
 
@@ -108,10 +113,6 @@ class WLED(WrapperBase):
             self._set_seg(col=colours)
         else:
             raise ValueError("Colours must be a list of integers or a list of list of integers")
-
-
-
-# print(LedStrip.toggle())
 
 if __name__ == "__main__":
     LedStrip = WLED()
