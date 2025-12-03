@@ -17,7 +17,7 @@ class WLED(WrapperBase):
         if ip is None:
             self.url = self.from_yaml(self.STRIP_NAME).url
         else:
-            self.url = f"http//{ip.rstrip('/')}/json/"
+            self.url = f"http://{ip.rstrip('/')}/json/"
 
         self._session = requests.Session()
         self._session.headers.update({'Content-Type': 'application/json'})
