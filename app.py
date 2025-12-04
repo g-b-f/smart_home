@@ -1,5 +1,6 @@
 import asyncio
 import sys
+from datetime import datetime, time
 
 import flask
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
@@ -20,6 +21,7 @@ ALARM_DISMISSED = "alarm_alert_dismiss"
 BEDTIME_NOTIFICATION = "time_to_bed_alarm_alert"
 
 COLOR_TEMP_SYNC_INTERVAL = 10  # minutes
+WAKE_UP_TIME = time(7,0,0)
 
 app = flask.Flask(__name__)
 
@@ -38,6 +40,14 @@ async def sleep():
 
     if event == TRACKING_STARTED:
         await Routine.tracking_start()
+        return "OK", 200
+
+    elif event == TRACKING_STOPPED:
+        if datetime.now.time() > WAKE_UP_TIME:
+            logger.info(f"greater than {WAKE_UP_TIME}, turning on light")
+            await Routine.wake_up()
+        else:
+            logger.info(f"{event} caught, but {datetime.now.time()} is less than {WAKE_UP_TIME}, so not turning on light")
         return "OK", 200
     
     elif event == ALARM_START:
