@@ -10,7 +10,7 @@ class Routine:
     async def tracking_start():
         """turn off the light"""
         logger.info("Turning off light")
-        await WLED().turn_off()
+        #await WLED().turn_off()
         await Bulb().turn_off()
 
     @staticmethod

@@ -59,7 +59,10 @@ class WLED(WrapperBase):
 
     @property
     def info(self) -> WLEDResponse:
-        return cast(WLEDResponse, self._get())
+        try:
+            return cast(WLEDResponse, self._get())
+        except Exception as e:
+            self.logger.error("couldn't get info")
 
     @property
     async def is_on(self) -> bool:
@@ -75,7 +78,7 @@ class WLED(WrapperBase):
         except Exception as e:
             self.logger.error("couldn't turn off WLED: %s", e)
         
-    async def toggle(self):
+    async def toggle(self): 
         self._set(on=TOGGLE)
 
     def _set_seg(self, **kwargs):
