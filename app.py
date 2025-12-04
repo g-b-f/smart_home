@@ -9,6 +9,7 @@ from hypercorn.config import Config as HypercornConfig
 
 import utils
 from lighting_routines import Routine
+import global_vars as gbl
 
 logger = utils.get_logger(__name__, level="INFO")
 
@@ -21,7 +22,6 @@ ALARM_DISMISSED = "alarm_alert_dismiss"
 BEDTIME_NOTIFICATION = "time_to_bed_alarm_alert"
 
 COLOR_TEMP_SYNC_INTERVAL = 10  # minutes
-WAKE_UP_TIME = time(7,0,0)
 
 app = flask.Flask(__name__)
 
@@ -43,11 +43,11 @@ async def sleep():
         return "OK", 200
 
     elif event == TRACKING_STOPPED:
-        if datetime.now.time() > WAKE_UP_TIME:
-            logger.info(f"greater than {WAKE_UP_TIME}, turning on light")
+        if datetime.now().time() > gbl.WAKE_UP_TIME:
+            logger.info(f"greater than {gbl.WAKE_UP_TIME}, turning on light")
             await Routine.wake_up()
         else:
-            logger.info(f"{event} caught, but {datetime.now.time()} is less than {WAKE_UP_TIME}, so not turning on light")
+            logger.info(f"{event} caught, but {datetime.now.time()} is less than {gbl.WAKE_UP_TIME}, so not turning on light")
         return "OK", 200
     
     elif event == ALARM_START:

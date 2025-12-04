@@ -1,7 +1,7 @@
 from datetime import time
 
 CHILL_START = time(22, 0) # 10:00 PM
-
+WAKE_UP_TIME = time(7, 0) # 7:00 AM
 
 CHILL_COLOURTEMP = 2500
 SUNRISE_COLOURTEMP = 3000
