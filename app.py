@@ -8,7 +8,7 @@ from hypercorn.asyncio import serve
 from hypercorn.config import Config as HypercornConfig
 
 import utils
-from lighting_routines import Routine
+import lighting_routines as Routine
 import global_vars as gbl
 
 logger = utils.get_logger(__name__, level="INFO")

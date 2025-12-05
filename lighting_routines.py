@@ -5,51 +5,46 @@ from wrappers.WLED_wrapper import WLED
 
 logger = get_logger(__name__)
 
-class Routine:
-    @staticmethod
-    async def tracking_start():
-        """turn off the light"""
-        logger.info("Turning off light")
-        await WLED().turn_off()
-        await Bulb().turn_off()
+async def tracking_start():
+    """turn off the light"""
+    logger.info("Turning off light")
+    await WLED().turn_off()
+    await Bulb().turn_off()
 
-    @staticmethod
-    async def bedtime():
-        """set the light to a dim, warm color"""
-        logger.info("bedtime")
-        await Bulb().turn_on(brightness=20, colortemp=gbl.BEDTIME_COLORTEMP)
+async def bedtime():
+    """set the light to a dim, warm color"""
+    logger.info("bedtime")
+    await Bulb().turn_on(brightness=20, colortemp=gbl.BEDTIME_COLORTEMP)
 
-    @staticmethod
-    async def wake_up(total_time=300):
-        """gradually brighten the light over total_time seconds"""
-        logger.info("waking up")
-        
-        await Bulb().turn_on(brightness=100, colortemp=gbl.MAX_COLORTEMP)
-        # await Bulb().lerp(10, BEDTIME_COLORTEMP, 100, MAX_COLORTEMP, total_time)
+async def wake_up(total_time=300):
+    """gradually brighten the light over total_time seconds"""
+    logger.info("waking up")
+    
+    await Bulb().turn_on(brightness=100, colortemp=gbl.MAX_COLORTEMP)
+    # await Bulb().lerp(10, BEDTIME_COLORTEMP, 100, MAX_COLORTEMP, total_time)
 
-    @staticmethod
-    async def sync_colour_temp(desired_temp: int):
-        light = Bulb()
-        state = await light.updateState()
-        if state is None:
-            logger.error("couldn't get state")
-            return
-        if not state.get_state():
-            return
-        brightness = state.get_brightness()
-        temp = state.get_colortemp()
-        if temp is None or brightness is None:
-            logger.error("couldn't get color temp or brightness")
-            return
-        
-        await light.lerp(brightness, temp, brightness, desired_temp, 10)
+async def sync_colour_temp(desired_temp: int):
+    light = Bulb()
+    state = await light.updateState()
+    if state is None:
+        logger.error("couldn't get state")
+        return
+    if not state.get_state():
+        return
+    brightness = state.get_brightness()
+    temp = state.get_colortemp()
+    if temp is None or brightness is None:
+        logger.error("couldn't get color temp or brightness")
+        return
+    
+    await light.lerp(brightness, temp, brightness, desired_temp, 10)
 
-    @staticmethod
-    async def set_temp_on_switch():
-        try:
-            bulb = Bulb() # noqa: F841
-        except Exception: # need more descriptive error
-            return
 
-       # state = await bulb.updateState()
-       # temp = state.get_temperature()
+async def set_temp_on_switch():
+    try:
+        bulb = Bulb() # noqa: F841
+    except Exception: # need more descriptive error
+        return
+
+    # state = await bulb.updateState()
+    # temp = state.get_temperature()
