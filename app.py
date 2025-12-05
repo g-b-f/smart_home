@@ -33,7 +33,7 @@ async def periodic_light_check():
 @app.route("/sleep", methods=["POST"])
 async def sleep():
     request_data = flask.request.get_json() or {}
-    logger.info(request_data)
+    logger.debug(request_data)
     event = request_data.get("event")
     current_time = datetime.now().time()
 
@@ -45,10 +45,10 @@ async def sleep():
 
     elif event == TRACKING_STOPPED:
         if current_time > gbl.WAKE_UP_TIME:
-            logger.info(f"greater than {gbl.WAKE_UP_TIME}, turning on light")
+            logger.debug(f"greater than {gbl.WAKE_UP_TIME}, turning on light")
             await Routine.wake_up()
         else:
-            logger.info(f"{event} caught, but {current_time} is less than {gbl.WAKE_UP_TIME}, so not turning on light")
+            logger.debug(f"{event} caught, but {current_time} is less than {gbl.WAKE_UP_TIME}, so not turning on light")
         return "OK", 200
     
     elif event == ALARM_START:
