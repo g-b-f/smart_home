@@ -17,7 +17,7 @@ tallha_big_light:
   class: wizlight
 
 fairy_lights:
-  ip: "192.168.1.121"
+  ip: "192.168.1.101"
   mac: dcda0ca15f34
   type: led_strip
   class: WLED

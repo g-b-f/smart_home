@@ -35,6 +35,7 @@ async def sleep():
     request_data = flask.request.get_json() or {}
     logger.info(request_data)
     event = request_data.get("event")
+    current_time = datetime.now().time()
 
     logger.info("Received sleep event: %s", event)
 
@@ -43,11 +44,11 @@ async def sleep():
         return "OK", 200
 
     elif event == TRACKING_STOPPED:
-        if datetime.now().time() > gbl.WAKE_UP_TIME:
+        if current_time > gbl.WAKE_UP_TIME:
             logger.info(f"greater than {gbl.WAKE_UP_TIME}, turning on light")
             await Routine.wake_up()
         else:
-            logger.info(f"{event} caught, but {datetime.now.time()} is less than {gbl.WAKE_UP_TIME}, so not turning on light")
+            logger.info(f"{event} caught, but {current_time} is less than {gbl.WAKE_UP_TIME}, so not turning on light")
         return "OK", 200
     
     elif event == ALARM_START:
