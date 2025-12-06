@@ -3,7 +3,7 @@ import sys
 from datetime import datetime, time
 
 import flask
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from apscheduler.schedulers.asyncio import AsyncIOScheduler # type: ignore[import-untyped]
 from hypercorn.asyncio import serve
 from hypercorn.config import Config as HypercornConfig
 

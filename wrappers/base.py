@@ -11,10 +11,7 @@ from utils import clamp, get_logger
 
 class WrapperBase(metaclass=ABCMeta):
 
-    @property
-    @abstractmethod
-    def logger(self):
-        return get_logger(__name__)
+    logger = get_logger(__name__)
     
     @property
     @abstractmethod

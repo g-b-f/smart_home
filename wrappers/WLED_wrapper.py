@@ -3,7 +3,7 @@ from typing import cast, Optional
 
 import requests
 
-from extra_types import RGBtype, WLEDResponse
+from extra_types import RGBtype, WLEDResponse, RGBWtype
 from utils import get_logger, clamp
 from wrappers.base import WrapperBase
 
@@ -40,7 +40,7 @@ class WLED(WrapperBase):
 
     def _request(self, method:str, endpoint="", **kwargs) -> dict:
         if method.lower() not in {"get", "post"}:
-            raise ValueError("Unsupported HTTP method")
+            raise ValueError(f"Unsupported HTTP method '{method}'")
         result = self._session.request(method, self.url + endpoint.lstrip('/'), **kwargs)
         result.raise_for_status()
         return result.json()
@@ -60,11 +60,7 @@ class WLED(WrapperBase):
 
     @property
     def info(self) -> WLEDResponse:
-        try:
-            return cast(WLEDResponse, self._get())
-        except Exception as e:
-            self.logger.error("couldn't get info")
-            return {}
+        return cast(WLEDResponse, self._get())
 
     @property
     async def is_on(self) -> bool:
@@ -73,7 +69,7 @@ class WLED(WrapperBase):
     
     async def _turn_on(self, brightness: Optional[int] = None, rgb: Optional[RGBtype] = None):
         if rgb is not None:
-            self.colour = rgb
+            self.colour = [rgb]
         if brightness is not None:
             self.brightness = brightness
         self._set(on=True)
@@ -105,10 +101,10 @@ class WLED(WrapperBase):
     def set_solid(self, colour: RGBtype | None = None):
         self.set_effect("Solid")
         if colour is not None:
-            self.colour = colour
+            self.colour = [colour]
 
     @property
-    def colour(self) -> list:
+    def colour(self) -> list[RGBtype | RGBWtype]:
         seg = self._get_seg()
         return seg["col"]
     
