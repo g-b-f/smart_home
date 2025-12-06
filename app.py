@@ -48,7 +48,8 @@ async def sleep():
             logger.debug(f"greater than {gbl.WAKE_UP_TIME}, turning on light")
             await Routine.wake_up()
         else:
-            logger.debug(f"{event} caught, but {current_time} is less than {gbl.WAKE_UP_TIME}, so not turning on light")
+            logger.debug(f"less than {gbl.WAKE_UP_TIME}, turning on nightlight")
+            await Routine.nightlight()
         return "OK", 200
     
     elif event == ALARM_START:

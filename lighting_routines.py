@@ -39,6 +39,10 @@ async def sync_colour_temp(desired_temp: int):
     
     await light.lerp(brightness, temp, brightness, desired_temp, 10)
 
+async def nightlight():
+    """set the light to a very dim, warm color"""
+    logger.info("turning on nightlight")
+    # await WLED().turn_on(brightness=10, colortemp=gbl.NIGHT_COLOURTEMP)
 
 async def set_temp_on_switch():
     try:
