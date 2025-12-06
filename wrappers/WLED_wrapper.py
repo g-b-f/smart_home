@@ -4,14 +4,15 @@ from typing import cast, Optional
 import requests
 
 from extra_types import RGBtype, WLEDResponse
-from utils import get_logger
+from utils import get_logger, clamp
 from wrappers.base import WrapperBase
 
 TOGGLE = "t"
 
 class WLED(WrapperBase):
     STRIP_NAME = "fairy_lights"
-    logger = get_logger(__name__, "INFO")
+    logger = get_logger(__name__, "INFO") # type: ignore[reportAssignmentType]
+    OBJECT_TYPE = "WLED" # type: ignore[reportAssignmentType]
 
     def __init__(self, ip:Optional[str]=None, **kwargs):
         if ip is None:
@@ -63,20 +64,22 @@ class WLED(WrapperBase):
             return cast(WLEDResponse, self._get())
         except Exception as e:
             self.logger.error("couldn't get info")
+            return {}
 
     @property
     async def is_on(self) -> bool:
         state = self.info.get("state", {})
         return state.get("on", False)
     
-    async def turn_on(self):
+    async def _turn_on(self, brightness: Optional[int] = None, rgb: Optional[RGBtype] = None):
+        if rgb is not None:
+            self.colour = rgb
+        if brightness is not None:
+            self.brightness = brightness
         self._set(on=True)
     
-    async def turn_off(self):
-        try:
-            self._set(on=False)
-        except Exception as e:
-            self.logger.error("couldn't turn off WLED: %s", e)
+    async def _turn_off(self):
+        self._set(on=False)
         
     async def toggle(self): 
         self._set(on=TOGGLE)
@@ -97,11 +100,12 @@ class WLED(WrapperBase):
         else:
             effect_index = effect
         self._set_seg(fx=effect_index)
+
     
     def set_solid(self, colour: RGBtype | None = None):
         self.set_effect("Solid")
         if colour is not None:
-            self.colour = list(colour)
+            self.colour = colour
 
     @property
     def colour(self) -> list:
@@ -109,13 +113,30 @@ class WLED(WrapperBase):
         return seg["col"]
     
     @colour.setter
-    def colour(self, colours: list[int] | list[list[int]]):
+    def colour(self, colours: RGBtype | list[RGBtype]):
         if all(isinstance(c, int) for c in colours):
             self._set_seg(col=[colours])
         elif all(isinstance(c, list) for c in colours):
             self._set_seg(col=colours)
         else:
             raise ValueError("Colours must be a list of integers or a list of list of integers")
+        
+    @property
+    def brightness(self) -> int:
+        return self.info["state"]["bri"]
+    
+    @brightness.setter
+    def brightness(self, value: int):
+        value = self.clamp_brightness(value)
+        self._set(bri=value)
+
+    def clamp_brightness(self, value: int) -> int:
+        """Clamp brightness value between 0 and 255."""
+        return clamp(value, 0, 255)
+    
+    async def get_info(self):
+        return self.info
+
 
 if __name__ == "__main__":
     LedStrip = WLED()
