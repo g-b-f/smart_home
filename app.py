@@ -84,7 +84,7 @@ async def main():
         config.accesslog = utils.get_logger("hypercorn.access", level="WARNING")
         config.errorlog = utils.get_logger("hypercorn.error", level="WARNING")
 
-        logger.info("Starting Hypercorn ASGI server at http://%s", config.bind)
+        logger.info("Starting Hypercorn ASGI server at http://%s", config.bind[0])
         await serve(app, config)
         logger.debug("finished serving")
     except Exception as e: # noqa: BLE001
