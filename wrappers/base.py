@@ -1,8 +1,9 @@
 import math
+import time
 from abc import ABCMeta, abstractmethod
 from pathlib import Path
 from typing import Any, Optional, cast
-import time
+
 import yaml
 
 from extra_types import RGBtype
@@ -39,7 +40,7 @@ class WrapperBase(metaclass=ABCMeta):
             rgb=self.temp_to_rgb(colortemp)        
         try:
             await self._turn_on(brightness, rgb)
-        except Exception as e:
+        except Exception as e: # noqa: BLE001
             self.logger.error("couldn't turn on %s: %s", self.OBJECT_TYPE, e)
         self.last_accessed = time.time()
         pass
@@ -52,7 +53,7 @@ class WrapperBase(metaclass=ABCMeta):
         try:
             await self._turn_off()
             self.last_accessed = time.time()
-        except Exception as e:
+        except Exception as e: # noqa: BLE001
             self.logger.error("couldn't turn off %s: %s", self.OBJECT_TYPE, e)
 
     @abstractmethod
@@ -73,7 +74,7 @@ class WrapperBase(metaclass=ABCMeta):
         try:
             await self.get_info()
             return True
-        except Exception:
+        except Exception: # noqa: BLE001
             return False
         
     @abstractmethod

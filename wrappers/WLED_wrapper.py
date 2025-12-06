@@ -1,10 +1,10 @@
 import asyncio
-from typing import cast, Optional
+from typing import Optional, cast
 
 import requests
 
-from extra_types import RGBtype, WLEDResponse, RGBWtype
-from utils import get_logger, clamp
+from extra_types import RGBtype, RGBWtype, WLEDResponse
+from utils import clamp, get_logger
 from wrappers.base import WrapperBase
 
 TOGGLE = "t"

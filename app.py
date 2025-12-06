@@ -1,15 +1,17 @@
 import asyncio
 import sys
-from datetime import datetime, time
+from datetime import datetime
 
 import flask
-from apscheduler.schedulers.asyncio import AsyncIOScheduler # type: ignore[import-untyped]
+from apscheduler.schedulers.asyncio import (
+    AsyncIOScheduler,  # type: ignore[import-untyped]
+)
 from hypercorn.asyncio import serve
 from hypercorn.config import Config as HypercornConfig
 
-import utils
-import lighting_routines as Routine
 import global_vars as gbl
+import lighting_routines as Routine
+import utils
 
 logger = utils.get_logger(__name__, level="INFO")
 
@@ -45,10 +47,10 @@ async def sleep():
 
     elif event == TRACKING_STOPPED:
         if current_time > gbl.WAKE_UP_TIME:
-            logger.debug(f"greater than {gbl.WAKE_UP_TIME}, turning on light")
+            logger.debug("greater than %s, turning on light", gbl.WAKE_UP_TIME)
             await Routine.wake_up()
         else:
-            logger.debug(f"less than {gbl.WAKE_UP_TIME}, turning on nightlight")
+            logger.debug("less than %s, turning on nightlight", gbl.WAKE_UP_TIME)
             await Routine.nightlight()
         return "OK", 200
     

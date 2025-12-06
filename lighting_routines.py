@@ -47,7 +47,7 @@ async def nightlight():
 async def set_temp_on_switch():
     try:
         bulb = Bulb() # noqa: F841
-    except Exception: # need more descriptive error
+    except Exception: # noqa: BLE001
         return
 
     # state = await bulb.updateState()

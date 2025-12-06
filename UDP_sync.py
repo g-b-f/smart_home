@@ -120,13 +120,13 @@ def listen_udp():
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     sock.bind(("0.0.0.0", PORT))
     
-    logger.info(f"WLED UDP listener started on port {PORT}")
+    logger.info("WLED UDP listener started on port %d", PORT)
     
     try:
         while True:
             data, addr = sock.recvfrom(BUFFER_SIZE)
             decoded = WLEDPacket.from_packet(data)
-            logger.info(f"Received from {addr[0]}:{addr[1]}")
+            logger.info("Received from %s:%d", addr[0], addr[1])
             logger.info(json.dumps(dict(decoded), indent=2))
                 
     except KeyboardInterrupt:
