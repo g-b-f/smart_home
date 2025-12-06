@@ -27,7 +27,8 @@ class Bulb(WrapperBase):
     TIME_STEP = 0.25 # seconds per linear interpolation step
     BULB_NAME = "bedroom_light"
 
-    logger = get_logger(__name__)
+    OBJECT_TYPE = "bulb" # type: ignore[reportAssignmentType]
+    logger = get_logger(__name__)  # type: ignore[reportAssignmentType]
 
     def __init__(self, ip: Optional[str] = None, port: Optional[int] = None, mac: Optional[str] = None):
         if ip is None or port is None or mac is None:
@@ -45,30 +46,13 @@ class Bulb(WrapperBase):
 
         self.last_accessed = time.time()
 
-    async def turn_off(self):
-        try:
-            await self.light.turn_off()
-            self.last_accessed = time.time()
-        except Exception as e:
-            self.logger.error("couldn't turn off Bulb: %s", e)
+    async def _turn_off(self):
+        await self.light.turn_off()
 
-    async def turn_on(self, brightness: Optional[int] = None, rgb: Optional[RGBtype] = None, colortemp: Optional[int] = None):
+    async def _turn_on(self, brightness: Optional[int] = None, rgb: Optional[RGBtype] = None):
         if brightness is not None:
-            brightness = self.clamp_brightness(brightness)
-        if rgb is not None:
-            builder = PilotBuilder(brightness=brightness, rgb=rgb)
-        if colortemp is not None:
-            if rgb is not None:
-                raise ValueError("cannot provide both rgb and colortemp")
-            builder = PilotBuilder(brightness=brightness, rgb=self.temp_to_rgb(colortemp))
-        else:
-            builder = PilotBuilder()
-        
-        try:
-            await self.light.turn_on(builder)
-        except Exception as e:
-            self.logger.error("couldn't turn on Bulb: %s", e)
-        self.last_accessed = time.time()
+            brightness = self.clamp_brightness(brightness)        
+        await self.light.turn_on(PilotBuilder(brightness=brightness, rgb=rgb))
 
     async def set_scene(self, scene: SceneType, brightness: Optional[int] = None, speed: Optional[int] = None):
         """Set the bulb to a predefined scene.
@@ -124,6 +108,9 @@ class Bulb(WrapperBase):
 
     async def updateState(self) -> Optional[PilotParser]:
         return await self.light.updateState()
+    
+    async def get_info(self):
+        return await self.updateState()
 
     @property
     async def is_on(self) -> bool:

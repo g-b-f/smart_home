@@ -1,16 +1,25 @@
 import math
 from abc import ABCMeta, abstractmethod
 from pathlib import Path
-from typing import Optional, cast
-
+from typing import Any, Optional, cast
+import time
 import yaml
 
 from extra_types import RGBtype
 from utils import clamp, get_logger
 
-_logger = get_logger(__name__)
 
 class WrapperBase(metaclass=ABCMeta):
+
+    @property
+    @abstractmethod
+    def logger(self):
+        return get_logger(__name__)
+    
+    @property
+    @abstractmethod
+    def OBJECT_TYPE(self):
+        pass
 
     def __init__(self, ip: Optional[str] = None, port: Optional[int] = None, mac: Optional[str] = None):
         pass
@@ -26,12 +35,33 @@ class WrapperBase(metaclass=ABCMeta):
                 mac=bulb_info["mac"],
             )
  
-    @abstractmethod
-    async def turn_on(self) -> None:
+    async def turn_on(self, brightness: Optional[int] = None, rgb: Optional[RGBtype] = None, colortemp: Optional[int] = None) -> None:
+        if colortemp is not None:
+            if rgb is not None:
+                raise ValueError("cannot provide both rgb and colortemp")
+            rgb=self.temp_to_rgb(colortemp)        
+        try:
+            await self._turn_on(brightness, rgb)
+        except Exception as e:
+            self.logger.error("couldn't turn on %s: %s", self.OBJECT_TYPE, e)
+        self.last_accessed = time.time()
         pass
+
     @abstractmethod
+    async def _turn_on(self, brightness: Optional[int], rgb: Optional[RGBtype]) -> None:
+        pass
+
     async def turn_off(self) -> None:
+        try:
+            await self._turn_off()
+            self.last_accessed = time.time()
+        except Exception as e:
+            self.logger.error("couldn't turn off %s: %s", self.OBJECT_TYPE, e)
+
+    @abstractmethod
+    async def _turn_off(self) -> None:
         pass
+    
     @abstractmethod
     async def toggle(self) -> None:
         pass
@@ -41,14 +71,27 @@ class WrapperBase(metaclass=ABCMeta):
     async def is_on(self) -> bool:
         pass
 
-    @staticmethod
-    def temp_to_rgb(temp: int|float) -> RGBtype:
+    @property
+    async def is_connected(self):
+        try:
+            await self.get_info()
+            return True
+        except Exception:
+            return False
+        
+    @abstractmethod
+    async def get_info(self) -> Any:
+        pass
+        
+
+    @classmethod
+    def temp_to_rgb(cls, temp: int|float) -> RGBtype:
         """Convert color temperature in Kelvin to RGB values.
 
         Algorithm from Tanner Helland (http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/)
         """
         if temp < 1000 or temp > 40000:
-            _logger.info("Color temperature should be between 1000 and 40000 Kelvin, got %d. " \
+            cls.logger.info("Color temperature should be between 1000 and 40000 Kelvin, got %d. " \
             "You might get some weird results", temp)
         
         temp = cast(float, temp / 100)
