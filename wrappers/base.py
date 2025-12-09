@@ -2,7 +2,7 @@ import math
 import time
 from abc import ABCMeta, abstractmethod
 from pathlib import Path
-from typing import Any, Optional, cast
+from typing import Optional, cast
 
 import yaml
 

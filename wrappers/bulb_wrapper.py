@@ -11,7 +11,9 @@ from pywizlight import (  # type: ignore[import-untyped]
     scenes,
     wizlight,
 )
-from pywizlight.exceptions import WizLightConnectionError  # type: ignore[import-untyped]
+from pywizlight.exceptions import (
+    WizLightConnectionError,  # type: ignore[import-untyped]
+)
 
 from utils import clamp, get_logger
 
