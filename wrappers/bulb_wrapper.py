@@ -11,6 +11,7 @@ from pywizlight import (  # type: ignore[import-untyped]
     scenes,
     wizlight,
 )
+from pywizlight.exceptions import WizLightConnectionError  # type: ignore[import-untyped]
 
 from utils import clamp, get_logger
 
@@ -111,6 +112,14 @@ class Bulb(WrapperBase):
     
     async def get_info(self):
         return await self.updateState()
+    
+    @property
+    async def is_connected(self) -> bool:
+        try:
+            await self.get_info()
+            return True
+        except WizLightConnectionError:
+            return False
 
     @property
     async def is_on(self) -> bool:

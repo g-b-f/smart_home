@@ -70,17 +70,10 @@ class WrapperBase(metaclass=ABCMeta):
         pass
 
     @property
-    async def is_connected(self):
-        try:
-            await self.get_info()
-            return True
-        except Exception: # noqa: BLE001
-            return False
-        
     @abstractmethod
-    async def get_info(self) -> Any:
+    async def is_connected(self) -> bool:
         pass
-        
+
 
     @classmethod
     def temp_to_rgb(cls, temp: int|float) -> RGBtype:

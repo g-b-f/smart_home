@@ -60,7 +60,7 @@ class WLED(WrapperBase):
 
     @property
     def info(self) -> WLEDResponse:
-        return cast(WLEDResponse, self._get())
+        return self._get() # type: ignore[return-value]
 
     @property
     async def is_on(self) -> bool:
@@ -129,9 +129,14 @@ class WLED(WrapperBase):
     def clamp_brightness(self, value: int) -> int:
         """Clamp brightness value between 0 and 255."""
         return clamp(value, 0, 255)
-    
-    async def get_info(self):
-        return self.info
+        
+    @property
+    async def is_connected(self) -> bool:
+        try:
+            self.info
+            return True
+        except requests.exceptions.ConnectionError:
+            return False
 
 
 if __name__ == "__main__":
