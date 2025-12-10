@@ -12,7 +12,7 @@ async def tracking_start():
     await Bulb().turn_off()
 
 async def bedtime():
-    """set the light to a dim, warm color"""
+    """set the light to a dim, warm colour"""
     logger.info("bedtime")
     await Bulb().turn_on(brightness=20, colortemp=gbl.BEDTIME_COLORTEMP)
 
@@ -34,15 +34,21 @@ async def sync_colour_temp(desired_temp: int):
     brightness = state.get_brightness()
     temp = state.get_colortemp()
     if temp is None or brightness is None:
-        logger.error("couldn't get color temp or brightness")
+        logger.error("couldn't get colour temp or brightness")
         return
     
     await light.lerp(brightness, temp, brightness, desired_temp, 10)
 
 async def nightlight():
-    """set the light to a very dim, warm color"""
+    """set the light to a very dim, warm colour"""
     logger.info("turning on nightlight")
     await WLED().turn_on(brightness=5, rgb=(255,0,0))
+
+async def reading_light():
+    """set the light to a fairly dim, warm colour"""
+    logger.info("turning on reading light")
+    await Bulb().turn_on(brightness=10, rgb=(255,0,0))
+    await WLED().turn_on(brightness=23, rgb=(255,0,0))
 
 async def set_temp_on_switch():
     try:
