@@ -13,7 +13,7 @@ import global_vars as gbl
 import lighting_routines as Routine
 import utils
 
-logger = utils.get_logger(__name__, level="INFO")
+logger = utils.get_logger(__name__, level="DEBUG")
 
 # https://sleep.urbandroid.org/docs/services/automation.html#events
 TRACKING_STARTED = "sleep_tracking_started"
@@ -24,6 +24,8 @@ ALARM_DISMISSED = "alarm_alert_dismiss"
 BEDTIME_NOTIFICATION = "time_to_bed_alarm_alert"
 
 COLOR_TEMP_SYNC_INTERVAL = 10  # minutes
+I_HAVE_COMPANY = False
+
 
 app = flask.Flask(__name__)
 
@@ -47,10 +49,18 @@ async def sleep():
 
     elif event == TRACKING_STOPPED:
         if current_time > gbl.WAKE_UP_TIME:
-            logger.debug("greater than %s, turning on light", gbl.WAKE_UP_TIME)
-            await Routine.wake_up()
+            logger.debug(
+                    "%s is greater than %s, turning on light",
+                     current_time, gbl.WAKE_UP_TIME
+                     )
+            if not I_HAVE_COMPANY:
+                await Routine.wake_up()
         else:
-            logger.debug("less than %s, turning on nightlight", gbl.WAKE_UP_TIME)
+            logger.debug(
+                    "%s is less than %s, turning on nightlight",
+                    current_time, gbl.WAKE_UP_TIME
+                    )
+
             await Routine.nightlight()
         return "OK", 200
     

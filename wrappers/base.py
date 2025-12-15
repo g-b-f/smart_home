@@ -20,6 +20,8 @@ class WrapperBase(metaclass=ABCMeta):
         pass
 
     def __init__(self, ip: Optional[str] = None, port: Optional[int] = None, mac: Optional[str] = None):
+        if not self.is_connected:
+            logger.warning("couldn't connect to %s", self.OBJECT_TYPE
         pass
 
     @classmethod

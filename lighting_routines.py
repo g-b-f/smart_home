@@ -8,8 +8,9 @@ logger = get_logger(__name__)
 async def tracking_start():
     """turn off the light"""
     logger.info("Turning off light")
-    await WLED().turn_off()
-    await Bulb().turn_off()
+    if not I_HAVE_COMPANY:
+        await WLED().turn_off()
+        await Bulb().turn_off()
 
 async def bedtime():
     """set the light to a dim, warm colour"""
@@ -43,6 +44,7 @@ async def nightlight():
     """set the light to a very dim, warm colour"""
     logger.info("turning on nightlight")
     await WLED().turn_on(brightness=5, rgb=(255,0,0))
+    await Bulb().turn_on(brightness=5, rgb=(255,0,0))
 
 async def reading_light():
     """set the light to a fairly dim, warm colour"""
