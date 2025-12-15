@@ -17,9 +17,16 @@ Change temp on switch
 - figure out something involving globals
 
 Fail gracefully wuhen unable to connect
+
 - maybe use annotations on functions
-- check for `.is_connected()|
+- check for `.is_connected()`
 - emit `logger.warning()` upon failure
 - somehow comvert class into ineffective version if unable to connect
   - replace `__get_atribute__`?
+
+Add tests
+
+- each of the sleep POST requests should call the appropriate routine
+- routines should call the appropriate methods
+- control flow continues when one of the objects is unable to connect
 
