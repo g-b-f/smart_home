@@ -14,6 +14,7 @@ import lighting_routines as Routine
 import utils
 
 logger = utils.get_logger(__name__, level="DEBUG")
+logger.debug("beginning smart home app")
 
 # https://sleep.urbandroid.org/docs/services/automation.html#events
 TRACKING_STARTED = "sleep_tracking_started"
