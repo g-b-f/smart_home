@@ -15,3 +15,11 @@ Change temp on switch
 - use that function in `set_temp_on_switch()` in `lighting_routines.py`
 - if light is reachable but wasn't before, change temp using `utils.get_colourtemp_for_time()`
 - figure out something involving globals
+
+Fail gracefully wuhen unable to connect
+- maybe use annotations on functions
+- check for `.is_connected()|
+- emit `logger.warning()` upon failure
+- somehow comvert class into ineffective version if unable to connect
+  - replace `__get_atribute__`?
+
