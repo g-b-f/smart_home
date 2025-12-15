@@ -3,13 +3,15 @@ from utils import get_logger
 from wrappers.bulb_wrapper import Bulb
 from wrappers.WLED_wrapper import WLED
 
+I_HAVE_COMPANY = False
+
 logger = get_logger(__name__)
 
 async def tracking_start():
     """turn off the light"""
     logger.info("Turning off light")
     if not I_HAVE_COMPANY:
-        await WLED().turn_off()
+        # await WLED().turn_off()
         await Bulb().turn_off()
 
 async def bedtime():
