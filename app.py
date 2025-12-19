@@ -73,7 +73,7 @@ async def sleep():
         await Routine.bedtime()
         return "OK", 200
     elif event ==  ALARM_SNOOZED:
-       await Routine.snooze():
+       await Routine.snooze()
        return "OK", 200
     else:
         logger.debug("unknown event: %s", event)
