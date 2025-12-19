@@ -24,7 +24,7 @@ ALARM_SNOOZED = "alarm_snooze_clicked"
 ALARM_DISMISSED = "alarm_alert_dismiss"
 BEDTIME_NOTIFICATION = "time_to_bed_alarm_alert"
 
-COLOR_TEMP_SYNC_INTERVAL = 10  # minutes
+COLOR_TEMP_SYNC_INTERVAL = 60  # minutes
 I_HAVE_COMPANY = False
 
 
@@ -72,7 +72,9 @@ async def sleep():
     elif event == BEDTIME_NOTIFICATION:
         await Routine.bedtime()
         return "OK", 200
-    
+   elif event ==  ALARM_SNOOZED:
+       await Routine.snooze():
+       return "OK", 200
     else:
         logger.debug("unknown event: %s", event)
         return "Unknown event", 200

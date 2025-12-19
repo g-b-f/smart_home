@@ -10,10 +10,15 @@ logger = get_logger(__name__)
 async def tracking_start():
     """turn off the light"""
     logger.info("Turning off light")
-    if not I_HAVE_COMPANY:
         # await WLED().turn_off()
         await Bulb().turn_off()
 
+async def snooze():
+    """snooze alarm"""
+    if not I_HAVE_COMPANY:
+        logger.info("snoozing")
+        await Bulb().turn_on(brightness=50, colortemp=gbl.MAX_COLORTEMP)
+    
 async def bedtime():
     """set the light to a dim, warm colour"""
     logger.info("bedtime")
@@ -21,9 +26,9 @@ async def bedtime():
 
 async def wake_up(total_time=300):
     """gradually brighten the light over total_time seconds"""
-    logger.info("waking up")
-    
-    await Bulb().turn_on(brightness=100, colortemp=gbl.MAX_COLORTEMP)
+    if not I_HAVE_COMPANY:
+        logger.info("waking up")
+        await Bulb().turn_on(brightness=100, colortemp=gbl.MAX_COLORTEMP)
     # await Bulb().lerp(10, BEDTIME_COLORTEMP, 100, MAX_COLORTEMP, total_time)
 
 async def sync_colour_temp(desired_temp: int):
