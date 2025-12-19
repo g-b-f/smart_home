@@ -72,7 +72,7 @@ async def sleep():
     elif event == BEDTIME_NOTIFICATION:
         await Routine.bedtime()
         return "OK", 200
-   elif event ==  ALARM_SNOOZED:
+    elif event ==  ALARM_SNOOZED:
        await Routine.snooze():
        return "OK", 200
     else:
