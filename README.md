@@ -21,7 +21,7 @@ Fail gracefully wuhen unable to connect
 - maybe use annotations on functions
 - check for `.is_connected()`
 - emit `logger.warning()` upon failure
-- somehow comvert class into ineffective version if unable to connect
+- somehow convert class into ineffective version if unable to connect
   - replace `__get_atribute__`?
 
 Add tests
@@ -30,3 +30,9 @@ Add tests
 - routines should call the appropriate methods
 - control flow continues when one of the objects is unable to connect
 
+Refactor routines
+
+- dictionary of methods
+- or of objects/ classes
+- if objects then could call other functions as appropriate
+- regardless, as much stuff as possible should be abstracted away into config etc
