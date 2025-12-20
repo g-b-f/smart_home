@@ -9,6 +9,7 @@ sys.path.append(str(Path(__file__).parent))
 
 from wrappers.base import FailedConnectionError, ignore_failed_connection
 
+
 def test_ignore_exception_annotation(mocker: MockerFixture):
     class TestClass:
         logger = mocker.Mock()

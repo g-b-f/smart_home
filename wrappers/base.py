@@ -9,6 +9,7 @@ import yaml
 from extra_types import RGBtype
 from utils import clamp, get_logger
 
+
 class FailedConnectionError(Exception):
     """Exception raised when a connection to a device fails."""
     pass

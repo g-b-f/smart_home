@@ -1,9 +1,9 @@
+from datetime import datetime
+
 import global_vars as gbl
 from utils import get_logger
 from wrappers.bulb_wrapper import Bulb
 from wrappers.WLED_wrapper import WLED
-
-from datetime import datetime
 
 logger = get_logger(__name__)
 
