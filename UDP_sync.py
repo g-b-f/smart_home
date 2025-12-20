@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 from utils import get_logger
 
-logger = get_logger(__name__, "DEBUG")
+logger = get_logger(__name__)
 
 PORT = 21324
 BUFFER_SIZE = 2**12
