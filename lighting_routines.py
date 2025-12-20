@@ -3,7 +3,7 @@ from utils import get_logger
 from wrappers.bulb_wrapper import Bulb
 from wrappers.WLED_wrapper import WLED
 
-I_HAVE_COMPANY = False
+from datetime import datetime
 
 logger = get_logger(__name__)
 
@@ -15,7 +15,7 @@ async def tracking_start():
 
 async def snooze():
     """snooze alarm"""
-    if not I_HAVE_COMPANY:
+    if not gbl.IS_VISITOR_PRESENT:
         logger.info("snoozing")
         await Bulb().turn_on(brightness=50, colortemp=gbl.MAX_COLORTEMP)
     
@@ -26,10 +26,32 @@ async def bedtime():
 
 async def wake_up(total_time=300):
     """gradually brighten the light over total_time seconds"""
-    if not I_HAVE_COMPANY:
+    if not gbl.IS_VISITOR_PRESENT:
         logger.info("waking up")
         await Bulb().turn_on(brightness=100, colortemp=gbl.MAX_COLORTEMP)
     # await Bulb().lerp(10, BEDTIME_COLORTEMP, 100, MAX_COLORTEMP, total_time)
+
+async def tracking_stopped():
+    current_time = datetime.now().time()
+    """called when sleep tracking stops"""
+    if gbl.IS_VISITOR_PRESENT:
+        logger.info("visitor present, not turning on light")
+        return "OK", 200
+
+    if current_time > gbl.WAKE_UP_TIME:
+        logger.debug(
+                "%s is greater than %s, turning on light",
+                current_time, gbl.WAKE_UP_TIME
+                )
+        await wake_up()
+    else:
+        logger.debug(
+                "%s is less than %s, turning on nightlight",
+                current_time, gbl.WAKE_UP_TIME
+                )
+        
+
+        await nightlight()
 
 async def sync_colour_temp(desired_temp: int):
     light = Bulb()
