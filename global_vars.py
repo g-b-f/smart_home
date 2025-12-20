@@ -1,4 +1,5 @@
 from datetime import time
+IS_VISITOR_PRESENT = False # turns off routines related to waking up
 
 CHILL_START = time(22, 0) # 10:00 PM
 WAKE_UP_TIME = time(7, 0) # 7:00 AM

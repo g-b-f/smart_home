@@ -25,8 +25,6 @@ ALARM_DISMISSED = "alarm_alert_dismiss"
 BEDTIME_NOTIFICATION = "time_to_bed_alarm_alert"
 
 COLOR_TEMP_SYNC_INTERVAL = 60  # minutes
-I_HAVE_COMPANY = False
-
 
 app = flask.Flask(__name__)
 
@@ -54,7 +52,7 @@ async def sleep():
                     "%s is greater than %s, turning on light",
                      current_time, gbl.WAKE_UP_TIME
                      )
-            if not I_HAVE_COMPANY:
+            if not gbl.IS_VISITOR_PRESENT:
                 await Routine.wake_up()
         else:
             logger.debug(
