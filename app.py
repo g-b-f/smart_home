@@ -29,6 +29,14 @@ COLOR_TEMP_SYNC_INTERVAL = 60  # minutes
 
 app = flask.Flask(__name__)
 
+event_mappings = {
+    TRACKING_STARTED: Routine.tracking_start,
+    TRACKING_STOPPED: Routine.tracking_stopped,
+    ALARM_START: Routine.wake_up,
+    BEDTIME_NOTIFICATION: Routine.bedtime,
+    ALARM_SNOOZED: Routine.snooze,
+}
+
 # point to http://192.168.1.117:5000/sleep
 @app.route("/sleep", methods=["POST"])
 async def sleep():
@@ -38,29 +46,12 @@ async def sleep():
 
     logger.info("Received sleep event: %s", event)
 
-    if event == TRACKING_STARTED:
-        await Routine.tracking_start()
+    if event in event_mappings:
+        await event_mappings[event]()
         return "OK", 200
-
-    elif event == TRACKING_STOPPED:
-        await Routine.tracking_stopped()
-        return "OK", 200
-    
-    elif event == ALARM_START:
-        await Routine.wake_up()
-        return "OK", 200
-    
-    elif event == BEDTIME_NOTIFICATION:
-        await Routine.bedtime()
-        return "OK", 200
-    
-    elif event ==  ALARM_SNOOZED:
-       await Routine.snooze()
-       return "OK", 200
-    
     else:
         logger.debug("unknown event: %s", event)
-        return "Unknown event", 200
+        return "Unknown event", 501 # 501: Not Implemented
 
 @app.route("/test", methods=["POST"])
 async def test():
