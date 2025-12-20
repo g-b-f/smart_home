@@ -9,7 +9,6 @@ from apscheduler.schedulers.asyncio import (
 from hypercorn.asyncio import serve
 from hypercorn.config import Config as HypercornConfig
 
-import global_vars as gbl
 import lighting_routines as Routine
 from periodic_tasks import periodic_light_check
 import utils
@@ -33,8 +32,9 @@ event_mappings = {
     TRACKING_STARTED: Routine.tracking_start,
     TRACKING_STOPPED: Routine.tracking_stopped,
     ALARM_START: Routine.wake_up,
-    BEDTIME_NOTIFICATION: Routine.bedtime,
     ALARM_SNOOZED: Routine.snooze,
+    ALARM_DISMISSED: Routine.wake_up,
+    BEDTIME_NOTIFICATION: Routine.bedtime,
 }
 
 # point to http://192.168.1.117:5000/sleep
