@@ -1,4 +1,6 @@
 from datetime import time
+
+LOG_LEVEL = "INFO"
 IS_VISITOR_PRESENT = False # turns off routines related to waking up
 
 CHILL_START = time(22, 0) # 10:00 PM

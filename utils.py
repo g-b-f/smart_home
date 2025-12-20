@@ -10,7 +10,9 @@ from extra_types import RGBtype
 
 MAX_LOG_SIZE_BYTES = 1024 * 1024 # 1 MB
 
-def get_logger(name: str, level="INFO") -> logging.Logger:
+def get_logger(name: str, level=None) -> logging.Logger:
+    if level is None:
+        level = gbl.LOG_LEVEL
     if level.upper() not in logging._nameToLevel:
         raise ValueError(f"Invalid log level: {level}")
     level_int = logging._nameToLevel[level.upper()]
