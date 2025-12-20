@@ -11,6 +11,7 @@ from hypercorn.config import Config as HypercornConfig
 
 import global_vars as gbl
 import lighting_routines as Routine
+from periodic_tasks import periodic_light_check
 import utils
 
 logger = utils.get_logger(__name__, level="DEBUG")
@@ -27,10 +28,6 @@ BEDTIME_NOTIFICATION = "time_to_bed_alarm_alert"
 COLOR_TEMP_SYNC_INTERVAL = 60  # minutes
 
 app = flask.Flask(__name__)
-
-async def periodic_light_check():
-    zen = utils.get_zenith()
-    logger.debug("Current zenith: %f", zen)
 
 # point to http://192.168.1.117:5000/sleep
 @app.route("/sleep", methods=["POST"])
