@@ -9,9 +9,28 @@ import yaml
 from extra_types import RGBtype
 from utils import clamp, get_logger
 
+class FailedConnectionError(Exception):
+    """Exception raised when a connection to a device fails."""
+    pass
+
+def _ignore_exception(func, ExceptionType: type[Exception]):
+    """Decorator to ignore an arbitrary exception in an async method."""
+    async def wrapper(self, *args, **kwargs):
+        try:
+            return await func(self, *args, **kwargs)
+        except ExceptionType:
+            self.logger.warning("ignored %s in %s", ExceptionType.__name__, func.__name__)
+            pass
+    return wrapper
+
+    
+def ignore_failed_connection(func):
+    """Decorator to ignore FailedConnectionError in an async method."""
+    return _ignore_exception(func, FailedConnectionError)
+
+
 
 class WrapperBase(metaclass=ABCMeta):
-
     logger = get_logger(__name__)
     
     @property
@@ -21,7 +40,7 @@ class WrapperBase(metaclass=ABCMeta):
 
     def __init__(self, ip: Optional[str] = None, port: Optional[int] = None, mac: Optional[str] = None):
         if not self.is_connected:
-            logger.warning("couldn't connect to %s", self.OBJECT_TYPE)
+            self.logger.warning("couldn't connect to %s", self.OBJECT_TYPE)
         pass
 
     @classmethod
@@ -34,7 +53,8 @@ class WrapperBase(metaclass=ABCMeta):
                 port=bulb_info.get("port", 38899),
                 mac=bulb_info["mac"],
             )
- 
+
+    @ignore_failed_connection
     async def turn_on(self, brightness: Optional[int] = None, rgb: Optional[RGBtype] = None, colortemp: Optional[int] = None) -> None:
         if colortemp is not None:
             if rgb is not None:
