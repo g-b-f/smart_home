@@ -1,5 +1,7 @@
 import asyncio
 import sys
+import argparse
+
 
 import flask
 from apscheduler.schedulers.asyncio import (
@@ -11,6 +13,7 @@ from hypercorn.config import Config as HypercornConfig
 import lighting_routines as Routine
 import utils
 from periodic_tasks import periodic_light_check
+import global_vars as gbl
 
 logger = utils.get_logger(__name__)
 logger.debug("beginning smart home app")
@@ -57,7 +60,7 @@ async def test():
     logger.info("test endpoint hit with args:\n%s", flask.request.get_json() or {})
     return "OK", 200
 
-async def main():
+async def start():
     scheduler = AsyncIOScheduler(timezone="Europe/London")
     scheduler.add_job(periodic_light_check, 'interval', minutes=COLOR_TEMP_SYNC_INTERVAL)
     
@@ -81,10 +84,28 @@ async def main():
         logger.info("Shutting down scheduler")
         scheduler.shutdown()
 
-if __name__ == "__main__":
+
+def get_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Smart Home Lighting Controller")
+    parser.add_argument(
+        "--visitor",
+        action="store_true",
+        help="Indicate that a visitor is present, disabling wake-up routines.",
+    )
+    return parser.parse_args()
+
+
+def main():
     if sys.platform == "win32":
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     try:
-        asyncio.run(main())
+        # args = get_args()
+        # if args.visitor:
+        #     gbl.IS_VISITOR_PRESENT = True
+        #     logger.info("Visitor mode enabled: Wake-up routines are disabled.")
+        asyncio.run(start())
     except KeyboardInterrupt:
         logger.info("Application shut down by user.")
+
+if __name__ == "__main__":
+    main()

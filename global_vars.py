@@ -1,5 +1,8 @@
 from datetime import time
 
+USE_BULB = True
+USE_WLED = False
+
 LOG_LEVEL = "INFO"
 IS_VISITOR_PRESENT = False # turns off routines related to waking up
 
