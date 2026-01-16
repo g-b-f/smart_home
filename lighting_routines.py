@@ -74,16 +74,24 @@ async def nightlight():
     logger.info("turning on nightlight")
     if gbl.USE_WLED:
         await WLED().turn_on(brightness=5, rgb=(255,0,0))
+    else:
+        logger.debug("not turning on WLED due to global settimg")
     if gbl.USE_BULB:
         await Bulb().turn_on(brightness=5, rgb=(255,0,0))
+    else:
+        logger.debug("not turning on bulb due to global settimg")
 
 async def reading_light():
     """set the light to a fairly dim, warm colour"""
     logger.info("turning on reading light")
     if gbl.USE_BULB:
         await Bulb().turn_on(brightness=10, rgb=(255,0,0))
+    else:
+        logger.debug("not turning on bulb due to global settimg")
     if gbl.USE_WLED:
         await WLED().turn_on(brightness=23, rgb=(255,0,0))
+    else:
+        logger.debug("not turning on WLED due to global settimg")
 
 async def set_temp_on_switch():
     try:
