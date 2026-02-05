@@ -1,14 +1,48 @@
 import logging
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
+from typing import MutableMapping
+import json
 
-import astral
+
 import astral.sun
 
 import global_vars as gbl
 from extra_types import RGBtype
 
 MAX_LOG_SIZE_BYTES = 1024 * 1024 # 1 MB
+
+class JsonWrapper(MutableMapping):
+    def __init__(self, file: Path):
+        self.file = file
+    
+    @property
+    def data(self):
+        return json.loads(self.file.read_text())
+
+    @data.setter
+    def data(self, d):
+        self.file.write_text(json.dumps(d))
+
+    def __setattr__(self, key, val):
+        d = self.data
+        d[key] = val
+        self.data = d
+    
+    def __getattr__(self, key):
+        return self.data[key]
+
+    def __contains__(self, key):
+        return key in self.data
+    
+    def __iter__(self):
+        yield from self.data.items()
+
+    def __len__(self):
+        return len(self.data)
+
+mutable_globals = JsonWrapper(Path(__file__).parent / "mutable_globals.json")
+
 
 def get_logger(name: str, level=None) -> logging.Logger:
     if level is None:
