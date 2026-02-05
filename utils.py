@@ -1,7 +1,6 @@
 import logging
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
-from typing import MutableMapping
 import json
 
 
@@ -12,7 +11,7 @@ from extra_types import RGBtype
 
 MAX_LOG_SIZE_BYTES = 1024 * 1024 # 1 MB
 
-class JsonWrapper(MutableMapping):
+class JsonWrapper:
     def __init__(self, file: Path):
         self.file = file
     
