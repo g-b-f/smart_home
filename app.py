@@ -99,10 +99,12 @@ def main():
     if sys.platform == "win32":
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     try:
-        # args = get_args()
-        # if args.visitor:
-        #     gbl.IS_VISITOR_PRESENT = True
-        #     logger.info("Visitor mode enabled: Wake-up routines are disabled.")
+        args = get_args()
+        if args.visitor:
+            utils.mutable_globals["visitor_present"] = True
+            logger.info("Visitor mode enabled: Wake-up routines are disabled.")
+        else:
+            utils.mutable_globals["visitor_present"] = False
         asyncio.run(start())
     except KeyboardInterrupt:
         logger.info("Application shut down by user.")

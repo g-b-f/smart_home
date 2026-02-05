@@ -10,12 +10,15 @@ logger = get_logger(__name__)
 async def tracking_start():
     """turn off the light"""
     logger.info("Turning off light")
-    # await WLED().turn_off()
-    await Bulb().turn_off()
+    if gbl.utils.mutable_globals["use_wled"]:
+        await WLED().turn_off()
+
+    if gbl.utils.mutable_globals["use_bulb"]:
+        await Bulb().turn_off()
 
 async def snooze():
     """snooze alarm"""
-    if not gbl.IS_VISITOR_PRESENT:
+    if not utils.mutable_globals["visitor_present"]:
         logger.info("snoozing")
         await Bulb().turn_on(brightness=50, colortemp=gbl.MAX_COLORTEMP)
     
@@ -26,7 +29,7 @@ async def bedtime():
 
 async def wake_up(total_time=300):
     """gradually brighten the light over total_time seconds"""
-    if not gbl.IS_VISITOR_PRESENT:
+    if not utils.mutable_globals["visitor_present"]:
         logger.info("waking up")
         await Bulb().turn_on(brightness=100, colortemp=gbl.MAX_COLORTEMP)
     # await Bulb().lerp(10, BEDTIME_COLORTEMP, 100, MAX_COLORTEMP, total_time)
@@ -34,7 +37,7 @@ async def wake_up(total_time=300):
 async def tracking_stopped():
     current_time = datetime.now().time()
     """called when sleep tracking stops"""
-    if gbl.IS_VISITOR_PRESENT:
+    if utils.mutable_globals["visitor_present"]:
         logger.info("visitor present, not turning on light")
         return "OK", 200
 
@@ -72,11 +75,11 @@ async def sync_colour_temp(desired_temp: int):
 async def nightlight():
     """set the light to a very dim, warm colour"""
     logger.info("turning on nightlight")
-    if gbl.USE_WLED:
+    if gbl.utils.mutable_globals["use_wled"]:
         await WLED().turn_on(brightness=5, rgb=(255,0,0))
     else:
-        logger.debug("not turning on WLED due to global settimg")
-    if gbl.USE_BULB:
+        logger.debug("not turning on WLED due to global setting")
+    if gbl.utils.mutable_globals["use_bulb"]:
         await Bulb().turn_on(brightness=5, rgb=(255,0,0))
     else:
         logger.debug("not turning on bulb due to global settimg")
