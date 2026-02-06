@@ -15,7 +15,7 @@ from pywizlight.exceptions import (
     WizLightConnectionError,  # type: ignore[import-untyped]
 )
 
-from utils import clamp, get_logger
+from utils import clamp, get_logger, mutable_globals
 
 sys.path.append(str(Path(__file__).parent))
 from extra_types import RGBtype, SceneType
@@ -50,9 +50,16 @@ class Bulb(WrapperBase):
         self.last_accessed = time.time()
 
     async def _turn_off(self):
+        if not mutable_globals.use_bulb:
+            self.logger.debug("not turning off bulb due to global setting")
+            return
+
         await self.light.turn_off()
 
     async def _turn_on(self, brightness: Optional[int] = None, rgb: Optional[RGBtype] = None):
+        if not mutable_globals.use_bulb:
+            self.logger.debug("not turning on bulb due to global setting")
+            return
         if brightness is not None:
             brightness = self.clamp_brightness(brightness)        
         await self.light.turn_on(PilotBuilder(brightness=brightness, rgb=rgb))
@@ -65,6 +72,10 @@ class Bulb(WrapperBase):
             brightness (int, optional): Brightness (10-100). Defaults to None.
             speed (int, optional): Speed of effect (10-200). Defaults to None.
         """
+        if not mutable_globals.use_bulb:
+            self.logger.debug("not turning on bulb due to global setting")
+            return
+
         scene_id = scenes.get_id_from_scene_name(scene)
         if brightness is not None:
             brightness = self.clamp_brightness(brightness)

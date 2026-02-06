@@ -4,7 +4,7 @@ from typing import Optional
 import requests
 
 from extra_types import RGBtype, RGBWtype, WLEDResponse
-from utils import clamp, get_logger
+from utils import clamp, get_logger, mutable_globals
 from wrappers.base import WrapperBase
 
 TOGGLE = "t"
@@ -68,6 +68,10 @@ class WLED(WrapperBase):
         return state.get("on", False)
     
     async def _turn_on(self, brightness: Optional[int] = None, rgb: Optional[RGBtype] = None):
+        if not mutable_globals.use_wled:
+            self.logger.debug("not turning on WLED due to global setting")
+            return
+        
         if rgb is not None:
             self.colour = [rgb]
         if brightness is not None:
@@ -75,9 +79,17 @@ class WLED(WrapperBase):
         self._set(on=True)
     
     async def _turn_off(self):
+        if not mutable_globals.use_wled:
+            self.logger.debug("not turning off WLED due to global setting")
+            return
+        
         self._set(on=False)
         
     async def toggle(self): 
+        if not mutable_globals.use_wled:
+            self.logger.debug("not toggling WLED due to global setting")
+            return
+
         self._set(on=TOGGLE)
 
     def _set_seg(self, **kwargs):

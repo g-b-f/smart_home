@@ -11,11 +11,11 @@ from hypercorn.asyncio import serve
 from hypercorn.config import Config as HypercornConfig
 
 import lighting_routines as Routine
-import utils
+from utils import get_logger, mutable_globals
 from periodic_tasks import periodic_light_check
 import global_vars as gbl
 
-logger = utils.get_logger(__name__)
+logger = get_logger(__name__)
 logger.debug("beginning smart home app")
 
 # https://sleep.urbandroid.org/docs/services/automation.html#events
@@ -72,8 +72,8 @@ async def start():
         logger.debug("setting up server")
         config = HypercornConfig()
         config.bind = ["0.0.0.0:5000"] # Binds to all interfaces on port 5000
-        config.accesslog = utils.get_logger("hypercorn.access", level="WARNING")
-        config.errorlog = utils.get_logger("hypercorn.error", level="WARNING")
+        config.accesslog = get_logger("hypercorn.access", level="WARNING")
+        config.errorlog = get_logger("hypercorn.error", level="WARNING")
 
         logger.info("Starting Hypercorn ASGI server at http://%s", config.bind[0])
         await serve(app, config)
@@ -101,10 +101,10 @@ def main():
     try:
         args = get_args()
         if args.visitor:
-            utils.mutable_globals["visitor_present"] = True
+            mutable_globals.visitor_present = True
             logger.info("Visitor mode enabled: Wake-up routines are disabled.")
         else:
-            utils.mutable_globals["visitor_present"] = False
+            mutable_globals.visitor_present = False
         asyncio.run(start())
     except KeyboardInterrupt:
         logger.info("Application shut down by user.")

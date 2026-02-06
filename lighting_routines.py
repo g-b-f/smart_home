@@ -1,7 +1,7 @@
 from datetime import datetime
 
 import global_vars as gbl
-from utils import get_logger
+from utils import get_logger, mutable_globals
 from wrappers.bulb_wrapper import Bulb
 from wrappers.WLED_wrapper import WLED
 
@@ -10,15 +10,15 @@ logger = get_logger(__name__)
 async def tracking_start():
     """turn off the light"""
     logger.info("Turning off light")
-    if gbl.utils.mutable_globals["use_wled"]:
+    if mutable_globals.use_wled:
         await WLED().turn_off()
 
-    if gbl.utils.mutable_globals["use_bulb"]:
+    if mutable_globals.use_bulb:
         await Bulb().turn_off()
 
 async def snooze():
     """snooze alarm"""
-    if not utils.mutable_globals["visitor_present"]:
+    if not mutable_globals.visitor_present:
         logger.info("snoozing")
         await Bulb().turn_on(brightness=50, colortemp=gbl.MAX_COLORTEMP)
     
@@ -29,7 +29,7 @@ async def bedtime():
 
 async def wake_up(total_time=300):
     """gradually brighten the light over total_time seconds"""
-    if not utils.mutable_globals["visitor_present"]:
+    if not mutable_globals.visitor_present:
         logger.info("waking up")
         await Bulb().turn_on(brightness=100, colortemp=gbl.MAX_COLORTEMP)
     # await Bulb().lerp(10, BEDTIME_COLORTEMP, 100, MAX_COLORTEMP, total_time)
@@ -37,7 +37,7 @@ async def wake_up(total_time=300):
 async def tracking_stopped():
     current_time = datetime.now().time()
     """called when sleep tracking stops"""
-    if utils.mutable_globals["visitor_present"]:
+    if mutable_globals.visitor_present:
         logger.info("visitor present, not turning on light")
         return "OK", 200
 
@@ -75,26 +75,14 @@ async def sync_colour_temp(desired_temp: int):
 async def nightlight():
     """set the light to a very dim, warm colour"""
     logger.info("turning on nightlight")
-    if gbl.utils.mutable_globals["use_wled"]:
-        await WLED().turn_on(brightness=5, rgb=(255,0,0))
-    else:
-        logger.debug("not turning on WLED due to global setting")
-    if gbl.utils.mutable_globals["use_bulb"]:
-        await Bulb().turn_on(brightness=5, rgb=(255,0,0))
-    else:
-        logger.debug("not turning on bulb due to global settimg")
+    await WLED().turn_on(brightness=5, rgb=(255,0,0))
+    await Bulb().turn_on(brightness=5, rgb=(255,0,0))
 
 async def reading_light():
     """set the light to a fairly dim, warm colour"""
     logger.info("turning on reading light")
-    if gbl.USE_BULB:
-        await Bulb().turn_on(brightness=10, rgb=(255,0,0))
-    else:
-        logger.debug("not turning on bulb due to global settimg")
-    if gbl.USE_WLED:
-        await WLED().turn_on(brightness=23, rgb=(255,0,0))
-    else:
-        logger.debug("not turning on WLED due to global settimg")
+    await Bulb().turn_on(brightness=10, rgb=(255,0,0))
+    await WLED().turn_on(brightness=23, rgb=(255,0,0))
 
 async def set_temp_on_switch():
     try:

@@ -1,4 +1,10 @@
 from typing import Literal, TypedDict
+from pydantic import BaseModel, Field
+
+class MutableGlobals(BaseModel):
+    visitor_present: bool = Field(default=False, description="Whether a visitor is currently present")
+    use_bulb: bool = Field(default=True, description="Whether to connect to the lightbulb")
+    use_wled: bool = Field(default=True, description="Whether to connect to the WLED strip")
 
 RGBtype = tuple[int, int, int]
 RGBWtype = tuple[int, int, int, int]

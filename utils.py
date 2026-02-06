@@ -8,45 +8,9 @@ from typing import MutableMapping
 import astral.sun
 
 import global_vars as gbl
-from extra_types import RGBtype
+from extra_types import RGBtype, MutableGlobals
 
 MAX_LOG_SIZE_BYTES = 1024 * 1024 # 1 MB
-
-class JsonWrapper(MutableMapping):
-    def __init__(self, file: Path):
-        self.file = file
-    
-    @property
-    def data(self):
-        return json.loads(self.file.read_text())
-
-    @data.setter
-    def data(self, d):
-        self.file.write_text(json.dumps(d))
-
-    def __setitem__(self, key, val):
-        data = self.data
-        data[key] = val
-        self.data = data
-    
-    def __getitem__(self, key):
-        return self.data[key]
-
-    def __delitem__(self, key):
-        data = self.data
-        del data[key]
-        self.data = data
-
-    def __contains__(self, key):
-        return key in self.data
-    
-    def __iter__(self):
-        yield from self.data.items()
-
-    def __len__(self):
-        return len(self.data)
-
-mutable_globals = JsonWrapper(Path(__file__).parent / "mutable_globals.json")
 
 
 def get_logger(name: str, level=None) -> logging.Logger:
@@ -68,6 +32,76 @@ def get_logger(name: str, level=None) -> logging.Logger:
     logger.addHandler(handler)
 
     return logger
+
+class JsonWrapper:
+
+    default = MutableGlobals.model_construct().model_dump()
+
+    def __init__(self, file: Path):
+        self.file = file
+        self.logger = get_logger(file.stem)
+        
+    @property
+    def data(self) -> dict:
+        try:
+            ret = json.loads(self.file.read_text())
+            MutableGlobals.model_validate(ret)
+        except FileNotFoundError:
+            self.file.write_text(json.dumps(self.default))
+            ret = self.default
+        return ret
+
+    @data.setter
+    def data(self, d):
+        self.file.write_text(json.dumps(d))
+    
+    def _get_var(self, key:str):
+        ret = self.data[key]
+        self.logger.debug("%s is %s", key, ret)
+        return ret
+    
+    def _set_var(self, key:str, val):
+        data = self.data
+        data[key] = val
+        self.data = data
+
+    @property
+    def visitor_present(self) -> bool:
+        return self._get_var("visitor_present")
+    
+    @visitor_present.setter
+    def visitor_present(self, val:bool):
+        self._set_var("visitor_present", val)
+
+    @property
+    def use_bulb(self) -> bool:
+        return self._get_var("use_bulb")
+    
+    @use_bulb.setter
+    def use_bulb(self, val:bool):
+        self._set_var("use_bulb", val)
+    
+    @property
+    def use_wled(self) -> bool:
+        return self._get_var("use_wled")
+    
+    @use_wled.setter
+    def use_wled(self, val:bool):
+        self._set_var("use_wled", val)
+
+    def __contains__(self, key):
+        return key in self.data
+    
+    def __iter__(self):
+        yield from self.data.items()
+
+    def __len__(self):
+        return len(self.data)
+    
+    def __repr__(self) -> str:
+        return str(self.data)
+
+mutable_globals = JsonWrapper(Path(__file__).parent / "mutable_globals.json")
 
 
 def clamp(value, min_value, max_value):
