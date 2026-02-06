@@ -66,7 +66,6 @@ class WrapperBase(metaclass=ABCMeta):
         except Exception as e: # noqa: BLE001
             self.logger.error("couldn't turn on %s: %s", self.OBJECT_TYPE, e)
         self.last_accessed = time.time()
-        pass
 
     @abstractmethod
     async def _turn_on(self, brightness: Optional[int], rgb: Optional[RGBtype]) -> None:

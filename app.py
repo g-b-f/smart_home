@@ -1,7 +1,6 @@
+import argparse
 import asyncio
 import sys
-import argparse
-
 
 import flask
 from apscheduler.schedulers.asyncio import (
@@ -11,9 +10,8 @@ from hypercorn.asyncio import serve
 from hypercorn.config import Config as HypercornConfig
 
 import lighting_routines as Routine
-from utils import get_logger, mutable_globals
 from periodic_tasks import periodic_light_check
-import global_vars as gbl
+from utils import get_logger, mutable_globals
 
 logger = get_logger(__name__)
 logger.debug("beginning smart home app")

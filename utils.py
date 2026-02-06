@@ -1,14 +1,12 @@
+import json
 import logging
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
-import json
-from typing import MutableMapping
-
 
 import astral.sun
 
 import global_vars as gbl
-from extra_types import RGBtype, MutableGlobals
+from extra_types import MutableGlobals, RGBtype
 
 MAX_LOG_SIZE_BYTES = 1024 * 1024 # 1 MB
 

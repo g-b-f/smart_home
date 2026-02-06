@@ -1,5 +1,7 @@
 from typing import Literal, TypedDict
+
 from pydantic import BaseModel, Field
+
 
 class MutableGlobals(BaseModel):
     visitor_present: bool = Field(default=False, description="Whether a visitor is currently present")
