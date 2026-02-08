@@ -15,6 +15,8 @@ class WLED(WrapperBase):
     OBJECT_TYPE = "WLED" # type: ignore[reportAssignmentType]
 
     def __init__(self, ip:Optional[str]=None, **kwargs):
+        if not mutable_globals.use_wled:
+            return
         if ip is None:
             self.url = self.from_yaml(self.STRIP_NAME).url
         else:
