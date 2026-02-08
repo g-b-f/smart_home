@@ -51,7 +51,7 @@ class JsonWrapper:
 
     @data.setter
     def data(self, d):
-        self.file.write_text(json.dumps(d))
+        self.file.write_text(json.dumps(d, indent=4))
     
     def _get_var(self, key:str):
         ret = self.data[key]
