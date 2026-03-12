@@ -2,6 +2,7 @@ import json
 import logging
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
+from pydantic import ValidationError
 
 import astral.sun
 
@@ -31,6 +32,8 @@ def get_logger(name: str, level=None) -> logging.Logger:
 
     return logger
 
+logger = get_logger(__name__)
+
 class JsonWrapper:
 
     default = MutableGlobals.model_construct().model_dump()
@@ -44,7 +47,8 @@ class JsonWrapper:
         try:
             ret = json.loads(self.file.read_text())
             MutableGlobals.model_validate(ret)
-        except FileNotFoundError:
+        except (FileNotFoundError, ValidationError) as e:
+            logger.error("Error loading %s: %s. Reverting to default.", self.file.name, e)
             self.file.write_text(json.dumps(self.default))
             ret = self.default
         return ret
