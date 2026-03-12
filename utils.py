@@ -1,10 +1,11 @@
 import json
 import logging
+from datetime import datetime
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
-from pydantic import ValidationError
 
 import astral.sun
+from pydantic import ValidationError
 
 import global_vars as gbl
 from extra_types import MutableGlobals, RGBtype
@@ -91,6 +92,14 @@ class JsonWrapper:
     def use_wled(self, val:bool):
         self._set_var("use_wled", val)
 
+    @property
+    def last_sleep(self) -> datetime:
+        return datetime.fromisoformat(self._get_var("last_sleep"))
+    
+    @last_sleep.setter
+    def last_sleep(self, val:datetime):
+        self._set_var("last_sleep", val.isoformat())
+    
     def __contains__(self, key):
         return key in self.data
     

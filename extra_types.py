@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Literal, TypedDict
 
 from pydantic import BaseModel, Field
@@ -7,6 +8,7 @@ class MutableGlobals(BaseModel):
     visitor_present: bool = Field(default=False, description="Whether a visitor is currently present")
     use_bulb: bool = Field(default=True, description="Whether to connect to the lightbulb")
     use_wled: bool = Field(default=True, description="Whether to connect to the WLED strip")
+    last_sleep: datetime = Field(default_factory=datetime.now, description="The last time sleep tracking was active")
 
 RGBtype = tuple[int, int, int]
 RGBWtype = tuple[int, int, int, int]

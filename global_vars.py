@@ -1,4 +1,5 @@
 from datetime import time
+from datetime import timedelta
 
 USE_BULB = True
 USE_WLED = False
@@ -7,7 +8,11 @@ LOG_LEVEL = "INFO"
 IS_VISITOR_PRESENT = False # turns off routines related to waking up
 
 CHILL_START = time(22, 0) # 10:00 PM
-WAKE_UP_TIME = time(7, 0) # 7:00 AM
+EARLY_WAKE_TIME = time(6, 0) # 6:00 AM
+LATE_WAKE_UP_TIME = time(10, 0) # 10:00 AM
+EARLIEST_SLEEP_TIME = time(20, 0) # 8:00 PM
+
+MINIMUM_SLEEP_LENGTH = timedelta(hours=7, minutes=30)
 
 CHILL_COLOURTEMP = 2500
 SUNRISE_COLOURTEMP = 3000

@@ -10,6 +10,13 @@ logger = get_logger(__name__)
 async def tracking_start():
     """turn off the light"""
     logger.info("Turning off light")
+    if datetime.now().time() > gbl.EARLIEST_SLEEP_TIME:
+        now = datetime.now()
+        logger.debug(
+            "setting last sleep time to %s", now.strftime("%d/%m/%Y %H:%M:%S")
+            )
+        mutable_globals.last_sleep = now
+
     if mutable_globals.use_wled:
         await WLED().turn_off()
 
@@ -34,6 +41,22 @@ async def wake_up(total_time=300):
         await Bulb().turn_on(brightness=100, colortemp=gbl.MAX_COLORTEMP)
     # await Bulb().lerp(10, BEDTIME_COLORTEMP, 100, MAX_COLORTEMP, total_time)
 
+async def nightlight():
+    """set the light to a very dim, warm colour"""
+    logger.info("turning on nightlight")
+    if mutable_globals.use_bulb:
+        await Bulb().turn_on(brightness=5, rgb=(255,0,0))
+    if mutable_globals.use_wled:
+        await WLED().turn_on(brightness=5, rgb=(255,0,0))
+
+async def reading_light():
+    """set the light to a fairly dim, warm colour"""
+    logger.info("turning on reading light")
+    if mutable_globals.use_bulb:
+        await Bulb().turn_on(brightness=10, rgb=(255,0,0))
+    if mutable_globals.use_wled:
+        await WLED().turn_on(brightness=23, rgb=(255,0,0))
+
 async def tracking_stopped():
     current_time = datetime.now().time()
     """called when sleep tracking stops"""
@@ -41,20 +64,33 @@ async def tracking_stopped():
         logger.info("visitor present, not turning on light")
         return "OK", 200
 
-    if current_time > gbl.WAKE_UP_TIME:
-        logger.debug(
+    if current_time > gbl.LATE_WAKE_UP_TIME:
+        logger.info(
                 "%s is greater than %s, turning on light",
-                current_time, gbl.WAKE_UP_TIME
+                current_time, gbl.LATE_WAKE_UP_TIME
                 )
         await wake_up()
-    else:
-        logger.debug(
+    elif current_time < gbl.EARLIEST_SLEEP_TIME:
+        logger.info(
                 "%s is less than %s, turning on nightlight",
-                current_time, gbl.WAKE_UP_TIME
+                current_time, gbl.EARLIEST_SLEEP_TIME
                 )
-        
-
         await nightlight()
+
+    else:
+        sleep_length = datetime.now() - mutable_globals.last_sleep        
+        if sleep_length < gbl.MINIMUM_SLEEP_LENGTH:
+            logger.info(
+                    "sleep length %s is less than %s, turning on nightlight",
+                    sleep_length, gbl.MINIMUM_SLEEP_LENGTH
+                    )
+            await nightlight()
+        else:
+            logger.info(
+                    "sleep length %s is greater than %s, turning on light",
+                    sleep_length, gbl.MINIMUM_SLEEP_LENGTH
+                    )
+            await wake_up()
 
 async def sync_colour_temp(desired_temp: int):
     light = Bulb()
@@ -71,18 +107,6 @@ async def sync_colour_temp(desired_temp: int):
         return
     
     await light.lerp(brightness, temp, brightness, desired_temp, 10)
-
-async def nightlight():
-    """set the light to a very dim, warm colour"""
-    logger.info("turning on nightlight")
-    await WLED().turn_on(brightness=5, rgb=(255,0,0))
-    await Bulb().turn_on(brightness=5, rgb=(255,0,0))
-
-async def reading_light():
-    """set the light to a fairly dim, warm colour"""
-    logger.info("turning on reading light")
-    await Bulb().turn_on(brightness=10, rgb=(255,0,0))
-    await WLED().turn_on(brightness=23, rgb=(255,0,0))
 
 async def set_temp_on_switch():
     try:
