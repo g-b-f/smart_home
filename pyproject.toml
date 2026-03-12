@@ -5,7 +5,9 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+    "astral>=3.2",
     "pydantic>=2.12.5",
+    "pyfracturedjson>=2.0.0",
 ]
 
 [project.scripts]

@@ -12,6 +12,18 @@ wheels = [
 ]
 
 [[package]]
+name = "astral"
+version = "3.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "tzdata", marker = "sys_platform == 'win32'" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/04/d1/1adbf06a38dc339e41a1666f6c7135924594c20fd46e060fb263248c564d/astral-3.2.tar.gz", hash = "sha256:9b7c3b412e9e69d172cfb24be0e6addcc9f1bd01a28db8bebe66d75ccc533d88", size = 48075, upload-time = "2022-11-05T18:12:02.913Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/2d/80/d6edd9c3259913cfe39aff2bea4da65de5ad0235a578405e37aabace5f2c/astral-3.2-py3-none-any.whl", hash = "sha256:cb7b49a3f0d4c64ae666be131276d2a3226134c598db10e672028cf8ff855f83", size = 38325, upload-time = "2022-11-05T18:12:01.164Z" },
+]
+
+[[package]]
 name = "certifi"
 version = "2025.10.5"
 source = { registry = "https://pypi.org/simple" }
@@ -251,6 +263,96 @@ wheels = [
 ]
 
 [[package]]
+name = "pyfracturedjson"
+version = "2.0.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ee/da/6621cd79c0d7183343b7f2a70721c62bed160e4edd6295c81c9dc74c3adb/pyfracturedjson-2.0.0.tar.gz", hash = "sha256:b8ad99c33af89feb36d074d95a26e4ec6a92e2d76a634e60ad67749559d2fcd6", size = 17095, upload-time = "2026-02-26T16:30:37.565Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/4b/7f/eaad98c27bb478099f36f0e234ee59a76b880003ff77db05484cdb7d10e5/pyfracturedjson-2.0.0-cp311-cp311-macosx_10_12_x86_64.whl", hash = "sha256:a7760e798cc023f229e775c8d8469b6ee87597bda27d8de168a757e0e070c060", size = 298421, upload-time = "2026-02-26T16:29:53.839Z" },
+    { url = "https://files.pythonhosted.org/packages/95/b4/0503561d3ebca6d109248cc119e7cf069b9c36884e4009fb42b6a94ae156/pyfracturedjson-2.0.0-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:73af0ce6d3d30df155dd6aade934427c2d2975ab5a3f3be1d279e71bb10dffa9", size = 291409, upload-time = "2026-02-26T16:29:56.036Z" },
+    { url = "https://files.pythonhosted.org/packages/de/ab/896137784e3d0ebbf4cebfe84e86622d6f7a7993a9d37a354a7281bc2e50/pyfracturedjson-2.0.0-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:56fb7279aa9b280b707ed344b5b1f77ff651d3579858ea9c83541e1d8778d597", size = 325571, upload-time = "2026-02-26T16:31:45.545Z" },
+    { url = "https://files.pythonhosted.org/packages/39/40/bc2cdec145276d580aa16e742a8300265e646404a626677574f7760031ef/pyfracturedjson-2.0.0-cp311-cp311-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:554a62e1edfda31db5a8517bbedeb702d9a6ba54f272548a684d821bbd59eeea", size = 333762, upload-time = "2026-02-26T16:30:31.867Z" },
+    { url = "https://files.pythonhosted.org/packages/5b/1c/bc464882cbaa7d0b01abbc938109783cb90d92f0319ec3fbab2ce7c845c6/pyfracturedjson-2.0.0-cp311-cp311-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:7e7222385559c14a5f95411264350ba034db526184afd7ad30ecfb8cb5ced694", size = 446953, upload-time = "2026-02-26T16:31:42.179Z" },
+    { url = "https://files.pythonhosted.org/packages/5d/8f/9f62f0a1824ebedaeb9973a0688435247e874c74b431b506675861a3f1d3/pyfracturedjson-2.0.0-cp311-cp311-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:7e9daf09892d7e83237e7db0be3b5c26b81c381e77b7a2bd1e878dc69d7c244c", size = 368980, upload-time = "2026-02-26T16:31:01.731Z" },
+    { url = "https://files.pythonhosted.org/packages/7a/89/aa61e6e52bcb2addae868dfe58eaedd8acdaf0215b27b2b061d9874f87ef/pyfracturedjson-2.0.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:d9d1f534975bbae284b0f3120f8d323fc3c24da20dcc3c8c017b869b3475ac43", size = 337828, upload-time = "2026-02-26T16:31:00.436Z" },
+    { url = "https://files.pythonhosted.org/packages/60/7b/f88bcd267385891b8ee48b029e6cd9292b74f2deadf57e22fa09f5049407/pyfracturedjson-2.0.0-cp311-cp311-manylinux_2_5_i686.manylinux1_i686.whl", hash = "sha256:42690c4b822555a51021dae557d4b09069a1395b259f5b1210606eb6f27df41d", size = 354513, upload-time = "2026-02-26T16:30:34.191Z" },
+    { url = "https://files.pythonhosted.org/packages/12/66/10b64ace327255455f1cf9b4ce9ed66b380b9f88ac8bc9b7349ce1f3cf87/pyfracturedjson-2.0.0-cp311-cp311-musllinux_1_2_aarch64.whl", hash = "sha256:f1d30265cf4eb035b412e465461e46c7deecfc2d122d9709070a19a9b7327afc", size = 501737, upload-time = "2026-02-26T16:31:11.417Z" },
+    { url = "https://files.pythonhosted.org/packages/e3/36/703f748090d9a2f17d1a726cc71d73e1070352e3ce065fef2925a2f4b3b4/pyfracturedjson-2.0.0-cp311-cp311-musllinux_1_2_armv7l.whl", hash = "sha256:03de3c90a4159cb4e205482cc3441fe6428c21a28e6856d9fc6776f582c970fd", size = 608350, upload-time = "2026-02-26T16:31:55.088Z" },
+    { url = "https://files.pythonhosted.org/packages/fe/12/9261458ffb5ee553e32470361d0758e43b39b6e859680b480b47ec3d0c17/pyfracturedjson-2.0.0-cp311-cp311-musllinux_1_2_i686.whl", hash = "sha256:b72780b312e6330cef27a3cbbd533869a1699ce408c20a9cb72f946bb6c42366", size = 570729, upload-time = "2026-02-26T16:30:17.96Z" },
+    { url = "https://files.pythonhosted.org/packages/94/2b/105895e52bc86287c1af611894cb5ab4740ebb4138e3a53f96dda65de1b1/pyfracturedjson-2.0.0-cp311-cp311-musllinux_1_2_x86_64.whl", hash = "sha256:9c45d5e681b5c23f6eccfcd552b1966c51d88a1d554f16b45a6a714a33e128a1", size = 537528, upload-time = "2026-02-26T16:30:59.149Z" },
+    { url = "https://files.pythonhosted.org/packages/77/8a/3b65da6113a8588ec4dff21526821aebb2223628fc1442aa893c98ae0f36/pyfracturedjson-2.0.0-cp311-cp311-win_amd64.whl", hash = "sha256:8b5c98783af912783e771ae9977adca9ec83874c42bdb7c72b125e1e2d2caa07", size = 190134, upload-time = "2026-02-26T16:31:03.958Z" },
+    { url = "https://files.pythonhosted.org/packages/6d/db/937630ebee43250b052347db5d2c7ce7c6f95524343d18c4bb84cdea8364/pyfracturedjson-2.0.0-cp312-cp312-macosx_10_12_x86_64.whl", hash = "sha256:a1a9696fc0900b351d2d06c6d3d020fca69e874fefcf00c6e5131af50e17ecfd", size = 297328, upload-time = "2026-02-26T16:30:30.309Z" },
+    { url = "https://files.pythonhosted.org/packages/b4/b2/4c79005037b9cdbe1d75c3ad02e4ecc9677020c2e1bc384c7a2b0306adf2/pyfracturedjson-2.0.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:d4455651b74eb726445c7e9ebec9cc84030d5d22d3a254a61621a9c0bfe1170a", size = 289850, upload-time = "2026-02-26T16:31:23.214Z" },
+    { url = "https://files.pythonhosted.org/packages/94/11/6bfcf7fd7df32dae5bc631c7bb7daa43e8da61923353e349fc428627f924/pyfracturedjson-2.0.0-cp312-cp312-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:7e07d663f97da3fa31b20567146c93b485cf718b00ca03178b1f1a52ab8f6933", size = 323231, upload-time = "2026-02-26T16:31:56.177Z" },
+    { url = "https://files.pythonhosted.org/packages/20/e7/87e7ae654c6595afcea4d63ba969c1037817141bb29d01748b5e485b134c/pyfracturedjson-2.0.0-cp312-cp312-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:58c8c2b0962ddc3cc4e1bab3b7435d443794d48793b71387dc756f156c4a2738", size = 331881, upload-time = "2026-02-26T16:30:56.632Z" },
+    { url = "https://files.pythonhosted.org/packages/e9/b5/ca78b670f093d6f75934998d721c42981d934dfa52cef3342c8487fdeb6d/pyfracturedjson-2.0.0-cp312-cp312-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:8edaec727db3e4f4167f500d13b7147b9f5626ebae81fdd885892f080b011a73", size = 444520, upload-time = "2026-02-26T16:30:04.275Z" },
+    { url = "https://files.pythonhosted.org/packages/07/b8/fd51d6482c9fe659f83dba74f7126c321bfe8cc8c9d27f3b274ac515bc8d/pyfracturedjson-2.0.0-cp312-cp312-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:5ffaf45fb943d73183486a77edd80ec4464ed610d11d34092fcd6f6a4476c438", size = 367250, upload-time = "2026-02-26T16:29:51.35Z" },
+    { url = "https://files.pythonhosted.org/packages/bc/de/8466cfc853b3f2580f817696653573b4dc8c31fb2309d3a27f89e62d7c64/pyfracturedjson-2.0.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:fa7b1924a78c1625fe90aafd277e4e73fb6b35c7a522cc8f1cbf3a34ce9e01d7", size = 335649, upload-time = "2026-02-26T16:31:26.315Z" },
+    { url = "https://files.pythonhosted.org/packages/37/7c/220a0c9ddf14bd3fcbf7d602e2e2f214b98b1a4853f274a35fa06da8a714/pyfracturedjson-2.0.0-cp312-cp312-manylinux_2_5_i686.manylinux1_i686.whl", hash = "sha256:2858101f6dbe2586b50dfea7389da11cae31f790c27aef35f81d27391a8fb583", size = 351805, upload-time = "2026-02-26T16:30:54.371Z" },
+    { url = "https://files.pythonhosted.org/packages/e1/27/68fb7e9d8c30491597efbd83ff4b491c5c0285303adf4ded7a3d4c5134da/pyfracturedjson-2.0.0-cp312-cp312-musllinux_1_2_aarch64.whl", hash = "sha256:9ade4b3fb9c8f36b1a6035c16ccb71eda1359ec1ad02575a9230c65859963c86", size = 499162, upload-time = "2026-02-26T16:30:35.29Z" },
+    { url = "https://files.pythonhosted.org/packages/47/de/bafd9e18605f9f129a6e681ab41f3c650897d93516982a843a7d9f467b7c/pyfracturedjson-2.0.0-cp312-cp312-musllinux_1_2_armv7l.whl", hash = "sha256:b8346895ac868488ebc28a49c4c0d55b059d28941290beb5ec056aea30c67dfb", size = 606418, upload-time = "2026-02-26T16:31:12.62Z" },
+    { url = "https://files.pythonhosted.org/packages/80/2d/b6238fa9a54133140fb0ae1daefc6c00b636fc6e4bcf3e36ab33cb24612a/pyfracturedjson-2.0.0-cp312-cp312-musllinux_1_2_i686.whl", hash = "sha256:c1e848888e15bdf754a7a2788bec593306a3632cc9394d68cdadd343b168ce0e", size = 568119, upload-time = "2026-02-26T16:31:14.906Z" },
+    { url = "https://files.pythonhosted.org/packages/65/62/03b2153cd2b547e2e34e6f1f573f9ac0dce621bc0e950a57f079c0592b4d/pyfracturedjson-2.0.0-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:2b95b31dedc26aef4879aeb745b8186f74b80be1e7f6ff1a1264b69d65c2b8c3", size = 535434, upload-time = "2026-02-26T16:31:21.958Z" },
+    { url = "https://files.pythonhosted.org/packages/53/72/57676e0bf738d7a4e1fcb7f9ee1a517e69daa9117511650309c090e21221/pyfracturedjson-2.0.0-cp312-cp312-win_amd64.whl", hash = "sha256:64c7227611167deeea262de1109ecd5b52ee5988e3d21655a081f8f20f01ca20", size = 188594, upload-time = "2026-02-26T16:30:36.637Z" },
+    { url = "https://files.pythonhosted.org/packages/5a/fa/26d0d6c647a26cf9eb41120d68471231c8d02bff1e259e90246ad1d0ff17/pyfracturedjson-2.0.0-cp312-cp312-win_arm64.whl", hash = "sha256:3a941a33daa1004d277aa53a9ec426aba37c43fa530031100d2a2b024be90fb8", size = 185513, upload-time = "2026-02-26T16:30:51.784Z" },
+    { url = "https://files.pythonhosted.org/packages/a9/10/3e233c66fab1cece6545d6f7edceed302d7881d37ab2d525c1335bea4f0e/pyfracturedjson-2.0.0-cp313-cp313-macosx_10_12_x86_64.whl", hash = "sha256:b0540505f4d2b50a6c54fe84da822a2956c26d148ac78ff6f404de730053d546", size = 297296, upload-time = "2026-02-26T16:30:39.791Z" },
+    { url = "https://files.pythonhosted.org/packages/d5/16/16b6f9140211e9ba6a2e4417dc9850a8354176e60c9a76ed400d6554cbe3/pyfracturedjson-2.0.0-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:90ac5abe30d4fc899e19e6153d9ab61092c1597fa6f7c3708835c572263f215b", size = 289654, upload-time = "2026-02-26T16:31:50.15Z" },
+    { url = "https://files.pythonhosted.org/packages/8b/a2/be8cd021fbfb30d64b009fc1198db0c68d374b19f346fb831fbc901bbbce/pyfracturedjson-2.0.0-cp313-cp313-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:7351da38a0b750946d15556e5c32c6cfdfa1ad0fe14f4b411549c7e075cf5240", size = 323433, upload-time = "2026-02-26T16:30:38.422Z" },
+    { url = "https://files.pythonhosted.org/packages/12/1f/60f0090f427a3c79d5dbe46f56f6af3b0c3831faed609e72da5f9e4b5790/pyfracturedjson-2.0.0-cp313-cp313-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:6985aa8a6bd6cd7c8e6d39ef69d25971ce6e92f7e95517fa390e11b4fe516f72", size = 331819, upload-time = "2026-02-26T16:29:58.325Z" },
+    { url = "https://files.pythonhosted.org/packages/43/62/80b9056b97ce2e6ffa5884287b62cb231812c1fb31f4bdf50e05535f3ec1/pyfracturedjson-2.0.0-cp313-cp313-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:8a93bf43890af921397fc2c3e3a94e726b162681338fc8a2e6d91fe48b5235fe", size = 444711, upload-time = "2026-02-26T16:32:03.573Z" },
+    { url = "https://files.pythonhosted.org/packages/57/9a/6b749bb5f9ad0f5a41123e24b7ddacf5c760b30d19b0021d8d06dc54aa95/pyfracturedjson-2.0.0-cp313-cp313-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:d0548a1454ce07fa7d3e3d631c32426cdb05e11270767ac3aa503c4f85f2197f", size = 367182, upload-time = "2026-02-26T16:31:34.1Z" },
+    { url = "https://files.pythonhosted.org/packages/17/72/81e0d8a959880d33c10c7019569f1130b07f8904f9a6903640dc111c61a5/pyfracturedjson-2.0.0-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:5bd3a4bb28a9af076923d901459674ece87d615742d7639405899160df5d085f", size = 335437, upload-time = "2026-02-26T16:31:39.261Z" },
+    { url = "https://files.pythonhosted.org/packages/a1/b7/6d10030cc07d436e84c3adc963b045c50695b48526f68e26b38836eaa7c9/pyfracturedjson-2.0.0-cp313-cp313-manylinux_2_5_i686.manylinux1_i686.whl", hash = "sha256:7a1ef749dca44c3ab66922372699f9c8907ae6f6e998025f1d74782febb3a6b7", size = 351640, upload-time = "2026-02-26T16:31:35.391Z" },
+    { url = "https://files.pythonhosted.org/packages/9f/3e/b3b9e8a5a1a17c64ca4af9e14b0f74880b2c45109f1566ae698cc5554e7b/pyfracturedjson-2.0.0-cp313-cp313-musllinux_1_2_aarch64.whl", hash = "sha256:35432eb2b89896e1eea31ae90f7a0a3a51a9372c0291eded24570790a8feca0c", size = 499445, upload-time = "2026-02-26T16:31:52.822Z" },
+    { url = "https://files.pythonhosted.org/packages/ce/32/0a885d134045721cffcfdf470a82cde8d4f2c6f6b0ec8faee72411ab8b54/pyfracturedjson-2.0.0-cp313-cp313-musllinux_1_2_armv7l.whl", hash = "sha256:d630049c1cdacf312b2133f6f1dd16dcc416914552816a9981bbf402d974c4c7", size = 606750, upload-time = "2026-02-26T16:30:26.368Z" },
+    { url = "https://files.pythonhosted.org/packages/6f/fe/21b4da700571bb95457944a0d3e8753ca47943cff03f397701d27a6f558c/pyfracturedjson-2.0.0-cp313-cp313-musllinux_1_2_i686.whl", hash = "sha256:e81fba99047edf9467c6ef035466435f93ad1b3d623ac8c4c0b395317621b234", size = 567774, upload-time = "2026-02-26T16:30:27.52Z" },
+    { url = "https://files.pythonhosted.org/packages/17/da/403b77c9b5edb380b9cc4f788b3e74a81e2bb62aca2e8dcfb973505a827f/pyfracturedjson-2.0.0-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:754fe8f9673b241116c407e8175a8ccf0f2c6affb8d7036d5abd3eedc50ba89c", size = 535558, upload-time = "2026-02-26T16:31:30.169Z" },
+    { url = "https://files.pythonhosted.org/packages/1d/39/429c154cec6ca92ddc83b082abd9d4f71b292de4ac8018d1a774e6f7045c/pyfracturedjson-2.0.0-cp313-cp313-win32.whl", hash = "sha256:ce55000b3b6bceea5131b75bcf7c140f74ddda137e9908bc6b1e104e4a1d1b52", size = 178985, upload-time = "2026-02-26T16:31:09.957Z" },
+    { url = "https://files.pythonhosted.org/packages/41/e3/e0b0fe614bd15ff73a179ef2680bdd1cebc512fdb8b2064c0be1ceefefbe/pyfracturedjson-2.0.0-cp313-cp313-win_amd64.whl", hash = "sha256:63cb2e8af4960d4d601a7f76896bb98a5ab893bf8ab16dea570f2736426908aa", size = 188634, upload-time = "2026-02-26T16:31:49.021Z" },
+    { url = "https://files.pythonhosted.org/packages/f0/b0/1620f4e390381f38453ad712f4b9a28f7527ee344874d4450b6d32bc714e/pyfracturedjson-2.0.0-cp313-cp313-win_arm64.whl", hash = "sha256:f06df7b9453fbe273809b502b84de8cf7304b9b9f446a341ce10bb21a3124319", size = 185715, upload-time = "2026-02-26T16:31:15.919Z" },
+    { url = "https://files.pythonhosted.org/packages/03/57/ea662ec73cf17ce3fbed03ba2963288391461980d00902566365995a853f/pyfracturedjson-2.0.0-cp313-cp313t-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:ea2be14b42e034d287eabf1c6655e799ab3a99fc58092560258d1d932f2aecd1", size = 322739, upload-time = "2026-02-26T16:31:27.695Z" },
+    { url = "https://files.pythonhosted.org/packages/34/85/19b0aca98982aae8b4c4da05ac32e1c458c33651695e3484fa977a237bd0/pyfracturedjson-2.0.0-cp313-cp313t-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:ecff04b530425471685a94bf523eb5285a878e2ee675724d7acdb78877148948", size = 330197, upload-time = "2026-02-26T16:30:21.327Z" },
+    { url = "https://files.pythonhosted.org/packages/54/e2/8875c0c83280b3b0bcab9ff7484b7eebe95089c4af5cfac0046c9f6a228b/pyfracturedjson-2.0.0-cp313-cp313t-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:1c4bd00955719812fdd7696d2df578d6388810bc0bb67a072183804ca3c64edd", size = 439218, upload-time = "2026-02-26T16:30:28.865Z" },
+    { url = "https://files.pythonhosted.org/packages/12/51/d3e8c1a73987bc72456499484b8c2742c39668da015ced38d838a8136bbd/pyfracturedjson-2.0.0-cp313-cp313t-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:3da61ed605d26fa036935d0f8493da046148431f64fe20463b3a2006bc10da4e", size = 366733, upload-time = "2026-02-26T16:30:15.573Z" },
+    { url = "https://files.pythonhosted.org/packages/7b/15/f6ab65ff2c4715bda0b4c7ae73a319b204379c8958c9b36b80f7a3f030d2/pyfracturedjson-2.0.0-cp313-cp313t-musllinux_1_2_aarch64.whl", hash = "sha256:bf1503727a85cb2cf0fcaabc7f27cc87fa019ae832b6454eb6c1c4cb767a010a", size = 498312, upload-time = "2026-02-26T16:30:06.88Z" },
+    { url = "https://files.pythonhosted.org/packages/9b/d5/fa083eac1749db831f397b49ad98a7beec5ad37a8300a88be75f3fbeb172/pyfracturedjson-2.0.0-cp313-cp313t-musllinux_1_2_armv7l.whl", hash = "sha256:d6443428819d5c9efcf4436af9924990d36d4bf1960abc83202e48cf16888a45", size = 605096, upload-time = "2026-02-26T16:31:57.233Z" },
+    { url = "https://files.pythonhosted.org/packages/f5/7a/b772853ada1f3b6fddba07fff68d4f9814450c09fcf0e12d2274c86d593e/pyfracturedjson-2.0.0-cp313-cp313t-musllinux_1_2_i686.whl", hash = "sha256:9591508ac6c71766f006c7775eabde6cbc069153eb4ee0b5cda37ecc98f0fcbd", size = 567128, upload-time = "2026-02-26T16:31:05.969Z" },
+    { url = "https://files.pythonhosted.org/packages/52/b3/0a681212157f9f78aaf560fb24b13119038b3d329a35c16a0eb492b54b67/pyfracturedjson-2.0.0-cp313-cp313t-musllinux_1_2_x86_64.whl", hash = "sha256:837f1c7ef7ddc2b80c5c217c46127d160059e7b75bbc9ed126768159c452012d", size = 535355, upload-time = "2026-02-26T16:30:19.19Z" },
+    { url = "https://files.pythonhosted.org/packages/39/3d/d4786410af959d1cb4b8252cd1a7f30cc03135da0281fa419c7f2aeb88b6/pyfracturedjson-2.0.0-cp314-cp314-macosx_10_12_x86_64.whl", hash = "sha256:142bf94afd1107a3c8e0b5a7ef997932150293d26c6811e2f8d1209dadeed7fb", size = 297361, upload-time = "2026-02-26T16:30:23.678Z" },
+    { url = "https://files.pythonhosted.org/packages/b5/ff/2d918ff6213f462247261cd9ad075e5606f0ba1cb451202c07b360f2c8f6/pyfracturedjson-2.0.0-cp314-cp314-macosx_11_0_arm64.whl", hash = "sha256:1b155df1fdc2396f7dcae10723f3bb8c32df863358244e2c851d8633857989eb", size = 289651, upload-time = "2026-02-26T16:30:05.659Z" },
+    { url = "https://files.pythonhosted.org/packages/d4/0a/fe66cc961f30a279907bbf9402738200e7af39a4f996a2092b7858a33d7b/pyfracturedjson-2.0.0-cp314-cp314-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:be2149bc13a8ea29c97ec04d080d343d52b42dc42488f2cb90f0a6ac2cc32839", size = 323294, upload-time = "2026-02-26T16:30:20.276Z" },
+    { url = "https://files.pythonhosted.org/packages/0a/b7/1b0e3a9006ab2e0d3bebb5ed6b22ceb44d1cd8482c7066a1770d1bad275d/pyfracturedjson-2.0.0-cp314-cp314-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:d535d02f444b5e6d4bf3fcbed01c787dbe3449d0e05d8f5c6ea0a18bb68b4255", size = 331424, upload-time = "2026-02-26T16:31:43.285Z" },
+    { url = "https://files.pythonhosted.org/packages/8a/7e/f47c56e0e1ff46006a68ede614f99cc6424cfa1a16566dbdc2faa07c81dd/pyfracturedjson-2.0.0-cp314-cp314-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:8fb1a9fe2bd6752b33c491c9047e5704c786a7f47b8d46d94526aef9b0ea87bf", size = 444877, upload-time = "2026-02-26T16:31:46.714Z" },
+    { url = "https://files.pythonhosted.org/packages/b1/63/bc751c14115801bc3a8a2773f9da2cba4a861ca537fc987e0d6a8d16d8e2/pyfracturedjson-2.0.0-cp314-cp314-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:59143257337262a1963074fd445999cd2312510eb84dc9a3e81f1e04bd5514d9", size = 367286, upload-time = "2026-02-26T16:30:48.536Z" },
+    { url = "https://files.pythonhosted.org/packages/0b/e0/30d89f357c016403467ce111b3ab0165dcc33038c6b87f0173daaa7c0bbb/pyfracturedjson-2.0.0-cp314-cp314-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:8d12bdf213f75929f2825900022951314866af7b197c0a9d32aa66c1da337423", size = 335767, upload-time = "2026-02-26T16:30:40.865Z" },
+    { url = "https://files.pythonhosted.org/packages/89/2c/fc9389bf7def64e799f721360095bc882532f36e1cc88c58280ff9c63a53/pyfracturedjson-2.0.0-cp314-cp314-manylinux_2_5_i686.manylinux1_i686.whl", hash = "sha256:e64f7638cd271ac72c1e0040101a005b71c1b339422e596ee8290be15d5e9931", size = 351729, upload-time = "2026-02-26T16:31:17.132Z" },
+    { url = "https://files.pythonhosted.org/packages/81/0b/51087f651c5cbcf3befe9a2206b2744352ee4ef7e17e899f22f7f726ccce/pyfracturedjson-2.0.0-cp314-cp314-musllinux_1_2_aarch64.whl", hash = "sha256:4afdc46df54516f4da7836c99cddc97e8894b5ed7e818f23e281327a27724519", size = 499172, upload-time = "2026-02-26T16:30:44.52Z" },
+    { url = "https://files.pythonhosted.org/packages/ff/51/8ff2a32516f92aab53c6c3e31307add5837dd19d820d5aba6c8d750d2a1e/pyfracturedjson-2.0.0-cp314-cp314-musllinux_1_2_armv7l.whl", hash = "sha256:892a5590b47020641773230e546de0573730cb8b199dd87e49285a841efd116f", size = 606232, upload-time = "2026-02-26T16:31:44.436Z" },
+    { url = "https://files.pythonhosted.org/packages/da/57/4f6a81a9a9514f03f2a47f010d081d5aeeae4b12455b9a74bacd32b5f978/pyfracturedjson-2.0.0-cp314-cp314-musllinux_1_2_i686.whl", hash = "sha256:bdd827b34b5ee58118963cbdce0a7fb4a98ed946d60e4af15d53c9cc77b37e69", size = 567839, upload-time = "2026-02-26T16:30:33.101Z" },
+    { url = "https://files.pythonhosted.org/packages/8f/5a/d0da33bd93432340db2ccb264defef876ced0c4d2e9e87eb7533e393c3d6/pyfracturedjson-2.0.0-cp314-cp314-musllinux_1_2_x86_64.whl", hash = "sha256:b5f9c6738a2eb07ca0ceaca730472f9e81ae819036f5b898b506b5cf1b65947f", size = 535636, upload-time = "2026-02-26T16:29:55.002Z" },
+    { url = "https://files.pythonhosted.org/packages/3f/b1/e98950dd31ea4a455a4a2636386a70491c30a205af99f75649e677c35de0/pyfracturedjson-2.0.0-cp314-cp314-win_amd64.whl", hash = "sha256:03d88a5726735e6412bce34d2293222cb037baca5793d5df7d9f47bc6d912bdd", size = 188642, upload-time = "2026-02-26T16:32:01.234Z" },
+    { url = "https://files.pythonhosted.org/packages/4a/05/4ba8bee8e0a19503a9d9ec4c8716fafc5a6ddd215c324576ec13b9150d0c/pyfracturedjson-2.0.0-cp314-cp314-win_arm64.whl", hash = "sha256:53ae9f00da5209af5e179f4d82295d4c7d3a102b416321b091680dcee8305c43", size = 185587, upload-time = "2026-02-26T16:29:59.389Z" },
+    { url = "https://files.pythonhosted.org/packages/e6/03/2cc3164e8ec3a65be60cda78c509ff5a8fd0e53709d406aa7daf7b6b91ca/pyfracturedjson-2.0.0-cp314-cp314t-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:1c3d7bd05df2e902a3aa0f460fc82ebacc0b6b8ba0583703f1e1661a449d964a", size = 322711, upload-time = "2026-02-26T16:29:57.136Z" },
+    { url = "https://files.pythonhosted.org/packages/5e/56/8f909ac3108516f495d56d6d5d4b4d56d5bb01668be1c23fe5a97cfc1c1a/pyfracturedjson-2.0.0-cp314-cp314t-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:387c990c6afd4a52952da013057b5176f4e707133a4b74ff555a44db276ae45f", size = 330566, upload-time = "2026-02-26T16:31:31.57Z" },
+    { url = "https://files.pythonhosted.org/packages/ae/0b/437abf837f8d807d6af2af3d135c0fd840b3e65c2997e29c7c0fcd8d14f6/pyfracturedjson-2.0.0-cp314-cp314t-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:21a429d9f600c8deba6e4299cb6dd4921fdd83119352b070dddda4e79116121f", size = 439874, upload-time = "2026-02-26T16:30:45.615Z" },
+    { url = "https://files.pythonhosted.org/packages/f2/29/fad09615c7f87642b64454812dc688ad3a20ba5d9022ff7ec4d7b28f6462/pyfracturedjson-2.0.0-cp314-cp314t-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:a4b144bf807648b5f60f385805c3bc70ba6b7e54baed24da185aeb7a62e12fa2", size = 366677, upload-time = "2026-02-26T16:30:42.05Z" },
+    { url = "https://files.pythonhosted.org/packages/68/99/dee5cb42b2476847c3dbcb781b4206cc809e23997e7fd8d552ecca6250d8/pyfracturedjson-2.0.0-cp314-cp314t-musllinux_1_2_aarch64.whl", hash = "sha256:d4b391db520f272e41ac42182350a9fec9a29b8fe64af183802d89fb83cfea2d", size = 498331, upload-time = "2026-02-26T16:31:37.863Z" },
+    { url = "https://files.pythonhosted.org/packages/f6/f4/453ba85c60469d0b921b0ab32acc4dacb2f6e99e14d1df63c07352192763/pyfracturedjson-2.0.0-cp314-cp314t-musllinux_1_2_armv7l.whl", hash = "sha256:75bd41861270339cf1a7a5de1f234afa70ed22ffd3a3ff21ba8abac289766071", size = 605380, upload-time = "2026-02-26T16:30:07.99Z" },
+    { url = "https://files.pythonhosted.org/packages/92/ab/4e4366ed294ce190e41fc6cb57103c9dffb74776299d6aede7a2fa95cbfc/pyfracturedjson-2.0.0-cp314-cp314t-musllinux_1_2_i686.whl", hash = "sha256:69b9e9e92908290222eb7ffdaf1586ab75efef62917e596dc12f92176101c194", size = 567096, upload-time = "2026-02-26T16:31:51.262Z" },
+    { url = "https://files.pythonhosted.org/packages/1a/11/f5f01681fa9a09bfcbcc83b06b623010874e7db3cae696e723b867983113/pyfracturedjson-2.0.0-cp314-cp314t-musllinux_1_2_x86_64.whl", hash = "sha256:b8ad2ebb3f8336e17c6b0a65b48a4cc76ab36634baa079c20f5cee6512a03626", size = 535431, upload-time = "2026-02-26T16:30:22.548Z" },
+    { url = "https://files.pythonhosted.org/packages/62/a9/b819a29b063609a8fc910bf8d3897b84129ccc87d74074a7b6e5e925d936/pyfracturedjson-2.0.0-pp311-pypy311_pp73-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:c254a2420311462a407563a4b08ba7487d7f9249b906600afd6192d7a0642858", size = 327040, upload-time = "2026-02-26T16:31:19.456Z" },
+    { url = "https://files.pythonhosted.org/packages/8a/89/c3c0c637aa8ddef0e4d1c9b81b1ec6318c182d95ab92e784a278e47a04ea/pyfracturedjson-2.0.0-pp311-pypy311_pp73-manylinux_2_17_armv7l.manylinux2014_armv7l.whl", hash = "sha256:94f110a8a8c0aeaccc34310319832737e081fa96cb3d4b9f6eee285b1a0a16d0", size = 334169, upload-time = "2026-02-26T16:31:08.859Z" },
+    { url = "https://files.pythonhosted.org/packages/a2/82/7579012c6f5942913780740da7d86b0966b7dd1a87bcd0d54dd90641ef4d/pyfracturedjson-2.0.0-pp311-pypy311_pp73-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:8fcc8de66b44e7d17cf12fbf5a1b9273d9c9a7391aa6d0ea9bba5948090274e1", size = 447185, upload-time = "2026-02-26T16:30:43.381Z" },
+    { url = "https://files.pythonhosted.org/packages/16/13/90892b98e42c0077c9a88ad3bc0c04cc0db17ab05c97a15103d40bef459d/pyfracturedjson-2.0.0-pp311-pypy311_pp73-manylinux_2_17_s390x.manylinux2014_s390x.whl", hash = "sha256:2b66022ec76cf1afd6b187207754f3426f7efb2f74145326bd5a2d65a20282df", size = 370192, upload-time = "2026-02-26T16:31:20.821Z" },
+    { url = "https://files.pythonhosted.org/packages/fa/5c/e7162ae9d1798d413b49340ab0c811416cd1f7e65228a865f180718b4698/pyfracturedjson-2.0.0-pp311-pypy311_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:ab225461f250cf97c2a2f081cf23ec67eceff8ba91fa8ce90b36ac8691cafbf1", size = 338664, upload-time = "2026-02-26T16:30:03.096Z" },
+    { url = "https://files.pythonhosted.org/packages/51/ed/15198f2873511e1e4a94b80ff5e892e4becec8f35e9951a2621515df5d9b/pyfracturedjson-2.0.0-pp311-pypy311_pp73-manylinux_2_5_i686.manylinux1_i686.whl", hash = "sha256:42a79a3123096870edd7efafef0069dcd2beddc9e9ab140f5dd6c19684d5d1c6", size = 354989, upload-time = "2026-02-26T16:31:59.895Z" },
+    { url = "https://files.pythonhosted.org/packages/cb/73/3a0a1d6c7f69d3dcb550eee7ac1a8cc329bba33220f081f0b7f574e21d71/pyfracturedjson-2.0.0-pp311-pypy311_pp73-musllinux_1_2_aarch64.whl", hash = "sha256:64f9a46ccef5d13d42f36fca0f4ab1a8047de78cd27956c9d1e3249a5313799a", size = 503030, upload-time = "2026-02-26T16:31:33.023Z" },
+    { url = "https://files.pythonhosted.org/packages/d4/2e/4b31415475a556cbd89f363fd3aa81ed2c68033da92b6698efe2bb5467da/pyfracturedjson-2.0.0-pp311-pypy311_pp73-musllinux_1_2_armv7l.whl", hash = "sha256:e14f3189168944c7cdf9078d6d378178860a26234c362e30641668de09a659f7", size = 608882, upload-time = "2026-02-26T16:30:10.827Z" },
+    { url = "https://files.pythonhosted.org/packages/bb/e1/2d4b21c5ba797d918566ec3999fee1fa72e1521f240b6caa968127d974a0/pyfracturedjson-2.0.0-pp311-pypy311_pp73-musllinux_1_2_i686.whl", hash = "sha256:aa9cd2dd52cd329a96e3e9fdbe6d4bdf126537dbeaa1258ca1ae3f91f2015092", size = 571286, upload-time = "2026-02-26T16:30:24.984Z" },
+    { url = "https://files.pythonhosted.org/packages/d7/c3/54b83bde814ca55ff1001d7dad090d7def0e056f8ff924137d5adec8b2ed/pyfracturedjson-2.0.0-pp311-pypy311_pp73-musllinux_1_2_x86_64.whl", hash = "sha256:fe6258ae3a5a477098f9d75d0b0a1b265d320f9e08e17874b0f888df1e2e1a95", size = 538659, upload-time = "2026-02-26T16:30:13.3Z" },
+]
+
+[[package]]
 name = "pygments"
 version = "2.19.2"
 source = { registry = "https://pypi.org/simple" }
@@ -415,7 +517,9 @@ name = "smart-home"
 version = "0.3.0"
 source = { virtual = "." }
 dependencies = [
+    { name = "astral" },
     { name = "pydantic" },
+    { name = "pyfracturedjson" },
 ]
 
 [package.dev-dependencies]
@@ -428,7 +532,11 @@ dev = [
 ]
 
 [package.metadata]
-requires-dist = [{ name = "pydantic", specifier = ">=2.12.5" }]
+requires-dist = [
+    { name = "astral", specifier = ">=3.2" },
+    { name = "pydantic", specifier = ">=2.12.5" },
+    { name = "pyfracturedjson", specifier = ">=2.0.0" },
+]
 
 [package.metadata.requires-dev]
 dev = [
@@ -467,6 +575,15 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/55/e3/70399cb7dd41c10ac53367ae42139cf4b1ca5f36bb3dc6c9d33acdb43655/typing_inspection-0.4.2.tar.gz", hash = "sha256:ba561c48a67c5958007083d386c3295464928b01faa735ab8547c5692e87f464", size = 75949, upload-time = "2025-10-01T02:14:41.687Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/dc/9b/47798a6c91d8bdb567fe2698fe81e0c6b7cb7ef4d13da4114b41d239f65d/typing_inspection-0.4.2-py3-none-any.whl", hash = "sha256:4ed1cacbdc298c220f1bd249ed5287caa16f34d44ef4e9c3d0cbad5b521545e7", size = 14611, upload-time = "2025-10-01T02:14:40.154Z" },
+]
+
+[[package]]
+name = "tzdata"
+version = "2025.3"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/5e/a7/c202b344c5ca7daf398f3b8a477eeb205cf3b6f32e7ec3a6bac0629ca975/tzdata-2025.3.tar.gz", hash = "sha256:de39c2ca5dc7b0344f2eba86f49d614019d29f060fc4ebc8a417896a620b56a7", size = 196772, upload-time = "2025-12-13T17:45:35.667Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/c7/b0/003792df09decd6849a5e39c28b513c06e84436a54440380862b5aeff25d/tzdata-2025.3-py2.py3-none-any.whl", hash = "sha256:06a47e5700f3081aab02b2e513160914ff0694bce9947d6b76ebd6bf57cfc5d1", size = 348521, upload-time = "2025-12-13T17:45:33.889Z" },
 ]
 
 [[package]]
