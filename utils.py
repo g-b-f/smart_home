@@ -48,11 +48,9 @@ class JsonWrapper:
         return obj.isoformat() if isinstance(obj, datetime) else obj
 
     def write_default(self):
-        logger.info(
-            "writing default values:\n%s",
-            json.dumps(self.default, indent=4, default=self.format_iso)
-        )
-        self.file.write_text(json.dumps(self.default, default=self.format_iso))
+        output = json.dumps(self.default, indent=4, default=self.format_iso)
+        logger.info("writing default values:\n%s", output)
+        self.file.write_text(output + "\n")
         
     @property
     def data(self) -> dict:
