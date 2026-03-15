@@ -43,9 +43,16 @@ class JsonWrapper:
         self.file = file
         self.logger = get_logger(file.stem)
 
+    @staticmethod
+    def format_iso(obj):
+        return obj.isoformat() if isinstance(obj, datetime) else obj
+
     def write_default(self):
-        logger.info("writing default values:\n%s", json.dumps(self.default, indent=4))
-        self.file.write_text(json.dumps(self.default))
+        logger.info(
+            "writing default values:\n%s",
+            json.dumps(self.default, indent=4, default=self.format_iso)
+        )
+        self.file.write_text(json.dumps(self.default, default=self.format_iso))
         
     @property
     def data(self) -> dict:
