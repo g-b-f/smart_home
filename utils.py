@@ -42,6 +42,10 @@ class JsonWrapper:
     def __init__(self, file: Path):
         self.file = file
         self.logger = get_logger(file.stem)
+
+    def write_default(self):
+        logger.info("writing default values:\n%s", json.dumps(self.default, indent=4))
+        self.file.write_text(json.dumps(self.default))
         
     @property
     def data(self) -> dict:
@@ -50,7 +54,7 @@ class JsonWrapper:
             MutableGlobals.model_validate(ret)
         except (FileNotFoundError, ValidationError) as e:
             logger.error("Error loading %s: %s. Reverting to default.", self.file.name, e)
-            self.file.write_text(json.dumps(self.default))
+            self.write_default()
             ret = self.default
         return ret
 
@@ -168,3 +172,7 @@ class Sun:
 
     def __repr__(self):
         return f"Sun({self.location}): {self.sun}"
+
+
+if __name__ == "__main__":
+    mutable_globals.write_default()
