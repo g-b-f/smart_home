@@ -66,13 +66,13 @@ async def tracking_stopped():
 
     if current_time > gbl.LATE_WAKE_UP_TIME:
         logger.info(
-                "%s is greater than %s, turning on light",
+                "current time %s is greater than late wakeup time %s, turning on light",
                 current_time, gbl.LATE_WAKE_UP_TIME
                 )
         await wake_up()
-    elif current_time < gbl.EARLIEST_SLEEP_TIME:
+    elif current_time < gbl.EARLY_WAKE_TIME:
         logger.info(
-                "%s is less than %s, turning on nightlight",
+                "current time %s is less than early wakeup time %s,",
                 current_time, gbl.EARLIEST_SLEEP_TIME
                 )
         await nightlight()
@@ -81,13 +81,13 @@ async def tracking_stopped():
         sleep_length = datetime.now() - mutable_globals.last_sleep        
         if sleep_length < gbl.MINIMUM_SLEEP_LENGTH:
             logger.info(
-                    "sleep length %s is less than %s, turning on nightlight",
+                    "sleep length %s is less than minimum of %s, turning on nightlight",
                     sleep_length, gbl.MINIMUM_SLEEP_LENGTH
                     )
             await nightlight()
         else:
             logger.info(
-                    "sleep length %s is greater than %s, turning on light",
+                    "sleep length %s is greater than minimum of  %s, turning on light",
                     sleep_length, gbl.MINIMUM_SLEEP_LENGTH
                     )
             await wake_up()
