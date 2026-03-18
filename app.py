@@ -11,7 +11,7 @@ from hypercorn.config import Config as HypercornConfig
 
 import lighting_routines as Routine
 from periodic_tasks import periodic_light_check
-from utils import get_logger, mutable_globals
+from utils import get_logger, mutable_globals, set_config
 
 logger = get_logger(__name__)
 logger.debug("beginning smart home app")
@@ -57,6 +57,29 @@ async def sleep():
 async def test():
     logger.info("test endpoint hit with args:\n%s", flask.request.get_json() or {})
     return "OK", 200
+
+
+@app.route("/mutable_globals", methods=["POST"])
+async def mutable_globals():
+    request_data = flask.request.get_json() or {}                     logger.debug(request_data)
+    visitor_present = request_data.get("visitor_present")
+    toggle_strs = {"toggle", "t"}
+    if visitor_present is not None:
+        old = mutable_globals.visitor_present
+        if isinstance(visitor_present, bool):
+            mutable_globals.visitor_present = visitor_present
+            return f"visitor_present was {old}, now {visitor_present}", 200
+        if isinstance(visitor_present, str) and visitor_present.lower() in toggle_strs:
+            mutable_globals.visitor_present = not old
+            return f"visitor_present was {old}, now {not old}", 200
+        return f"unknown request visitor_present={visitor_present}", 400
+
+    unimplemented = {"use_bulb", "use_wled", "last_sleep"}
+    if keys := request_data.keys() & unimplemented:
+        return f"nothing implemented for {keys}", 501
+    return f"unknown request {request_data}", 400
+
+
 
 async def start():
     scheduler = AsyncIOScheduler(timezone="Europe/London")
