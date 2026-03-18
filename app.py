@@ -11,7 +11,7 @@ from hypercorn.config import Config as HypercornConfig
 
 import lighting_routines as Routine
 from periodic_tasks import periodic_light_check
-from utils import get_logger, mutable_globals, set_config
+from utils import get_logger, mutable_globals
 
 logger = get_logger(__name__)
 logger.debug("beginning smart home app")
@@ -61,7 +61,8 @@ async def test():
 
 @app.route("/mutable_globals", methods=["POST"])
 async def mutable_globals():
-    request_data = flask.request.get_json() or {}                     logger.debug(request_data)
+    request_data = flask.request.get_json() or {}
+    logger.debug(request_data)
     visitor_present = request_data.get("visitor_present")
     toggle_strs = {"toggle", "t"}
     if visitor_present is not None:
