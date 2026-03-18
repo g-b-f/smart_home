@@ -5,3 +5,4 @@ __pycache__
 .mypy_cache
 nohup.out
 log.txt
+mutable_globals.json
