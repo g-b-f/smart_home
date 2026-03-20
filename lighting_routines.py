@@ -2,6 +2,8 @@ from datetime import datetime
 
 import global_vars as gbl
 from utils import get_logger, mutable_globals
+from utils import format_time as fmt
+
 from wrappers.bulb_wrapper import Bulb
 from wrappers.WLED_wrapper import WLED
 
@@ -67,13 +69,13 @@ async def tracking_stopped():
     if current_time > gbl.LATE_WAKE_UP_TIME:
         logger.info(
                 "current time %s is greater than late wakeup time %s, turning on light",
-                current_time, gbl.LATE_WAKE_UP_TIME
+                fmt(current_time), fmt(gbl.LATE_WAKE_UP_TIME)
                 )
         await wake_up()
     elif current_time < gbl.EARLY_WAKE_TIME:
         logger.info(
                 "current time %s is less than early wakeup time %s,",
-                current_time, gbl.EARLIEST_SLEEP_TIME
+                fmt(current_time), fmt(gbl.EARLIEST_SLEEP_TIME)
                 )
         await nightlight()
 
@@ -82,13 +84,13 @@ async def tracking_stopped():
         if sleep_length < gbl.MINIMUM_SLEEP_LENGTH:
             logger.info(
                     "sleep length %s is less than minimum of %s, turning on nightlight",
-                    sleep_length, gbl.MINIMUM_SLEEP_LENGTH
+                    fmt(sleep_length), fmt(gbl.MINIMUM_SLEEP_LENGTH)
                     )
             await nightlight()
         else:
             logger.info(
                     "sleep length %s is greater than minimum of  %s, turning on light",
-                    sleep_length, gbl.MINIMUM_SLEEP_LENGTH
+                    fmt(sleep_length), fmt(gbl.MINIMUM_SLEEP_LENGTH)
                     )
             await wake_up()
 

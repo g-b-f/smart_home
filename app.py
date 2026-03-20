@@ -1,6 +1,7 @@
 import argparse
 import asyncio
 import sys
+from datetime import datetime
 
 import flask
 from apscheduler.schedulers.asyncio import (
@@ -11,7 +12,7 @@ from hypercorn.config import Config as HypercornConfig
 
 import lighting_routines as Routine
 from periodic_tasks import periodic_light_check
-from utils import get_logger, mutable_globals
+from utils import get_logger, mutable_globals, config_to_bool_op, format_time
 
 logger = get_logger(__name__)
 logger.debug("beginning smart home app")
@@ -59,26 +60,49 @@ async def test():
     return "OK", 200
 
 
-@app.route("/mutable_globals", methods=["POST"])
-async def mutable_globals():
+@app.route("/config", methods=["POST"])
+async def config():
     request_data = flask.request.get_json() or {}
     logger.debug(request_data)
-    visitor_present = request_data.get("visitor_present")
-    toggle_strs = {"toggle", "t"}
-    if visitor_present is not None:
-        old = mutable_globals.visitor_present
-        if isinstance(visitor_present, bool):
-            mutable_globals.visitor_present = visitor_present
-            return f"visitor_present was {old}, now {visitor_present}", 200
-        if isinstance(visitor_present, str) and visitor_present.lower() in toggle_strs:
-            mutable_globals.visitor_present = not old
-            return f"visitor_present was {old}, now {not old}", 200
-        return f"unknown request visitor_present={visitor_present}", 400
+    valid_requests = request_data.keys() & mutable_globals.data.keys()
+    if not valid_requests:
+        logger.warning("No valid config options provided in request\n%s", request_data)
+        return "No valid config options provided", 400
+    
+    for key, value in request_data.items():
+        assert isinstance(key, str)
+        if key in mutable_globals:
 
-    unimplemented = {"use_bulb", "use_wled", "last_sleep"}
-    if keys := request_data.keys() & unimplemented:
-        return f"nothing implemented for {keys}", 501
-    return f"unknown request {request_data}", 400
+            if key == "last_sleep":
+                try:
+                    from_iso = datetime.fromisoformat(value)
+                    mutable_globals.last_sleep = from_iso
+                    logger.info("Updating last_sleep to %s", format_time(from_iso))
+                except ValueError:
+                    logger.warning("Invalid datetime format for last_sleep: %s", value)
+                    return "Invalid datetime format for last_sleep, expected ISO format", 400
+                except Exception as e:
+                    logger.warning("Error updating last_sleep: %s", e)
+                    return f"Error updating last_sleep: {e}", 500
+                continue
+
+            mut_key = key.replace("_", " ")
+            try:
+                op = config_to_bool_op(value)
+                old_value = mutable_globals[key]
+                new_value = op(old_value, key)
+                mutable_globals[key] = new_value
+
+                if len(valid_requests) == 1:
+                    return f"{mut_key} was {old_value}, now {new_value}", 200
+            except ValueError as e:
+                logger.warning("Invalid value for %s: %s", key, value)
+                return str(e), 400
+        else:
+            logger.warning("Unknown config option: %s", key)        
+    
+
+    return f"Updated {len(valid_requests)} config options", 200
 
 
 
