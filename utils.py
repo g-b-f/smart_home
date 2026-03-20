@@ -1,6 +1,6 @@
 import json
 import logging
-from datetime import datetime, timedelta, time
+from datetime import datetime, time, timedelta
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 from typing import Callable
@@ -132,10 +132,7 @@ mutable_globals = JsonWrapper(Path(__file__).parent / "mutable_globals.json")
 
 def format_time(t: datetime| timedelta | time) -> str:
     if isinstance(t, timedelta):
-        if t.days > 0:
-            days_str = f"{t.days} day{'s' if t.days != 1 else ''}, "
-        else:
-            days_str = ""
+        days_str = f"{t.days} day{'s' if t.days != 1 else ''}, " if t.days else ""
         total_seconds = int(t.total_seconds())
         hours, remainder = divmod(total_seconds, 3600)
         minutes, seconds = divmod(remainder, 60)

@@ -1,5 +1,4 @@
-from datetime import time
-from datetime import timedelta
+from datetime import time, timedelta
 
 USE_BULB = True
 USE_WLED = False

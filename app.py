@@ -12,7 +12,7 @@ from hypercorn.config import Config as HypercornConfig
 
 import lighting_routines as Routine
 from periodic_tasks import periodic_light_check
-from utils import get_logger, mutable_globals, config_to_bool_op, format_time
+from utils import config_to_bool_op, format_time, get_logger, mutable_globals
 
 logger = get_logger(__name__)
 logger.debug("beginning smart home app")
