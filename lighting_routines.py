@@ -12,7 +12,7 @@ async def tracking_start():
     """turn off the light"""
     logger.info("Turning off light")
     now = datetime.now()
-    if now.time() > gbl.EARLIEST_SLEEP_TIME or now.time() < EARLY_WAKE_TIME:
+    if now.time() > gbl.EARLIEST_SLEEP_TIME or now.time() < gbl.EARLY_WAKE_TIME:
         logger.debug(
             "setting last sleep time to %s", now.strftime("%d/%m/%Y %H:%M:%S")
             )
