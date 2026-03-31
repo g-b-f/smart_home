@@ -13,6 +13,15 @@ from extra_types import MutableGlobals, RGBtype
 
 MAX_LOG_SIZE_BYTES = 1024 * 1024 # 1 MB
 
+def namer(default_name: str) -> str:
+    """By default, `RotatingFileHandler` creates logs of the form `log.txt.1`.
+    This custom namer instead makes them of the form `log_1.txt`"""
+
+    default_path = Path(default_name)
+    index = default_path.suffix.strip(".")
+    base_file = Path(default_path.stem)
+    new_name = f"{base_file.stem}_{index}{base_file.suffix}"
+    return str(path.parent / new_name)
 
 def get_logger(name: str, level=None) -> logging.Logger:
     if level is None:
@@ -24,6 +33,7 @@ def get_logger(name: str, level=None) -> logging.Logger:
     log_file = Path(__file__).parent / "log.txt"
     handler = RotatingFileHandler(log_file, maxBytes=MAX_LOG_SIZE_BYTES, backupCount=2)
     handler.setLevel(level_int)
+    handler.namer = namer
     formatter = logging.Formatter("%(asctime)s %(levelname)s - %(message)s", datefmt="%H:%M:%S")
     handler.setFormatter(formatter)
 
