@@ -21,7 +21,7 @@ def namer(default_name: str) -> str:
     index = default_path.suffix.strip(".")
     base_file = Path(default_path.stem)
     new_name = f"{base_file.stem}_{index}{base_file.suffix}"
-    return str(path.parent / new_name)
+    return str(default_path.parent / new_name)
 
 def get_logger(name: str, level=None) -> logging.Logger:
     if level is None:
@@ -55,11 +55,11 @@ class JsonWrapper:
         self.logger = get_logger(file.stem)
 
     @staticmethod
-    def format_iso(obj):
+    def _format_iso(obj):
         return obj.isoformat() if isinstance(obj, datetime) else obj
 
     def write_default(self):
-        output = json.dumps(self.default, indent=4, default=self.format_iso)
+        output = json.dumps(self.default, indent=4, default=self._format_iso)
         logger.info("writing default values:\n%s", output)
         self.file.write_text(output + "\n")
         
@@ -76,7 +76,7 @@ class JsonWrapper:
 
     @data.setter
     def data(self, d):
-        self.file.write_text(json.dumps(d, indent=4, default=self.format_iso) + "\n")
+        self.file.write_text(json.dumps(d, indent=4, default=self._format_iso) + "\n")
     
     def _get_var(self, key:str):
         ret = self.data[key]
@@ -157,7 +157,7 @@ def format_time(t: datetime| timedelta | time) -> str:
         raise ValueError("Input must be a datetime, timedelta, or time object")
 
 
-def config_to_bool_op(option: str|bool|int) -> Callable:
+def config_to_bool_function(option: str|bool|int) -> Callable:
     toggle = ["toggle", "t"]
     true = ["true", True, 1, "1"]
     false = ["false", False, 0, "0"]

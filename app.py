@@ -12,7 +12,7 @@ from hypercorn.config import Config as HypercornConfig
 
 import lighting_routines as Routine
 from periodic_tasks import periodic_light_check
-from utils import config_to_bool_op, format_time, get_logger, mutable_globals
+from utils import config_to_bool_function, format_time, get_logger, mutable_globals
 
 logger = get_logger(__name__)
 logger.debug("beginning smart home app")
@@ -88,9 +88,9 @@ async def config():
 
             mut_key = key.replace("_", " ")
             try:
-                op = config_to_bool_op(value)
+                func = config_to_bool_function(value)
                 old_value = mutable_globals[key]
-                new_value = op(old_value, key)
+                new_value = func(old_value, key)
                 mutable_globals[key] = new_value
 
                 if len(valid_requests) == 1:
