@@ -157,7 +157,7 @@ def format_time(t: datetime| timedelta | time) -> str:
         raise ValueError("Input must be a datetime, timedelta, or time object")
 
 
-def config_to_bool_function(option: str|bool|int) -> Callable:
+def config_to_bool_function(option: str|bool|int) -> Callable[[bool, str], bool]:
     toggle = ["toggle", "t"]
     true = ["true", True, 1, "1"]
     false = ["false", False, 0, "0"]
@@ -172,7 +172,7 @@ def config_to_bool_function(option: str|bool|int) -> Callable:
     if option not in functions:
         raise ValueError(f"Invalid option: {option}")
     
-    def func(current_value, name):
+    def func(current_value:bool, name:str) -> bool:
         new_value = functions[option](current_value)
         logger.info("%s was %s, now %s", name, current_value, new_value)
         return new_value

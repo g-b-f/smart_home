@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 from pytest import LogCaptureFixture
 
-from utils import JsonWrapper
+from utils import JsonWrapper, config_to_bool_function
 
 
 @pytest.fixture
@@ -53,3 +53,27 @@ class TestMutableGlobals:
             if record.levelname == "ERROR" and "Error loading" in record.message:
                 return
         raise AssertionError("Expected error log not found")
+    
+class TestConfigToBoolFunction:
+    @pytest.mark.parametrize("option", ["true", "True", True, 1, "1"])
+    def test_set_true(self, option):
+        func = config_to_bool_function(option)
+        assert func(True, "")
+        assert func(False, "")
+    
+    @pytest.mark.parametrize("option", ["false", "False", False, 0, "0"])
+    def test_set_false(self, option):
+        func = config_to_bool_function(option)
+        assert not func(True, "")
+        assert not func(False, "")
+
+    @pytest.mark.parametrize("option", ["toggle", "Toggle", "t", "T"])
+    def test_toggle(self, option):
+        func = config_to_bool_function(option)
+        assert not func(True, "")
+        assert func(False, "")
+
+    def test_invalid_option(self):
+        with pytest.raises(ValueError):
+            config_to_bool_function("qwerty")
+
