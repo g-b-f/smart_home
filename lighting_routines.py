@@ -28,7 +28,7 @@ async def snooze():
     """snooze alarm"""
     if not mutable_globals.visitor_present:
         logger.info("snoozing")
-        await Bulb().turn_on(brightness=50, colortemp=gbl.MAX_COLORTEMP)
+        await Bulb().turn_on(brightness=50, colortemp=gbl.SUNRISE_COLOURTEMP)
     
 async def bedtime():
     """set the light to a dim, warm colour"""
