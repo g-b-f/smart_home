@@ -4,6 +4,7 @@ from datetime import datetime, time, timedelta
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 from typing import Callable
+import humanize
 
 import astral.sun
 from pydantic import ValidationError
@@ -142,12 +143,7 @@ mutable_globals = JsonWrapper(Path(__file__).parent / "mutable_globals.json")
 
 def format_time(t: datetime| timedelta | time) -> str:
     if isinstance(t, timedelta):
-        days_str = f"{t.days} day{'s' if t.days != 1 else ''}, " if t.days else ""
-        total_seconds = int(t.total_seconds())
-        hours, remainder = divmod(total_seconds, 3600)
-        minutes, seconds = divmod(remainder, 60)
-        return f"{days_str}{hours:02}:{minutes:02}:{seconds:02}"
-    
+        return humanize.precisedelta(t)
     elif isinstance(t, datetime):
         return t.strftime("%Y-%m-%d %H:%M:%S")
     elif isinstance(t, time):

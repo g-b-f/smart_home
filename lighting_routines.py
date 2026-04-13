@@ -13,9 +13,7 @@ async def tracking_start():
     logger.info("Turning off light")
     now = datetime.now()
     if now.time() > gbl.EARLIEST_SLEEP_TIME or now.time() < gbl.EARLY_WAKE_TIME:
-        logger.debug(
-            "setting last sleep time to %s", now.strftime("%d/%m/%Y %H:%M:%S")
-            )
+        logger.debug("setting last sleep time to %s", fmt(now))
         mutable_globals.last_sleep = now
 
     if mutable_globals.use_wled:
