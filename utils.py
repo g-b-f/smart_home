@@ -3,10 +3,10 @@ import logging
 from datetime import datetime, time, timedelta
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
-from typing import Callable
-import humanize
+from typing import Callable, MutableMapping
 
 import astral.sun
+import humanize
 from pydantic import ValidationError
 
 import global_vars as gbl
@@ -47,7 +47,7 @@ def get_logger(name: str, level=None) -> logging.Logger:
 
 logger = get_logger(__name__)
 
-class JsonWrapper:
+class JsonWrapper(MutableMapping):
 
     default = MutableGlobals.model_construct().model_dump()
 
@@ -138,6 +138,12 @@ class JsonWrapper:
     
     def __repr__(self) -> str:
         return str(self.data)
+    
+    def __delitem__(self, key):
+        data = self.data
+        del data[key]
+        self.data = data
+        
 
 mutable_globals = JsonWrapper(Path(__file__).parent / "mutable_globals.json")
 
