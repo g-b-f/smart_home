@@ -2,6 +2,7 @@ import argparse
 import asyncio
 import sys
 from datetime import datetime
+from http import HTTPStatus
 
 import flask
 from apscheduler.schedulers.asyncio import (
@@ -25,6 +26,8 @@ ALARM_SNOOZED = "alarm_snooze_clicked"
 ALARM_DISMISSED = "alarm_alert_dismiss"
 BEDTIME_NOTIFICATION = "time_to_bed_alarm_alert"
 
+http_ok = ("OK", HTTPStatus.OK.value)
+
 COLOR_TEMP_SYNC_INTERVAL = 60  # minutes
 
 app = flask.Flask(__name__)
@@ -40,7 +43,7 @@ event_mappings = {
 
 # point to http://192.168.1.117:5000/sleep
 @app.route("/sleep", methods=["POST"])
-async def sleep():
+async def sleep() -> tuple[str, int]:
     request_data = flask.request.get_json() or {}
     logger.debug(request_data)
     event = request_data.get("event")
@@ -49,33 +52,32 @@ async def sleep():
 
     if event in event_mappings:
         await event_mappings[event]()
-        return "OK", 200
+        return http_ok
     else:
         logger.debug("unknown event: %s", event)
-        return "Unknown event", 501 # 501: Not Implemented
+        return "Unknown event", HTTPStatus.NOT_IMPLEMENTED.value
     
 
 
 @app.route("/test", methods=["POST"])
-async def test():
+async def test() -> tuple[str, int]:
     logger.info("test endpoint hit with args:\n%s", flask.request.get_json() or {})
-    return "OK", 200
+    return http_ok
 
 
 @app.route("/set_lights", methods=["POST"])
-async def set_lights():
+async def set_lights() -> tuple[str, int]:
     request_data = flask.request.get_json() or {}
-
-    return "OK", 200
+    return http_ok
 
 @app.route("/config", methods=["POST"])
-async def config():
+async def config() -> tuple[str, int]:
     request_data = flask.request.get_json() or {}
     logger.debug(request_data)
     valid_requests = request_data.keys() & mutable_globals.data.keys()
     if not valid_requests:
         logger.warning("No valid config options provided in request\n%s", request_data)
-        return "No valid config options provided", 400
+        return "No valid config options provided", HTTPStatus.BAD_REQUEST.value
     
     for key, value in request_data.items():
         assert isinstance(key, str)
@@ -88,10 +90,12 @@ async def config():
                     logger.info("Updating last_sleep to %s", format_time(from_iso))
                 except ValueError:
                     logger.warning("Invalid datetime format for last_sleep: %s", value)
-                    return "Invalid datetime format for last_sleep, expected ISO format", 400
+                    return ("Invalid datetime format for last_sleep, expected ISO format", 
+                            HTTPStatus.BAD_REQUEST.value)
                 except Exception as e:
                     logger.warning("Error updating last_sleep: %s", e)
-                    return f"Error updating last_sleep: {e}", 500
+                    return (f"Error updating last_sleep: {e}", 
+                        HTTPStatus.INTERNAL_SERVER_ERROR.value)
                 continue
 
             mut_key = key.replace("_", " ")
@@ -102,15 +106,15 @@ async def config():
                 mutable_globals[key] = new_value
 
                 if len(valid_requests) == 1:
-                    return f"{mut_key} was {old_value}, now {new_value}", 200
+                    return f"{mut_key} was {old_value}, now {new_value}", HTTPStatus.OK.value
             except ValueError as e:
                 logger.warning("Invalid value for %s: %s", key, value)
-                return str(e), 400
+                return str(e), HTTPStatus.BAD_REQUEST.value
         else:
             logger.warning("Unknown config option: %s", key)        
     
 
-    return f"Updated {len(valid_requests)} config options", 200
+    return f"Updated {len(valid_requests)} config options", HTTPStatus.OK.value
 
 
 
