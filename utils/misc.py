@@ -4,6 +4,7 @@ from datetime import datetime, time, timedelta
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 from typing import Callable, MutableMapping
+import http
 
 import astral.sun
 import humanize

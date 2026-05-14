@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 from pytest import LogCaptureFixture
 
-from utils import JsonWrapper, config_to_bool_function
+from utils.misc import JsonWrapper, config_to_bool_function
 
 
 @pytest.fixture

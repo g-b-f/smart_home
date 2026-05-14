@@ -12,7 +12,7 @@ from hypercorn.config import Config as HypercornConfig
 
 import lighting_routines as Routine
 from periodic_tasks import periodic_light_check
-from utils import config_to_bool_function, format_time, get_logger, mutable_globals
+from utils.misc import config_to_bool_function, format_time, get_logger, mutable_globals
 
 logger = get_logger(__name__)
 logger.debug("beginning smart home app")
@@ -53,12 +53,20 @@ async def sleep():
     else:
         logger.debug("unknown event: %s", event)
         return "Unknown event", 501 # 501: Not Implemented
+    
+
 
 @app.route("/test", methods=["POST"])
 async def test():
     logger.info("test endpoint hit with args:\n%s", flask.request.get_json() or {})
     return "OK", 200
 
+
+@app.route("/set_lights", methods=["POST"])
+async def set_lights():
+    request_data = flask.request.get_json() or {}
+
+    return "OK", 200
 
 @app.route("/config", methods=["POST"])
 async def config():

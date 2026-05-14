@@ -7,7 +7,7 @@ from typing import Optional, cast
 import yaml
 
 from extra_types import RGBtype
-from utils import clamp, get_logger
+from utils.misc import clamp, get_logger
 
 
 class FailedConnectionError(Exception):
