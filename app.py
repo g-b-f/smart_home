@@ -13,6 +13,8 @@ from hypercorn.config import Config as HypercornConfig
 
 import lighting_routines as Routine
 from periodic_tasks import periodic_light_check
+from wrappers.bulb_wrapper import Bulb
+from wrappers.WLED_wrapper import WLED
 from utils.misc import config_to_bool_function, format_time, get_logger, mutable_globals
 
 logger = get_logger(__name__)
@@ -68,7 +70,38 @@ async def test() -> tuple[str, int]:
 @app.route("/set_lights", methods=["POST"])
 async def set_lights() -> tuple[str, int]:
     request_data = flask.request.get_json() or {}
-    return http_ok
+    valid_requests = {"on", "brightness", "rgb", "colortemp"}
+    if not valid_requests & request_data.keys():
+        logger.warning("No valid light control options provided in request\n%s", request_data)
+        return "No valid light control options provided", HTTPStatus.BAD_REQUEST.value
+
+    if "on" in request_data:
+        if request_data["on"]:
+            await Bulb().turn_on()
+            await WLED().turn_on()
+        else:
+            await Bulb().turn_off()
+            await WLED().turn_off()
+        return http_ok
+    try:
+        await Bulb().turn_on(
+            brightness=request_data.get("brightness"),
+            rgb=request_data.get("rgb"),
+            colortemp=request_data.get("colortemp"),
+        )
+        await WLED().turn_on(
+            brightness=request_data.get("brightness"),
+            rgb=request_data.get("rgb"),
+            colortemp=request_data.get("colortemp"),
+        )
+        return http_ok
+    
+    except ValueError as e:
+        logger.warning("Invalid value in set_lights request: %s", e)
+        return f"Invalid value: {e}", HTTPStatus.BAD_REQUEST.value
+    except Exception as e: # noqa: BLE001
+        logger.error("Error setting lights: %s", e)
+        return f"Error setting lights: {e}", HTTPStatus.INTERNAL_SERVER_ERROR.value
 
 @app.route("/config", methods=["POST"])
 async def config() -> tuple[str, int]:
