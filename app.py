@@ -84,16 +84,18 @@ async def set_lights() -> tuple[str, int]:
             await WLED().turn_off()
         return http_ok
     try:
-        await Bulb().turn_on(
-            brightness=request_data.get("brightness"),
-            rgb=request_data.get("rgb"),
-            colortemp=request_data.get("colortemp"),
-        )
-        await WLED().turn_on(
-            brightness=request_data.get("brightness"),
-            rgb=request_data.get("rgb"),
-            colortemp=request_data.get("colortemp"),
-        )
+        if mutable_globals.use_bulb:
+            await Bulb().turn_on(
+                brightness=request_data.get("brightness"),
+                rgb=request_data.get("rgb"),
+                colortemp=request_data.get("colortemp"),
+                )
+        if mutable_globals.use_wled:
+            await WLED().turn_on(
+                brightness=request_data.get("brightness"),
+                rgb=request_data.get("rgb"),
+                colortemp=request_data.get("colortemp"),
+            )
         return http_ok
     
     except ValueError as e:
