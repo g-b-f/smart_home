@@ -13,9 +13,9 @@ from hypercorn.config import Config as HypercornConfig
 
 import lighting_routines as Routine
 from periodic_tasks import periodic_light_check
+from utils.misc import config_to_bool_function, format_time, get_logger, mutable_globals
 from wrappers.bulb_wrapper import Bulb
 from wrappers.WLED_wrapper import WLED
-from utils.misc import config_to_bool_function, format_time, get_logger, mutable_globals
 
 logger = get_logger(__name__)
 logger.debug("beginning smart home app")
