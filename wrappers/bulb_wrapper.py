@@ -11,15 +11,16 @@ from pywizlight import (  # type: ignore[import-untyped]
     scenes,
     wizlight,
 )
-from pywizlight.exceptions import (
-    WizLightConnectionError,  # type: ignore[import-untyped]
-)
+from pywizlight.exceptions import WizLightConnectionError # type: ignore[import-untyped]
 
 from utils.misc import clamp, get_logger, mutable_globals
 
 sys.path.append(str(Path(__file__).parent))
 from extra_types import RGBtype, SceneType
 from wrappers.base import WrapperBase
+
+del wizlight.__del__
+
 
 SCALING_FACTOR = 1_000_000
 
