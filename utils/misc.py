@@ -31,7 +31,7 @@ def get_logger(name: str, level=None) -> logging.Logger:
         raise ValueError(f"Invalid log level: {level}")
     level_int = logging._nameToLevel[level.upper()]
 
-    log_file = Path(__file__).parent / "log.txt"
+    log_file = Path(__file__).parent.parent / "log.txt"
     handler = RotatingFileHandler(log_file, maxBytes=MAX_LOG_SIZE_BYTES, backupCount=2)
     handler.setLevel(level_int)
     handler.namer = namer
@@ -107,7 +107,8 @@ class JsonWrapper(MutableMapping):
     
     @property
     def use_wled(self) -> bool:
-        return self._get_var("use_wled")
+        return False
+        # return self._get_var("use_wled")
     
     @use_wled.setter
     def use_wled(self, val:bool):
