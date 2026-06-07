@@ -6,6 +6,8 @@ from utils.misc import get_logger, mutable_globals
 from wrappers.bulb_wrapper import Bulb
 from wrappers.WLED_wrapper import WLED
 
+RED = (255, 0, 0)
+
 logger = get_logger(__name__)
 
 async def tracking_start():
@@ -31,7 +33,7 @@ async def snooze():
 async def bedtime():
     """set the light to a dim, warm colour"""
     logger.info("bedtime")
-    await Bulb().turn_on(brightness=20, colortemp=gbl.BEDTIME_COLORTEMP)
+    await Bulb().turn_on(brightness=30, colortemp=gbl.BEDTIME_COLORTEMP)
 
 async def wake_up(total_time=300):
     """gradually brighten the light over total_time seconds"""
@@ -44,24 +46,24 @@ async def nightlight():
     """set the light to a very dim, warm colour"""
     logger.info("turning on nightlight")
     if mutable_globals.use_bulb:
-        await Bulb().turn_on(brightness=5, rgb=(255,0,0))
+        await Bulb().turn_on(brightness=5, rgb=RED)
     if mutable_globals.use_wled:
-        await WLED().turn_on(brightness=5, rgb=(255,0,0))
+        await WLED().turn_on(brightness=5, rgb=RED)
 
 async def reading_light():
     """set the light to a fairly dim, warm colour"""
     logger.info("turning on reading light")
     if mutable_globals.use_bulb:
-        await Bulb().turn_on(brightness=10, rgb=(255,0,0))
+        await Bulb().turn_on(brightness=10, rgb=RED)
     if mutable_globals.use_wled:
-        await WLED().turn_on(brightness=23, rgb=(255,0,0))
+        await WLED().turn_on(brightness=23, rgb=RED)
 
 async def tracking_stopped():
     current_time = datetime.now().time()
     """called when sleep tracking stops"""
     if mutable_globals.visitor_present:
         logger.info("visitor present, not turning on light")
-        return "OK", 200
+        return
 
     if current_time > gbl.LATE_WAKE_UP_TIME:
         logger.info(
