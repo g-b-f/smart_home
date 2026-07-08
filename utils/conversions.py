@@ -53,17 +53,15 @@ def temp_to_rgb(temp: int|float) -> RGBtype:
 
     return round(red), round(green), round(blue)  
 
-def rgb_to_tmp(rgb_or_hex: RGBtype | str) -> int:
-    if isinstance(rgb_to_hex, str):
-        assert isinstance(rgb_or_hex, str)
-        rgb = hex_to_rgb(rgb_or_hex)
+def rgb_to_temp(rgb_or_hex: RGBtype | str) -> int:
+    if isinstance(rgb_or_hex, str):
+        rgb_target = hex_to_rgb(rgb_or_hex)
     else:
-        rgb = rgb_or_hex
-    assert isinstance(rgb, tuple)
+        rgb_target = rgb_or_hex
 
     for temp in range(1_000, 10_000):
-        rgb_target = temp_to_rgb(temp)
-        if rgb == rgb_target:
+        rgb_current = temp_to_rgb(temp)
+        if rgb_current == rgb_target:
             return temp
     
     raise RuntimeError(f"couldn't get temp for {rgb_or_hex}")
