@@ -25,3 +25,11 @@ BEDTIME_COLORTEMP = 1320
 
 MIN_COLORTEMP = 2200
 MAX_COLORTEMP = 6500
+
+ZENITH_WAYPOINTS = {
+    0.0: 6500,    # Solar noon (Cool Daylight)
+    60.0: 5500,   # Afternoon 
+    85.0: 3500,   # Golden Hour
+    90.0: 2700,   # Sunset (Warm White)
+    108.0: 2000   # Astronomical Dusk / Night
+}

@@ -8,6 +8,7 @@ import flask
 from apscheduler.schedulers.asyncio import (
     AsyncIOScheduler,  # type: ignore[import-untyped]
 )
+from apscheduler.triggers.interval import IntervalTrigger
 from hypercorn.asyncio import serve
 from hypercorn.config import Config as HypercornConfig
 
@@ -154,10 +155,10 @@ async def config() -> tuple[str, int]:
 
 
 async def start():
-    scheduler = AsyncIOScheduler(timezone="Europe/London")
-    scheduler.add_job(periodic_light_check, 'interval', minutes=COLOR_TEMP_SYNC_INTERVAL)
-    
     logger.info("starting scheduler")
+    scheduler = AsyncIOScheduler(timezone="Europe/London")
+    trigger = IntervalTrigger(seconds=30)
+    scheduler.add_job(periodic_light_check, trigger)
     scheduler.start()
     logger.debug("scheduler started")
     

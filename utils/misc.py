@@ -206,6 +206,33 @@ def get_zenith(location = astral.LocationInfo()) -> float:
     return astral.sun.zenith(location.observer)
 
 
+def lerp_color_temp(zenith: float) -> int:
+    """Linearly interpolates the colourtemp for a given zenith based on `gbl.ZENITH_WAYPOINTS`
+
+    Args:
+        zenith (float): The zenith, in degrees.
+
+    Returns:
+        int: The desired colourtemp for the zenith
+    """
+    waypoints = list(gbl.ZENITH_WAYPOINTS.items())
+
+    if zenith <= waypoints[0][0]:
+        return waypoints[0][1]
+    if zenith >= waypoints[-1][0]:
+        return waypoints[-1][1]
+
+    for i in range(len(waypoints) - 1):
+        zenith_1, colortemp_1 = waypoints[i]
+        zenith_2, colortemp_2 = waypoints[i + 1]
+
+        if zenith_1 <= zenith <= zenith_2:
+            factor = (zenith - zenith_1) / (zenith_2 - zenith_1)
+            return int(round(colortemp_1 + factor * (colortemp_2 - colortemp_1)))
+    
+    raise RuntimeError("couldn't get zenith. There might be something wrong with `gbl.ZENITH_WAYPOINTS`")
+
+
 def get_colourtemp_for_time(location = astral.LocationInfo(), date=None) -> int:
     sun = Sun(location, date)
     now = astral.now(location.tzinfo)
