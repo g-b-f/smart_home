@@ -53,15 +53,41 @@ def temp_to_rgb(temp: int|float) -> RGBtype:
 
     return round(red), round(green), round(blue)  
 
-def rgb_to_temp(rgb_or_hex: RGBtype | str) -> int:
+def rgb_to_temp(rgb_or_hex: RGBtype | str, approximate=True) -> int:
+    """The reverse of `temp_to_rgb`.
+    Brute forces the answer because I don't want to manually calculate it
+
+    Args:
+        rgb_or_hex (RGBtype | str): The color, as either an (r,g,b) tuple or hex string
+        approximate (bool, optional): Whether to get an approximation using euclidean distance. Defaults to True.
+
+    Raises:
+        RuntimeError: If a temperature couldn't be found.
+
+    Returns:
+        int: the colour temperature that matches the input value
+    """
     if isinstance(rgb_or_hex, str):
         rgb_target = hex_to_rgb(rgb_or_hex)
     else:
         rgb_target = rgb_or_hex
 
+    best_dist = 100.0 # any further than this gives dubious results 
+    best_temp = None
     for temp in range(1_000, 10_000):
         rgb_current = temp_to_rgb(temp)
         if rgb_current == rgb_target:
             return temp
-    
-    raise RuntimeError(f"couldn't get temp for {rgb_or_hex}")
+
+        if not approximate:
+            continue
+
+        dist = math.dist(rgb_current, rgb_target)
+        if dist < best_dist:
+            best_dist = dist
+            best_temp = temp
+
+    if best_temp is not None:
+        return best_temp
+    else:
+        raise RuntimeError(f"couldn't get temp for {rgb_or_hex}")
