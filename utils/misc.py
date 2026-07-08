@@ -122,6 +122,15 @@ class JsonWrapper(MutableMapping):
     def last_sleep(self, val:datetime):
         self._set_var("last_sleep", val.isoformat())
 
+    @property
+    def auto_colourtemp(self) -> bool:
+        return self._get_var("auto_colourtemp")
+
+    @auto_colourtemp.setter
+    def auto_colourtemp(self, val:bool):
+        self._set_var("auto_colourtemp", val)
+
+
     def __getitem__(self, key):
         return self._get_var(key)
     
