@@ -10,7 +10,7 @@ import humanize
 from pydantic import ValidationError
 
 import global_vars as gbl
-from extra_types import MutableGlobals, RGBtype
+from extra_types import MutableGlobals
 
 MAX_LOG_SIZE_BYTES = 1024 * 1024 # 1 MB
 
@@ -193,23 +193,6 @@ def config_to_bool_function(option: str|bool|int) -> Callable[[bool, str], bool]
 
 def clamp(value, min_value, max_value):
     return max(min_value, min(value, max_value))
-
-
-def rgb_to_hex(rgb: RGBtype) -> str:
-    return "{:02X}{:02X}{:02X}".format(*rgb)
-
-
-def hex_to_rgb(hex_colour: str) -> RGBtype:
-    hex_colour = hex_colour.lstrip('#')
-    if len(hex_colour) == 3:
-        hex_colour = ''.join([c*2 for c in hex_colour])
-    if len(hex_colour) != 6:
-        raise ValueError("Hex color must be in the format RRGGBB or RGB")
-    r = int(hex_colour[0:2], 16)
-    g = int(hex_colour[2:4], 16)
-    b = int(hex_colour[4:6], 16)
-    return (r, g, b)
-
 
 def get_zenith(location = astral.LocationInfo()) -> float:
     return astral.sun.zenith(location.observer)
