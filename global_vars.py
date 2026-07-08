@@ -33,7 +33,7 @@ ZENITH_WAYPOINTS = {
     90.0: 2700,   # Sunset (Warm White)
     96.0: 2000,   # Dawn/ Dusk
     # 108.0: 1800   # Astronomical Dusk / Night
-    108.0: BEDTIME_COLORTEMP   # Astronomical Dusk / Night
+    102.0: BEDTIME_COLORTEMP   # Night
 }
 # https://www.researchgate.net/publication/266389024_Dynamic_Lighting_System_for_Workplaces_at_Northern_Latitudes
 # suggests something like:

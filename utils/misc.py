@@ -222,7 +222,7 @@ def lerp_color_temp(zenith: float) -> int:
             factor = (zenith - zenith_1) / (zenith_2 - zenith_1)
             return int(round(colortemp_1 + factor * (colortemp_2 - colortemp_1)))
     
-    raise RuntimeError("couldn't get zenith. There might be something wrong with `gbl.ZENITH_WAYPOINTS`")
+    raise RuntimeError("couldn't get colourtemp. There might be something wrong with `gbl.ZENITH_WAYPOINTS`")
 
 
 def get_colourtemp_for_time(location = astral.LocationInfo(), date=None) -> int:
