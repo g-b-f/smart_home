@@ -31,5 +31,9 @@ ZENITH_WAYPOINTS = {
     60.0: 5500,   # Afternoon 
     85.0: 3500,   # Golden Hour
     90.0: 2700,   # Sunset (Warm White)
-    108.0: 2000   # Astronomical Dusk / Night
+    96.0: 2000,   # Dawn/ Dusk
+    108.0: 1800   # Astronomical Dusk / Night
 }
+# https://www.researchgate.net/publication/266389024_Dynamic_Lighting_System_for_Workplaces_at_Northern_Latitudes
+# suggests something like:
+zenith_to_temp = lambda zen: 4100 - 2500/ 2**((90-zen)/8.5)
