@@ -4,7 +4,6 @@ from pathlib import Path
 
 import global_vars as gbl
 
-
 MAX_LOG_SIZE_BYTES = 1024 * 1024 # 1 MB
 
 def namer(default_name: str) -> str:

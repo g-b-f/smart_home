@@ -1,9 +1,9 @@
 from datetime import datetime
 
 import global_vars as gbl
+from utils.get_logger import get_logger
 from utils.misc import format_time as fmt
 from utils.misc import mutable_globals
-from utils.get_logger import get_logger
 from wrappers.all import AllObjects
 from wrappers.bulb_wrapper import Bulb
 from wrappers.WLED_wrapper import WLED

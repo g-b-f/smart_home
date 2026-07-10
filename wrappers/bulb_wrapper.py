@@ -15,8 +15,8 @@ from pywizlight.exceptions import (
     WizLightConnectionError,  # type: ignore[import-untyped]
 )
 
-from utils.misc import clamp, mutable_globals
 from utils.get_logger import get_logger
+from utils.misc import clamp, mutable_globals
 
 sys.path.append(str(Path(__file__).parent))
 from extra_types import RGBtype, SceneType

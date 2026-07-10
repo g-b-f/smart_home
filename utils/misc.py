@@ -6,10 +6,9 @@ import astral.sun
 import humanize
 
 import global_vars as gbl
-from extra_types import  WayPointType
+from extra_types import WayPointType
 from utils.get_logger import get_logger
 from utils.json_wrapper import JsonWrapper
-
 
 logger = get_logger(__name__)
 

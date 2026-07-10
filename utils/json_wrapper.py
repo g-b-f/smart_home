@@ -1,5 +1,5 @@
-from datetime import datetime
 import json
+from datetime import datetime
 from pathlib import Path
 from typing import MutableMapping
 
@@ -7,6 +7,7 @@ from pydantic import ValidationError
 
 from extra_types import MutableGlobals
 from utils.get_logger import get_logger
+
 
 # TODO: decouple from MutableGlobals
 class JsonWrapper(MutableMapping):
