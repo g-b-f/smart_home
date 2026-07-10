@@ -15,8 +15,7 @@ from hypercorn.config import Config as HypercornConfig
 import lighting_routines as Routine
 from periodic_tasks import periodic_light_check
 from utils.misc import config_to_bool_function, format_time, get_logger, mutable_globals
-from wrappers.bulb_wrapper import Bulb
-from wrappers.WLED_wrapper import WLED
+from wrappers.all import AllObjects
 
 logger = get_logger(__name__)
 logger.debug("beginning smart home app")
@@ -78,25 +77,17 @@ async def set_lights() -> tuple[str, int]:
 
     if "on" in request_data:
         if request_data["on"]:
-            await Bulb().turn_on()
-            await WLED().turn_on()
+            await AllObjects().turn_on()
         else:
-            await Bulb().turn_off()
-            await WLED().turn_off()
+            await AllObjects().turn_off()
         return http_ok
+    
     try:
-        if mutable_globals.use_bulb:
-            await Bulb().turn_on(
-                brightness=request_data.get("brightness"),
-                rgb=request_data.get("rgb"),
-                colortemp=request_data.get("colortemp"),
-                )
-        if mutable_globals.use_wled:
-            await WLED().turn_on(
-                brightness=request_data.get("brightness"),
-                rgb=request_data.get("rgb"),
-                colortemp=request_data.get("colortemp"),
-            )
+        await AllObjects().turn_on(
+            brightness=request_data.get("brightness"),
+            rgb=request_data.get("rgb"),
+            colortemp=request_data.get("colortemp"),
+        )
         return http_ok
     
     except ValueError as e:

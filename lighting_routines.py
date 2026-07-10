@@ -3,6 +3,7 @@ from datetime import datetime
 import global_vars as gbl
 from utils.misc import format_time as fmt
 from utils.misc import get_logger, mutable_globals
+from wrappers.all import AllObjects
 from wrappers.bulb_wrapper import Bulb
 from wrappers.WLED_wrapper import WLED
 
@@ -19,11 +20,7 @@ async def tracking_start():
         logger.debug("setting last sleep time to %s", fmt(now))
         mutable_globals.last_sleep = now
 
-    if mutable_globals.use_wled:
-        await WLED().turn_off()
-
-    if mutable_globals.use_bulb:
-        await Bulb().turn_off()
+    await AllObjects().turn_off()
 
 async def snooze():
     """snooze alarm"""
@@ -46,10 +43,7 @@ async def wake_up(total_time=300):
 async def nightlight():
     """set the light to a very dim, warm colour"""
     logger.info("turning on nightlight")
-    if mutable_globals.use_bulb:
-        await Bulb().turn_on(brightness=5, rgb=RED)
-    if mutable_globals.use_wled:
-        await WLED().turn_on(brightness=5, rgb=RED)
+    await AllObjects().turn_on(brightness=5, rgb=RED)
 
 async def reading_light():
     """set the light to a fairly dim, warm colour"""
