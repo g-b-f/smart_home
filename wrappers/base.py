@@ -1,4 +1,3 @@
-import math
 import time
 from abc import ABCMeta, abstractmethod
 from pathlib import Path
@@ -7,8 +6,8 @@ from typing import Optional
 import yaml
 
 from extra_types import RGBtype
-from utils.misc import get_logger
 from utils.conversions import temp_to_rgb
+from utils.misc import get_logger
 
 
 class FailedConnectionError(Exception):

@@ -1,6 +1,6 @@
-from utils.misc import get_logger, get_zenith, lerp_color_temp, mutable_globals
-from wrappers.WLED_wrapper import WLED
+from utils.misc import colourtemp_from_zenith, get_logger, mutable_globals
 from wrappers.bulb_wrapper import Bulb
+from wrappers.WLED_wrapper import WLED
 
 logger = get_logger(__name__)
 
@@ -9,9 +9,7 @@ async def periodic_light_check():
         logger.debug("auto_colourtemp is disabled, skipping periodic light check")
         return
     
-    zen = get_zenith()
-    logger.debug("Current zenith: %f", zen)
-    temp = lerp_color_temp(zen)
+    temp = colourtemp_from_zenith()
     logger.debug("Setting colourtemp to %d based on zenith", temp)
 
     if mutable_globals.use_wled:

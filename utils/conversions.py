@@ -67,10 +67,7 @@ def rgb_to_temp(rgb_or_hex: RGBtype | str, approximate=True) -> int:
     Returns:
         int: the colour temperature that matches the input value
     """
-    if isinstance(rgb_or_hex, str):
-        rgb_target = hex_to_rgb(rgb_or_hex)
-    else:
-        rgb_target = rgb_or_hex
+    rgb_target = hex_to_rgb(rgb_or_hex) if isinstance(rgb_or_hex, str) else rgb_or_hex
 
     best_dist = 100.0 # any further than this gives dubious results 
     best_temp = None

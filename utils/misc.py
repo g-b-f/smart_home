@@ -3,7 +3,7 @@ import logging
 from datetime import datetime, time, timedelta
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
-from typing import Callable, Mapping, MutableMapping, Protocol, TypeVar, Any
+from typing import Any, Callable, Mapping, MutableMapping, Protocol, TypeVar
 
 import astral.sun
 import humanize

@@ -37,7 +37,6 @@ dev = [
 [tool.ruff.lint]
 extend-select = [
     "BLE",  # Blind exceptions
-    "FBT",  # Boolean trap
     "A",    # Builtin shadowing
     "C4",   # Comprehensions
     "LOG",  # Logging

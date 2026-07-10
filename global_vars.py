@@ -33,7 +33,8 @@ ZENITH_WAYPOINTS = {
 }
 # https://www.researchgate.net/publication/266389024_Dynamic_Lighting_System_for_Workplaces_at_Northern_Latitudes
 # suggests something like:
-zenith_to_temp = lambda zen: 4100 - 2500/ 2**((90-zen)/8.5)
+def zenith_to_temp(zen):
+    return 4100 - 2500/ 2**((90-zen)/8.5)
 
 
 TIME_WAYPOINTS = {
