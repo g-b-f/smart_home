@@ -4,7 +4,8 @@ from pathlib import Path
 import pytest
 from pytest import LogCaptureFixture
 
-from utils.misc import JsonWrapper, config_to_bool_function
+from utils.json_wrapper import JsonWrapper
+from utils.misc import config_to_bool_function
 
 
 @pytest.fixture
@@ -18,7 +19,7 @@ def check_defaults(wrapper: JsonWrapper):
     assert wrapper.use_bulb
     assert not wrapper.use_wled
     # last_sleep should initialise to datetime.now(), but we give some leeway:
-    assert datetime.now() - wrapper.last_sleep < timedelta(seconds=5)
+    assert datetime.now() - wrapper.last_sleep < timedelta(milliseconds=500)
 
 class TestMutableGlobals:
     def test_write_default(self, wrapper: JsonWrapper):
