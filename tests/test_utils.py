@@ -16,7 +16,7 @@ def wrapper(tmp_path:Path):
 def check_defaults(wrapper: JsonWrapper):
     assert not wrapper.visitor_present
     assert wrapper.use_bulb
-    assert wrapper.use_wled
+    assert not wrapper.use_wled
     # last_sleep should initialise to datetime.now(), but we give some leeway:
     assert datetime.now() - wrapper.last_sleep < timedelta(seconds=5)
 
