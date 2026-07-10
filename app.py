@@ -14,7 +14,8 @@ from hypercorn.config import Config as HypercornConfig
 
 import lighting_routines as Routine
 from periodic_tasks import periodic_light_check
-from utils.misc import config_to_bool_function, format_time, get_logger, mutable_globals
+from utils.misc import config_to_bool_function, format_time, mutable_globals
+from utils.get_logger import get_logger
 from wrappers.all import AllObjects
 
 logger = get_logger(__name__)

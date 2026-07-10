@@ -4,7 +4,8 @@ from typing import Optional
 import requests
 
 from extra_types import RGBtype, RGBWtype, WLEDResponse
-from utils.misc import clamp, get_logger, mutable_globals
+from utils.misc import clamp, mutable_globals
+from utils.get_logger import get_logger
 from wrappers.base import WrapperBase
 
 TOGGLE = "t"

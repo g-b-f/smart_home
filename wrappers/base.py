@@ -7,7 +7,7 @@ import yaml
 
 from extra_types import RGBtype
 from utils.conversions import temp_to_rgb
-from utils.misc import get_logger
+from utils.get_logger import get_logger
 
 
 class FailedConnectionError(Exception):

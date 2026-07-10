@@ -1,4 +1,5 @@
-from utils.misc import colourtemp_from_zenith, get_logger, mutable_globals
+from utils.misc import colourtemp_from_zenith, mutable_globals
+from utils.get_logger import get_logger
 from wrappers.all import AllObjects
 
 logger = get_logger(__name__)

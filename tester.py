@@ -2,7 +2,7 @@ import asyncio
 import time
 
 import lighting_routines as Routine
-from utils.misc import get_logger
+from utils.get_logger import get_logger
 
 logger = get_logger(__name__, level="debug")
 

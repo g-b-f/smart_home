@@ -1,9 +1,7 @@
 import json
-import logging
 from datetime import datetime, time, timedelta
-from logging.handlers import RotatingFileHandler
 from pathlib import Path
-from typing import Any, Callable, Mapping, MutableMapping
+from typing import Callable, Mapping, MutableMapping
 
 import astral.sun
 import humanize
@@ -11,41 +9,8 @@ from pydantic import ValidationError
 
 import global_vars as gbl
 from extra_types import MutableGlobals, WayPointType
+from utils.get_logger import get_logger
 
-
-
-MAX_LOG_SIZE_BYTES = 1024 * 1024 # 1 MB
-
-def namer(default_name: str) -> str:
-    """By default, `RotatingFileHandler` creates logs of the form `log.txt.1`.
-    This custom namer instead makes them of the form `log_1.txt`"""
-
-    default_path = Path(default_name)
-    index = default_path.suffix.strip(".")
-    base_file = Path(default_path.stem)
-    new_name = f"{base_file.stem}_{index}{base_file.suffix}"
-    return str(default_path.parent / new_name)
-
-def get_logger(name: str, level=None) -> logging.Logger:
-    if level is None:
-        level = gbl.LOG_LEVEL
-    if level.upper() not in logging._nameToLevel:
-        raise ValueError(f"Invalid log level: {level}")
-    level_int = logging._nameToLevel[level.upper()]
-
-    log_file = Path(__file__).parent.parent / "log.txt"
-    handler = RotatingFileHandler(log_file, maxBytes=MAX_LOG_SIZE_BYTES, backupCount=2)
-    handler.setLevel(level_int)
-    handler.namer = namer
-    formatter = logging.Formatter("%(asctime)s %(levelname)s - %(message)s", datefmt="%H:%M:%S")
-    handler.setFormatter(formatter)
-
-    logger = logging.getLogger(name)
-    logger.handlers.clear()
-    logger.setLevel(level_int)
-    logger.addHandler(handler)
-
-    return logger
 
 logger = get_logger(__name__)
 
@@ -63,7 +28,7 @@ class JsonWrapper(MutableMapping):
 
     def write_default(self):
         output = json.dumps(self.default, indent=4, default=self._format_iso)
-        logger.info("writing default values:\n%s", output)
+        self.logger.info("writing default values:\n%s", output)
         self.file.write_text(output + "\n")
         
     @property

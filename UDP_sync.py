@@ -2,7 +2,7 @@ import json
 import socket
 from dataclasses import dataclass
 
-from utils.misc import get_logger
+from utils.get_logger import get_logger
 
 logger = get_logger(__name__)
 
