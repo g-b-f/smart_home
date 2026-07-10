@@ -3,14 +3,16 @@ import logging
 from datetime import datetime, time, timedelta
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
-from typing import Any, Callable, Mapping, MutableMapping, Protocol, TypeVar
+from typing import Any, Callable, Mapping, MutableMapping
 
 import astral.sun
 import humanize
 from pydantic import ValidationError
 
 import global_vars as gbl
-from extra_types import MutableGlobals
+from extra_types import MutableGlobals, WayPointType
+
+
 
 MAX_LOG_SIZE_BYTES = 1024 * 1024 # 1 MB
 
@@ -197,18 +199,6 @@ def clamp(value, min_value, max_value):
 def get_zenith(location = astral.LocationInfo()) -> float:
     return astral.sun.zenith(location.observer)
 
-
-class WayPointProtocol(Protocol):
-    def __lt__(self, other: Any, /) -> bool: ...
-    def __le__(self, other: Any, /) -> bool: ...
-    def __gt__(self, other: Any, /) -> bool: ...
-    def __ge__(self, other: Any, /) -> bool: ...
-    def __eq__(self, other: Any, /) -> bool: ...
-    def __sub__(self, other: Any, /) -> Any: ...
-    def __add__(self, other: Any, /) -> Any: ...
-
-    
-WayPointType = TypeVar("WayPointType", bound=WayPointProtocol)
 
 def lerp_color_temp(waypoint: WayPointType, waypoints_dict: Mapping[WayPointType, int]) -> int:
     """Linearly interpolates the colourtemp for a given input based on a dictionary of waypoints.
