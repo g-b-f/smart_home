@@ -3,7 +3,7 @@ import logging
 from datetime import datetime, time, timedelta
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
-from typing import Callable, MutableMapping
+from typing import Callable, Mapping, MutableMapping, Protocol, TypeVar, Any
 
 import astral.sun
 import humanize
@@ -198,54 +198,86 @@ def get_zenith(location = astral.LocationInfo()) -> float:
     return astral.sun.zenith(location.observer)
 
 
-def lerp_color_temp(zenith: float) -> int:
-    """Linearly interpolates the colourtemp for a given zenith based on `gbl.ZENITH_WAYPOINTS`
+class WayPointProtocol(Protocol):
+    def __lt__(self, other: Any, /) -> bool: ...
+    def __le__(self, other: Any, /) -> bool: ...
+    def __gt__(self, other: Any, /) -> bool: ...
+    def __ge__(self, other: Any, /) -> bool: ...
+    def __eq__(self, other: Any, /) -> bool: ...
+    def __sub__(self, other: Any, /) -> Any: ...
+    def __add__(self, other: Any, /) -> Any: ...
+
+    
+WayPointType = TypeVar("WayPointType", bound=WayPointProtocol)
+
+def lerp_color_temp(waypoint: WayPointType, waypoints_dict: Mapping[WayPointType, int]) -> int:
+    """Linearly interpolates the colourtemp for a given input based on a dictionary of waypoints.
 
     Args:
-        zenith (float): The zenith, in degrees.
+        waypoint: The input
+        waypoints_dict: A dictionary where keys are the input values and values are the corresponding colourtemp.
 
     Returns:
-        int: The desired colourtemp for the zenith
+        int: The desired colourtemp for the input
     """
-    waypoints = list(gbl.ZENITH_WAYPOINTS.items())
+    waypoints = sorted(waypoints_dict.items(), key=lambda item: item[0])
 
-    if zenith <= waypoints[0][0]:
+    if waypoint <= waypoints[0][0]:
         return waypoints[0][1]
-    if zenith >= waypoints[-1][0]:
+    if waypoint >= waypoints[-1][0]:
         return waypoints[-1][1]
 
     for i in range(len(waypoints) - 1):
-        zenith_1, colortemp_1 = waypoints[i]
-        zenith_2, colortemp_2 = waypoints[i + 1]
+        waypoint_1, colortemp_1 = waypoints[i]
+        waypoint_2, colortemp_2 = waypoints[i + 1]
 
-        if zenith_1 <= zenith <= zenith_2:
-            factor = (zenith - zenith_1) / (zenith_2 - zenith_1)
-            return int(round(colortemp_1 + factor * (colortemp_2 - colortemp_1)))
+        if waypoint_1 <= waypoint <= waypoint_2:
+            factor = (waypoint - waypoint_1) / (waypoint_2 - waypoint_1)
+            return round(colortemp_1 + factor * (colortemp_2 - colortemp_1))
     
-    raise RuntimeError("couldn't get colourtemp. There might be something wrong with `gbl.ZENITH_WAYPOINTS`")
+    raise RuntimeError("couldn't get colourtemp. There might be something wrong with the waypoints dict")
 
 
-def get_colourtemp_for_time(location = astral.LocationInfo(), date=None) -> int:
-    sun = Sun(location, date)
-    now = astral.now(location.tzinfo)
+def colourtemp_from_zenith() -> int:
+    zen = get_zenith()
+    waypoints = gbl.ZENITH_WAYPOINTS
+    return lerp_color_temp(zen, waypoints)
 
-    if now < sun.dawn or now > sun.dusk:
-        return gbl.NIGHT_COLOURTEMP
-    elif sun.dawn <= now < sun.sunrise:
-        return gbl.SUNRISE_COLOURTEMP
-    elif sun.sunrise <= now < sun.sunset:
-        return gbl.DAY_COLOURTEMP
-    elif sun.sunset <= now < sun.dusk:
-        return gbl.SUNSET_COLOURTEMP
-    else:
-        return gbl.SUNSET_COLOURTEMP
+
+def _time_to_seconds(t: time) -> int:
+    """Converts a datetime.time object into total seconds since midnight."""
+    return t.hour * 3600 + t.minute * 60 + t.second
+
+def colourtemp_from_time() -> int:
+    time_now = datetime.now().time()
+    seconds_now = _time_to_seconds(time_now)
+
+    waypoints = gbl.TIME_WAYPOINTS.items()
+    seconds_waypoints = { _time_to_seconds(t): temp for t, temp in waypoints }
+    return lerp_color_temp(seconds_now, seconds_waypoints)
+
+
+# def get_colourtemp_for_time(location = astral.LocationInfo(), date=None) -> int:
+#     sun = Sun(location, date)
+#     now = astral.now(location.tzinfo)
+
+#     if now < sun.dawn or now > sun.dusk:
+#         return gbl.NIGHT_COLOURTEMP
+#     elif sun.dawn <= now < sun.sunrise:
+#         return gbl.SUNRISE_COLOURTEMP
+#     elif sun.sunrise <= now < sun.sunset:
+#         return gbl.DAY_COLOURTEMP
+#     elif sun.sunset <= now < sun.dusk:
+#         return gbl.SUNSET_COLOURTEMP
+#     else:
+#         return gbl.SUNSET_COLOURTEMP
 
 class Sun:
     def __init__(self, location = astral.LocationInfo(), date=None):
         self.location = location
         if date is None:
             self.date = astral.today(location.tzinfo)
-        self.sun = astral.sun.sun(location.observer, date, tzinfo=self.location.tzinfo)
+        self.sun = astral.sun.sun(location.observer, date, tzinfo=location.tzinfo)
 
     def __getattribute__(self, name: str):
         if name in {"dawn", "sunrise", "noon", "sunset", "dusk"}:

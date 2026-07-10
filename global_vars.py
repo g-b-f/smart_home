@@ -1,10 +1,6 @@
 from datetime import time, timedelta
 
-USE_BULB = True
-USE_WLED = False
-
 LOG_LEVEL = "INFO"
-IS_VISITOR_PRESENT = False # turns off routines related to waking up
 
 CHILL_START = time(22, 0) # 10:00 PM
 EARLY_WAKE_TIME = time(6, 0) # 6:00 AM
@@ -38,3 +34,8 @@ ZENITH_WAYPOINTS = {
 # https://www.researchgate.net/publication/266389024_Dynamic_Lighting_System_for_Workplaces_at_Northern_Latitudes
 # suggests something like:
 zenith_to_temp = lambda zen: 4100 - 2500/ 2**((90-zen)/8.5)
+
+
+TIME_WAYPOINTS = {
+    time(12,0): MAX_COLORTEMP
+}
