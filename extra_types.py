@@ -21,6 +21,7 @@ class MutableGlobals(BaseModel):
     use_bulb: bool = Field(default=True, description="Whether to connect to the lightbulb")
     use_wled: bool = Field(default=True, description="Whether to connect to the WLED strip")
     auto_colourtemp: bool = Field(default=True, description="Whether to adjust the colourtemp based on time of day")
+    zenith_not_time: bool = Field(default=False, description="Whether to use zenith instead of time for colourtemp adjustment")
     last_sleep: datetime = Field(default_factory=datetime.now, description="The last time sleep tracking was active")
 
 RGBtype = tuple[int, int, int]

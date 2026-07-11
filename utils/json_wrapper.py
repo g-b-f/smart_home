@@ -92,6 +92,14 @@ class JsonWrapper(MutableMapping):
     def auto_colourtemp(self, val:bool):
         self._set_var("auto_colourtemp", val)
 
+    @property
+    def zenith_not_time(self) -> bool:
+        return self._get_var("zenith_not_time")
+
+    @zenith_not_time.setter
+    def zenith_not_time(self, val:bool):
+        self._set_var("zenith_not_time", val)
+
     def __getitem__(self, key):
         return self._get_var(key)
     
