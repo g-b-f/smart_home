@@ -36,12 +36,12 @@ class WrapperBase(metaclass=ABCMeta):
     
     @property
     @abstractmethod
-    def OBJECT_TYPE(self):
-        pass
+    def OBJECT_TYPE(self) -> str:
+        return ""
 
     def __init__(self, ip: Optional[str] = None, port: Optional[int] = None, mac: Optional[str] = None):
-        if not self.is_connected:
-            self.logger.warning("couldn't connect to %s", self.OBJECT_TYPE)
+        # if not self.is_connected:
+        #     self.logger.warning("couldn't connect to %s", self.OBJECT_TYPE)
         pass
 
     @classmethod

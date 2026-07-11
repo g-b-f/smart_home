@@ -12,8 +12,11 @@ TOGGLE = "t"
 
 class WLED(WrapperBase):
     STRIP_NAME = "fairy_lights"
-    logger = get_logger(__name__) # type: ignore[reportAssignmentType]
-    OBJECT_TYPE = "WLED" # type: ignore[reportAssignmentType]
+    logger = get_logger(__name__)
+
+    @property
+    def OBJECT_TYPE(self):
+        return "WLED"
 
     def __init__(self, ip:Optional[str]=None, **kwargs):
         if not mutable_globals.use_wled:

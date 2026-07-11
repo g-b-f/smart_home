@@ -34,8 +34,11 @@ class Bulb(WrapperBase):
     TIME_STEP = 0.25 # seconds per linear interpolation step
     BULB_NAME = "bedroom_light"
 
-    OBJECT_TYPE = "bulb" # type: ignore[reportAssignmentType]
-    logger = get_logger(__name__)  # type: ignore[reportAssignmentType]
+    @property
+    def OBJECT_TYPE(self):
+        return "bulb"
+    
+    logger = get_logger(__name__)
 
     def __init__(self, ip: Optional[str] = None, port: Optional[int] = None, mac: Optional[str] = None):
         if ip is None or port is None or mac is None:
