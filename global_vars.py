@@ -33,10 +33,16 @@ ZENITH_WAYPOINTS = {
 }
 # https://www.researchgate.net/publication/266389024_Dynamic_Lighting_System_for_Workplaces_at_Northern_Latitudes
 # suggests something like:
-def zenith_to_temp(zen):
-    return 4100 - 2500/ 2**((90-zen)/8.5)
-
+# def zenith_to_temp(zen):
+#     return 4100 - 2500/ 2**((90-zen)/8.5)
 
 TIME_WAYPOINTS = {
-    time(12,0): MAX_COLORTEMP
+    time(6, 0): 2700,
+    time(9, 0): 4500,
+    time(12, 0): 6500,
+    time(15, 0): 5000,
+    time(17, 0): 4500,
+    time(19, 0): 3500, 
+    time(20, 0): 2700,
+    time(23, 00): 1600,
 }
