@@ -25,10 +25,9 @@ def hex_to_rgb(hex_colour: str) -> RGBtype:
 
 def temp_to_rgb(temp: int|float) -> RGBtype:
     """Convert color temperature in Kelvin to RGB values.
+    Input colourtemp should be between 1000 and 40000 Kelvin.
 
-    input colourtemp should be between 1000 and 40000 Kelvin
-
-    Algorithm from Tanner Helland (http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/)
+    Algorithm from [Tanner Helland](http://www.tannerhelland.com/4435/convert-temperature-rgb-algorithm-code/)
     """
     temp = cast(float, temp / 100)
 
@@ -55,8 +54,8 @@ def temp_to_rgb(temp: int|float) -> RGBtype:
     return round(red), round(green), round(blue)  
 
 def rgb_to_temp(rgb_or_hex: RGBtype | str, approximate=True) -> int:
-    """The reverse of `temp_to_rgb`.
-    Brute forces the answer because I don't want to manually calculate it
+    """The reverse of `temp_to_rgb()`.
+    Brute forces the answer to avoid manual calculation.
 
     Args:
         rgb_or_hex (RGBtype | str): The color, as either an (r,g,b) tuple or hex string
@@ -66,7 +65,7 @@ def rgb_to_temp(rgb_or_hex: RGBtype | str, approximate=True) -> int:
         RuntimeError: If a temperature couldn't be found.
 
     Returns:
-        int: the colour temperature that matches the input value
+        int: The colour temperature that matches the input value
     """
     rgb_target = hex_to_rgb(rgb_or_hex) if isinstance(rgb_or_hex, str) else rgb_or_hex
 
