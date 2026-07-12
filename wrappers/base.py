@@ -39,7 +39,7 @@ class WrapperBase(metaclass=ABCMeta):
     def OBJECT_TYPE(self) -> str:
         return ""
 
-    def __init__(self, ip: Optional[str] = None, port: Optional[int] = None, mac: Optional[str] = None):
+    def __init__(self, ip: Optional[str] = None, mac: Optional[str] = None, port: Optional[int] = None):
         # if not self.is_connected:
         #     self.logger.warning("couldn't connect to %s", self.OBJECT_TYPE)
         pass

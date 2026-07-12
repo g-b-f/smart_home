@@ -9,7 +9,7 @@ from pywizlight import PilotBuilder, PilotParser, wizlight
 
 sys.path.append(str(Path(__file__).parent))
 
-from wrappers.bulb_wrapper import Bulb, get_range
+from wrappers.bulb_wrapper import Bulb, get_fractional_range
 
 
 @pytest.fixture
@@ -345,7 +345,7 @@ class TestGetRange:
 
     def test_get_range_basic(self):
         """Test basic range generation."""
-        result = list(get_range(0, 100, 10))
+        result = list(get_fractional_range(0, 100, 10))
         assert len(result) == 11  # 10 steps + 1
         assert result[0] == 0
         assert result[-1] == 100

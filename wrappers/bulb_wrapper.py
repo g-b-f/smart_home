@@ -19,7 +19,7 @@ from utils.get_logger import get_logger
 from utils.misc import clamp, mutable_globals
 
 sys.path.append(str(Path(__file__).parent))
-from extra_types import RGBtype, SceneType
+from extra_types import RGBtype, RGBWWtype, SceneType
 from wrappers.base import WrapperBase
 
 del wizlight.__del__
@@ -40,8 +40,8 @@ class Bulb(WrapperBase):
     
     logger = get_logger(__name__)
 
-    def __init__(self, ip: Optional[str] = None, port: Optional[int] = None, mac: Optional[str] = None):
-        if ip is None or port is None or mac is None:
+    def __init__(self, ip: Optional[str] = None, mac: Optional[str] = None, port: int = 38899):
+        if ip is None or mac is None:
             self.light:wizlight = self.from_yaml(self.BULB_NAME).light
         else:
             self.light = wizlight(ip=ip, port=port, mac=mac)
@@ -103,8 +103,8 @@ class Bulb(WrapperBase):
         start_brightness = self.clamp_brightness(start_brightness)
         end_brightness = self.clamp_brightness(end_brightness)
         steps = round(duration / self.TIME_STEP)
-        brightness_iter = get_range(start_brightness, end_brightness, steps)
-        temp_iter = get_range(start_temp, end_temp, steps)
+        brightness_iter = get_fractional_range(start_brightness, end_brightness, steps)
+        temp_iter = get_fractional_range(start_temp, end_temp, steps)
         # assert operator.length_hint(brightness_iter) == operator.length_hint(temp_iter)
 
         for brightness, temp in zip(brightness_iter, temp_iter):
@@ -166,16 +166,24 @@ class Bulb(WrapperBase):
     def clamp_speed(self, value: int) -> int:
         """Clamp speed value between 10 and 200."""
         return clamp(value, 10, 200)
+
+    def clamp_rgb(self, value: RGBtype) -> RGBtype:
+        """Clamp RGB values between 0 and 255."""
+        return tuple(clamp(v, 0, 255) for v in value) # type: ignore[return-value]
+
+    def clamp_rgbww(self, value: RGBWWtype) -> RGBWWtype:
+        """Clamp RGBWW values between 0 and 255."""
+        return tuple(clamp(v, 0, 255) for v in value) # type: ignore[return-value]
   
 
-def get_range(start: int, stop: int, length: int) -> Iterator[int]:
+def get_fractional_range(start: int, stop: int, length: int) -> Iterator[int]:
     # multiply then divide by SCALING_FACTOR to avoid issues with `step` rounding to zero.
     # it is possible to calculate the ideal SCALING_FACTOR,
     # but is simpler to just use an arbitrarily large constant
     start = start * SCALING_FACTOR
     stop = stop * SCALING_FACTOR
     span = abs(stop - start)
-    step = round((span / length))
+    step = round(span / length)
     assert step > 0
     iterator = range(start, stop + step, step)
     assert operator.length_hint(iterator) == length + 1
