@@ -1,10 +1,11 @@
-
 import math
 from typing import cast
 
-from extra_types import RGBtype
+from extra_types import RGBtype, RGBWWtype
 from utils.misc import clamp
+import global_vars as gbl
 
+__all__ = ["rgb_to_hex", "hex_to_rgb", "temp_to_rgb", "rgb_to_temp", "temp_to_rgbww"]
 
 def rgb_to_hex(rgb: RGBtype) -> str:
     return "{:02X}{:02X}{:02X}".format(*rgb)
@@ -88,3 +89,27 @@ def rgb_to_temp(rgb_or_hex: RGBtype | str, approximate=True) -> int:
         return best_temp
     else:
         raise RuntimeError(f"couldn't get temp for {rgb_or_hex}")
+
+
+def temp_to_rgbww(temp: int|float) -> RGBWWtype:
+    """
+    Converts Kelvin color temperature to a WiZ 5-tuple (R, G, B, CW, WW).
+    """
+    alpha = clamp((temp - gbl.MIN_COLORTEMP) / (gbl.MAX_COLORTEMP - gbl.MIN_COLORTEMP), 0.0, 1.0)
+    
+    # High-CRI mode using white diodes only, for temp > 2200
+    if temp > gbl.MIN_COLORTEMP:
+        cool_white = int(round(255 * alpha))
+        warm_white = 255 - cool_white
+        return (0, 0, 0, cool_white, warm_white)
+    
+    red, green, blue = temp_to_rgb(temp) 
+    white = min(red, green, blue)
+    
+    red = red - white
+    green = green - white
+    blue = blue - white
+    cool_white = int(round(white * alpha))
+    warm_white = white - cool_white
+    
+    return (red, green, blue, cool_white, warm_white)
