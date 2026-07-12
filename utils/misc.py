@@ -8,11 +8,11 @@ import humanize
 import global_vars as gbl
 from extra_types import WayPointType
 from utils.get_logger import get_logger
-from utils.json_wrapper import JsonWrapper
+from utils.json_wrapper import MutableGlobalsWrapper
 
 logger = get_logger(__name__)
 
-mutable_globals = JsonWrapper(Path(__file__).parent / "mutable_globals.json")
+mutable_globals = MutableGlobalsWrapper(Path(__file__).parent / "mutable_globals.json")
 
 def format_time(t: datetime| timedelta | time) -> str:
     if isinstance(t, timedelta):

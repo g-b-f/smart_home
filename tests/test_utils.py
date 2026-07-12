@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 from pytest import LogCaptureFixture
 
-from utils.json_wrapper import JsonWrapper
+from utils.json_wrapper import MutableGlobalsWrapper
 from utils.misc import config_to_bool_function
 
 
@@ -12,9 +12,9 @@ from utils.misc import config_to_bool_function
 def wrapper(tmp_path:Path):
     fpath = tmp_path / "output.json"
     fpath.touch()
-    return JsonWrapper(fpath)
+    return MutableGlobalsWrapper(fpath)
 
-def check_defaults(wrapper: JsonWrapper):
+def check_defaults(wrapper: MutableGlobalsWrapper):
     assert not wrapper.visitor_present
     assert wrapper.use_bulb
     assert not wrapper.use_wled
@@ -22,13 +22,13 @@ def check_defaults(wrapper: JsonWrapper):
     assert datetime.now() - wrapper.last_sleep < timedelta(milliseconds=500)
 
 class TestMutableGlobals:
-    def test_write_default(self, wrapper: JsonWrapper):
+    def test_write_default(self, wrapper: MutableGlobalsWrapper):
         assert not wrapper.file.read_text()
         wrapper.write_default()
         check_defaults(wrapper)
 
 
-    def test_write_vars(self, wrapper: JsonWrapper):
+    def test_write_vars(self, wrapper: MutableGlobalsWrapper):
         wrapper.write_default()
         check_defaults(wrapper)
 
@@ -42,7 +42,7 @@ class TestMutableGlobals:
         assert not wrapper.use_wled
         assert wrapper.last_sleep == datetime(2024, 1, 1, 12, 0, 0)
 
-    def test_read_error_writes_default(self, wrapper: JsonWrapper, caplog:LogCaptureFixture):
+    def test_read_error_writes_default(self, wrapper: MutableGlobalsWrapper, caplog:LogCaptureFixture):
         wrapper.write_default()
         check_defaults(wrapper)
 

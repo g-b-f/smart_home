@@ -1,21 +1,47 @@
 import json
 from datetime import datetime
 from pathlib import Path
-from typing import MutableMapping
+from typing import Generic, MutableMapping, TypeVar
 
-from pydantic import ValidationError
+from pydantic import BaseModel, ValidationError
 
 from extra_types import MutableGlobals
 from utils.get_logger import get_logger
 
+ModelType = TypeVar("ModelType", bound=BaseModel)
+class JsonWrapper(MutableMapping, Generic[ModelType]):
+    """Thin wrapper that gives access to a local JSON file in a pythonic way.
 
-# TODO: decouple from MutableGlobals
-class JsonWrapper(MutableMapping):
-    default = MutableGlobals.model_construct().model_dump()
+    It is expected that subclasses are of the form:
+
+    ```
+    class MyWrapper(JsonWrapper[MyPydanticModel]):
+        pydantic_model = MyPydanticModel
+
+        @property
+        def some_bool(self) -> bool:
+            return self._get_var("some_bool")
+        
+        @some_bool.setter
+        def some_bool(self, val:bool):
+            self._set_var("some_bool", val)
+    ```
+    and `MyPydanticModel` is of the form:
+
+    ```
+    class MyPydanticModel(pydantic.BaseModel):
+        some_bool: bool = pydantic.Field(default=...)
+    ```
+    """
+    pydantic_model: type[ModelType]
 
     def __init__(self, file: Path):
+        if getattr(self, "pydantic_model", None) is None:
+            raise ValueError("When subclassing you must assign to pydantic_model")
+
         self.file = file
         self.logger = get_logger(file.stem)
+        self.default = self.pydantic_model.model_construct().model_dump()
 
     @staticmethod
     def _format_iso(obj):
@@ -30,7 +56,7 @@ class JsonWrapper(MutableMapping):
     def data(self) -> dict:
         try:
             ret = json.loads(self.file.read_text())
-            MutableGlobals.model_validate(ret)
+            self.pydantic_model.model_validate(ret)
         except (FileNotFoundError, ValidationError) as e:
             self.logger.error("Error loading %s: %s. Reverting to default.", self.file.name, e)
             self.write_default()
@@ -50,6 +76,33 @@ class JsonWrapper(MutableMapping):
         data = self.data
         data[key] = val
         self.data = data
+    
+    def __getitem__(self, key):
+        return self._get_var(key)
+    
+    def __setitem__(self, key, value):
+        self._set_var(key, value)
+    
+    def __contains__(self, key):
+        return key in self.data
+    
+    def __iter__(self):
+        yield from self.data.items()
+
+    def __len__(self):
+        return len(self.data)
+    
+    def __repr__(self) -> str:
+        return str(self.data)
+    
+    def __delitem__(self, key):
+        data = self.data
+        del data[key]
+        self.data = data
+        
+
+class MutableGlobalsWrapper(JsonWrapper[MutableGlobals]):
+    pydantic_model = MutableGlobals
 
     @property
     def visitor_present(self) -> bool:
@@ -100,26 +153,3 @@ class JsonWrapper(MutableMapping):
     def zenith_not_time(self, val:bool):
         self._set_var("zenith_not_time", val)
 
-    def __getitem__(self, key):
-        return self._get_var(key)
-    
-    def __setitem__(self, key, value):
-        self._set_var(key, value)
-    
-    def __contains__(self, key):
-        return key in self.data
-    
-    def __iter__(self):
-        yield from self.data.items()
-
-    def __len__(self):
-        return len(self.data)
-    
-    def __repr__(self) -> str:
-        return str(self.data)
-    
-    def __delitem__(self, key):
-        data = self.data
-        del data[key]
-        self.data = data
-        
