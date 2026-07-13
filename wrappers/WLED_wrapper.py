@@ -3,7 +3,7 @@ from typing import Optional
 
 import requests
 
-from extra_types import ColourType, RGBtype, WLEDResponse
+from extra_types import ColourType, RGBtype, RGBWtype, WLEDResponse
 from utils.get_logger import get_logger
 from utils.misc import clamp, mutable_globals
 from wrappers.base import WrapperBase
@@ -124,7 +124,7 @@ class WLED(WrapperBase):
             self.colour = [colour]
 
     @property
-    def colour(self) -> list[RGBtype]:
+    def colour(self) -> list[RGBtype | RGBWtype]:
         seg = self._get_seg()
         return seg["col"]
     

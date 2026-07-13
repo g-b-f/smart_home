@@ -2,7 +2,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 import pytest
-from pytest import LogCaptureFixture
+from pytest import LogCaptureFixture  # noqa: PT013
 
 from utils.json_wrapper import MutableGlobalsWrapper
 from utils.misc import config_to_bool_function
@@ -75,6 +75,5 @@ class TestConfigToBoolFunction:
         assert func(False, "")
 
     def test_invalid_option(self):
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match="Invalid option: qwerty"):
             config_to_bool_function("qwerty")
-

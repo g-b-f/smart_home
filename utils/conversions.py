@@ -1,9 +1,9 @@
 import math
 from typing import cast
 
+import global_vars as gbl
 from extra_types import RGBtype, RGBWWtype
 from utils.misc import clamp
-import global_vars as gbl
 
 __all__ = ["rgb_to_hex", "hex_to_rgb", "temp_to_rgb", "rgb_to_temp", "temp_to_rgbww"]
 

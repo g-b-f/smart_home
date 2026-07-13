@@ -26,6 +26,7 @@ class MutableGlobals(BaseModel):
 
 RGBtype = tuple[int, int, int]
 RGBWWtype = tuple[int, int, int, int, int]
+RGBWtype = tuple[int, int, int, int]
 ColourType = Optional[RGBtype | RGBWWtype]
 
 SceneType = Literal[

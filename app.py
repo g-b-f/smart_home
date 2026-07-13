@@ -120,7 +120,7 @@ async def config() -> tuple[str, int]:
                     logger.warning("Invalid datetime format for last_sleep: %s", value)
                     return ("Invalid datetime format for last_sleep, expected ISO format", 
                             HTTPStatus.BAD_REQUEST.value)
-                except Exception as e:
+                except Exception as e: # noqa: BLE001
                     logger.warning("Error updating last_sleep: %s", e)
                     return (f"Error updating last_sleep: {e}", 
                         HTTPStatus.INTERNAL_SERVER_ERROR.value)

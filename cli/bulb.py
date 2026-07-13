@@ -9,7 +9,7 @@ import pywizlight
 root_dir = Path(__file__).parent.parent
 sys.path.append( str(root_dir))
 
-from wrappers.bulb_wrapper import Bulb
+from wrappers.bulb_wrapper import Bulb  # noqa: E402
 
 if os.name == "nt":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
