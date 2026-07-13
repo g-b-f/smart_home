@@ -3,7 +3,7 @@ from typing import Optional
 
 import requests
 
-from extra_types import RGBtype, RGBWtype, WLEDResponse
+from extra_types import ColourType, RGBtype, WLEDResponse
 from utils.get_logger import get_logger
 from utils.misc import clamp, mutable_globals
 from wrappers.base import WrapperBase
@@ -73,12 +73,14 @@ class WLED(WrapperBase):
         state = self.info.get("state", {})
         return state.get("on", False)
     
-    async def _turn_on(self, brightness: Optional[int] = None, rgb: Optional[RGBtype] = None):
+    async def _turn_on(self, brightness: Optional[int], rgb: ColourType):
         if not mutable_globals.use_wled:
             self.logger.debug("not turning on WLED due to global setting")
             return
         
         if rgb is not None:
+            if len(rgb) > 3:
+                rgb = rgb[:3] # ignore white channels
             self.colour = [rgb]
         if brightness is not None:
             self.brightness = brightness
@@ -122,7 +124,7 @@ class WLED(WrapperBase):
             self.colour = [colour]
 
     @property
-    def colour(self) -> list[RGBtype | RGBWtype]:
+    def colour(self) -> list[RGBtype]:
         seg = self._get_seg()
         return seg["col"]
     

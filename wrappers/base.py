@@ -5,7 +5,7 @@ from typing import Optional
 
 import yaml
 
-from extra_types import RGBtype
+from extra_types import ColourType, RGBtype, RGBWWtype
 from utils.conversions import temp_to_rgb
 from utils.get_logger import get_logger
 
@@ -56,7 +56,12 @@ class WrapperBase(metaclass=ABCMeta):
             )
 
     @ignore_failed_connection
-    async def turn_on(self, brightness: Optional[int] = None, rgb: Optional[RGBtype] = None, colortemp: Optional[int] = None) -> None:
+    async def turn_on(
+        self,
+        brightness: Optional[int] = None,
+        rgb: ColourType = None,
+        colortemp: Optional[int] = None
+        ) -> None:
         if colortemp is not None:
             if rgb is not None:
                 raise ValueError("cannot provide both rgb and colortemp")
@@ -68,7 +73,7 @@ class WrapperBase(metaclass=ABCMeta):
         self.last_accessed = time.time()
 
     @abstractmethod
-    async def _turn_on(self, brightness: Optional[int], rgb: Optional[RGBtype]) -> None:
+    async def _turn_on(self, brightness: Optional[int], rgb: ColourType) -> None:
         pass
 
     async def turn_off(self) -> None:
@@ -96,9 +101,8 @@ class WrapperBase(metaclass=ABCMeta):
     async def is_connected(self) -> bool:
         pass
 
-
     @classmethod
-    def temp_to_rgb(cls, temp: int|float) -> RGBtype:
+    def temp_to_rgb(cls, temp: int|float) -> RGBtype | RGBWWtype:
         if temp < 1000 or temp > 40000:
             cls.logger.info(
                 "Color temperature should be between 1000 and 40000 Kelvin, got %d. "

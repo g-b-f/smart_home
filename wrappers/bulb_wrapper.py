@@ -15,11 +15,12 @@ from pywizlight.exceptions import (
     WizLightConnectionError,  # type: ignore[import-untyped]
 )
 
+from utils.conversions import temp_to_rgbww
 from utils.get_logger import get_logger
 from utils.misc import clamp, mutable_globals
 
 sys.path.append(str(Path(__file__).parent))
-from extra_types import RGBtype, RGBWWtype, SceneType
+from extra_types import ColourType, RGBtype, RGBWWtype, SceneType
 from wrappers.base import WrapperBase
 
 del wizlight.__del__
@@ -63,13 +64,24 @@ class Bulb(WrapperBase):
 
         await self.light.turn_off()
 
-    async def _turn_on(self, brightness: Optional[int] = None, rgb: Optional[RGBtype] = None):
+    async def _turn_on(self, brightness: Optional[int] = None, rgb: ColourType = None):
         if not mutable_globals.use_bulb:
             self.logger.debug("not turning on bulb due to global setting")
             return
         if brightness is not None:
-            brightness = self.clamp_brightness(brightness)        
-        await self.light.turn_on(PilotBuilder(brightness=brightness, rgb=rgb))
+            brightness = self.clamp_brightness(brightness)
+        
+        if rgb is None:
+            builder = PilotBuilder(brightness=brightness)
+        elif len(rgb) == 3:
+            rgb = self.clamp_rgb(rgb)
+            builder = PilotBuilder(brightness=brightness, rgb=rgb)
+        elif len(rgb) == 5:
+            rgb = self.clamp_rgbww(rgb)
+            builder = PilotBuilder(brightness=brightness, rgbww=rgb)
+        else:
+            raise ValueError(f"Unexpected rgb value: {rgb}")
+        await self.light.turn_on(builder)
 
     async def set_scene(self, scene: SceneType, brightness: Optional[int] = None, speed: Optional[int] = None):
         """Set the bulb to a predefined scene.
@@ -174,6 +186,15 @@ class Bulb(WrapperBase):
     def clamp_rgbww(self, value: RGBWWtype) -> RGBWWtype:
         """Clamp RGBWW values between 0 and 255."""
         return tuple(clamp(v, 0, 255) for v in value) # type: ignore[return-value]
+
+    @classmethod
+    def temp_to_rgb(cls, temp: int|float) -> RGBWWtype:
+        if temp < 1000 or temp > 40000:
+            cls.logger.info(
+                "Color temperature should be between 1000 and 40000 Kelvin, got %d. "
+                "You might get some weird results", temp
+            )
+        return temp_to_rgbww(temp)
   
 
 def get_fractional_range(start: int, stop: int, length: int) -> Iterator[int]:

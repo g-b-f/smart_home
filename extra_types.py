@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Literal, Protocol, TypedDict, TypeVar
+from typing import Any, Literal, Optional, Protocol, TypedDict, TypeVar
 
 from pydantic import BaseModel, Field
 
@@ -25,8 +25,8 @@ class MutableGlobals(BaseModel):
     last_sleep: datetime = Field(default_factory=datetime.now, description="The last time sleep tracking was active")
 
 RGBtype = tuple[int, int, int]
-RGBWtype = tuple[int, int, int, int]
 RGBWWtype = tuple[int, int, int, int, int]
+ColourType = Optional[RGBtype | RGBWWtype]
 
 SceneType = Literal[
     "Alarm",
