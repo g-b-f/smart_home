@@ -17,6 +17,7 @@ from periodic_tasks import periodic_light_check
 from utils.get_logger import get_logger
 from utils.misc import config_to_bool_function, format_time, mutable_globals
 from wrappers.all import AllObjects
+from zigbee_example import scan_devices
 
 logger = get_logger(__name__)
 logger.debug("beginning smart home app")
@@ -43,6 +44,19 @@ event_mappings = {
     ALARM_DISMISSED: Routine.wake_up,
     BEDTIME_NOTIFICATION: Routine.bedtime,
 }
+
+async def zigbee_scan_loop(interval_seconds: int = 30) -> None:
+    """Run the Zigbee discovery scan in a background task without blocking the app."""
+    while True:
+        try:
+            logger.info("Starting Zigbee device scan")
+            await scan_devices()
+        except asyncio.CancelledError:
+            logger.info("Zigbee scan loop cancelled")
+            raise
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("Zigbee scan failed: %s", exc)
+        await asyncio.sleep(interval_seconds)
 
 # point to http://192.168.1.117:5000/sleep
 @app.route("/sleep", methods=["POST"])
@@ -153,7 +167,9 @@ async def start():
     scheduler.add_job(periodic_light_check, trigger)
     scheduler.start()
     logger.debug("scheduler started")
-    
+
+    zigbee_scan_task = asyncio.create_task(zigbee_scan_loop())
+
     try:
         logger.debug("setting up server")
         config = HypercornConfig()
@@ -165,8 +181,13 @@ async def start():
         await serve(app, config)
         logger.debug("finished serving")
     except Exception as e: # noqa: BLE001
-        logger.info("exception %s", e) 
+        logger.error("exception %s", e) 
     finally:
+        zigbee_scan_task.cancel()
+        try:
+            await zigbee_scan_task
+        except asyncio.CancelledError:
+            pass
         logger.info("Shutting down scheduler")
         scheduler.shutdown()
 
