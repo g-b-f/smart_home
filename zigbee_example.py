@@ -11,8 +11,9 @@ from utils.misc import clamp, mutable_globals
 
 sys.path.append(str(Path(__file__).parent))
 
-
 logger = get_logger(__name__) 
+
+SERIAL_PATH="/dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_1ef187a87c15f01198892bf7763d9da9-if00-port0"
 
 class ZigbeeNetworkListener:
     """Listener for Zigbee network events such as device joins and initialization."""
@@ -30,27 +31,25 @@ class ZigbeeNetworkListener:
 
 
 
-async def get_coordinator(serial_port_path = "/dev/ttyUSB0") -> zigpy.application.ControllerApplication:
+async def get_coordinator(serial_port_path = SERIAL_PATH) -> ControllerApplication:
     coordinator_configuration = {
         "device": { "path": serial_port_path },
         "database_path": "zigbee_network.db"
     }
 
-    coordinator_application = await bellows.zigbee.application.ControllerApplication.new(
+    coordinator_application = await ControllerApplication.new(
         config=coordinator_configuration,
         auto_form=False
     )
     return coordinator_application
 
 
-async def scan_devices():
+async def scan_devices(coordinator: ControllerApplication):
     """Connects to the Zigbee coordinator and prints cached attributes for all devices.
 
     Args:
         serial_port_path: The file path to the Zigbee adapter serial device.
     """
-    coordinator = await get_coordinator()
-
 
     for ieee_address, network_device in coordinator.devices.items():
         logger.info(f"Device: {ieee_address}")
@@ -70,7 +69,7 @@ async def scan_devices():
                         logger.info(f"    {attribute_record.name}: {attribute_value}")
 
 
-async def open_pairing(permit_duration_seconds: int = 120):
+async def open_pairing(coordinator: ControllerApplication, permit_duration_seconds: int = 120):
     """Opens the Zigbee network for pairing and listens for joining devices.
 
     Args:
@@ -88,5 +87,5 @@ async def open_pairing(permit_duration_seconds: int = 120):
     await asyncio.sleep(permit_duration_seconds)
     logger.info("Pairing window closed.")
 
-if __name__ == "__main__":
-    asyncio.run(scan_devices())
+# if __name__ == "__main__":
+#     asyncio.run(scan_devices())

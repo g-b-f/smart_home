@@ -17,7 +17,7 @@ from periodic_tasks import periodic_light_check
 from utils.get_logger import get_logger
 from utils.misc import config_to_bool_function, format_time, mutable_globals
 from wrappers.all import AllObjects
-from zigbee_example import scan_devices
+from zigbee_example import get_coordinator, scan_devices
 
 logger = get_logger(__name__)
 logger.debug("beginning smart home app")
@@ -47,10 +47,12 @@ event_mappings = {
 
 async def zigbee_scan_loop(interval_seconds: int = 30) -> None:
     """Run the Zigbee discovery scan in a background task without blocking the app."""
+    logger.debug("getting coordinator")
+    coordinator = await get_coordinator()
     while True:
         try:
             logger.info("Starting Zigbee device scan")
-            await scan_devices()
+            await scan_devices(coordinator)
         except asyncio.CancelledError:
             logger.info("Zigbee scan loop cancelled")
             raise
