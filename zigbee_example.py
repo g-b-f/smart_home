@@ -18,15 +18,15 @@ class ZigbeeNetworkListener:
     """Listener for Zigbee network events such as device joins and initialization."""
 
     def device_joined(self, network_device):
-        print(f"Device joined: {network_device.ieee}")
+        logger.info(f"Device joined: {network_device.ieee}")
 
     def device_initialized(self, network_device):
-        print(f"Device initialized: {network_device.ieee}")
-        print(f"Manufacturer: {network_device.manufacturer}")
-        print(f"Model: {network_device.model}")
+        logger.info(f"""Device initialized: {network_device.ieee}\n"
+    Manufacturer: {network_device.manufacturer}
+    Model: {network_device.model}""")
 
     def device_left(self, network_device):
-        print(f"Device left: {network_device.ieee}")
+        logger.info(f"Device left: {network_device.ieee}")
 
 
 
@@ -53,7 +53,7 @@ async def scan_devices():
 
 
     for ieee_address, network_device in coordinator.devices.items():
-        print(f"Device: {ieee_address}")
+        logger.info(f"Device: {ieee_address}")
         
         for endpoint_id, endpoint in network_device.endpoints.items():
             if endpoint_id == 0:
@@ -61,13 +61,13 @@ async def scan_devices():
 
             assert isinstance(endpoint.in_clusters, dict)
             for cluster_id, cluster in endpoint.in_clusters.items():
-                print(f"  Cluster: {cluster.ep_attribute}")
+                logger.info(f"  Cluster: {cluster.ep_attribute}")
                 
                 for attribute_id, attribute_record in cluster.attributes.items():
                     attribute_value = cluster.get(attribute_record.name)
                     
                     if attribute_value is not None:
-                        print(f"    {attribute_record.name}: {attribute_value}")
+                        logger.info(f"    {attribute_record.name}: {attribute_value}")
 
 
 async def open_pairing(permit_duration_seconds: int = 120):
@@ -83,10 +83,10 @@ async def open_pairing(permit_duration_seconds: int = 120):
     coordinator.add_listener(network_listener)
 
     await coordinator.permit(permit_duration_seconds)
-    print(f"Network open for pairing for {permit_duration_seconds} seconds. Put device in pairing mode.")
+    logger.info(f"Network open for pairing for {permit_duration_seconds} seconds. Put device in pairing mode.")
 
     await asyncio.sleep(permit_duration_seconds)
-    print("Pairing window closed.")
+    logger.info("Pairing window closed.")
 
 if __name__ == "__main__":
     asyncio.run(scan_devices())
