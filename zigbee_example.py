@@ -69,7 +69,7 @@ async def scan_devices(coordinator: ControllerApplication):
                         logger.info(f"    {attribute_record.name}: {attribute_value}")
 
 
-async def open_pairing(coordinator: ControllerApplication, permit_duration_seconds: int = 120):
+async def open_pairing(permit_duration_seconds: int = 120):
     """Opens the Zigbee network for pairing and listens for joining devices.
 
     Args:
@@ -87,5 +87,5 @@ async def open_pairing(coordinator: ControllerApplication, permit_duration_secon
     await asyncio.sleep(permit_duration_seconds)
     logger.info("Pairing window closed.")
 
-# if __name__ == "__main__":
-#     asyncio.run(scan_devices())
+if __name__ == "__main__":
+    asyncio.run(open_pairing())
