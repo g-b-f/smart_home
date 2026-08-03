@@ -19,6 +19,7 @@ dependencies = [
     "requests>=2.34.2",
     "humanize>=4.16.0",
     "zigpy>=2.1.0",
+    "bellows>=1.0.0",
 ]
 
 [project.scripts]

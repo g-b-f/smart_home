@@ -1,5 +1,5 @@
 import asyncio
-from zigpy.application import ControllerApplication
+import bellows.zigbee.application
 
 async def scan_devices_and_print_attributes(serial_port_path: str):
     """Connects to the Zigbee coordinator and prints cached attributes for all devices.
@@ -12,7 +12,7 @@ async def scan_devices_and_print_attributes(serial_port_path: str):
         "database_path": "zigbee_network.db"
     }
 
-    coordinator_application = await ControllerApplication.new(
+    coordinator_application = await bellows.zigbee.application.ControllerApplication.new(
         config=coordinator_configuration,
         auto_form=False
     )
