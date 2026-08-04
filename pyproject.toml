@@ -20,6 +20,7 @@ dependencies = [
     "humanize>=4.16.0",
     "zigpy>=2.1.0",
     "bellows>=1.0.0",
+    "zha-quirks",
 ]
 
 [project.scripts]
