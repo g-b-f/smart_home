@@ -7,3 +7,4 @@ nohup.out
 log.txt
 mutable_globals.json
 .coverage
+zigbee_network.db*
