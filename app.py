@@ -17,7 +17,7 @@ from periodic_tasks import periodic_light_check
 from utils.get_logger import get_logger
 from utils.misc import config_to_bool_function, format_time, mutable_globals
 from wrappers.all import AllObjects
-from zigbee_example import get_coordinator, scan_devices
+from zigbee_example import attach_zigbee_listeners, get_coordinator, scan_devices
 
 logger = get_logger(__name__)
 logger.debug("beginning smart home app")
@@ -161,7 +161,6 @@ async def config() -> tuple[str, int]:
     return f"Updated {len(valid_requests)} config options", HTTPStatus.OK.value
 
 
-
 async def start():
     logger.info("starting scheduler")
     scheduler = AsyncIOScheduler(timezone="Europe/London")
@@ -170,7 +169,8 @@ async def start():
     scheduler.start()
     logger.debug("scheduler started")
 
-    zigbee_scan_task = asyncio.create_task(zigbee_scan_loop())
+    coordinator = await get_coordinator()
+    await attach_zigbee_listeners(coordinator)
 
     try:
         logger.debug("setting up server")
@@ -185,11 +185,6 @@ async def start():
     except Exception as e: # noqa: BLE001
         logger.error("exception %s", e) 
     finally:
-        zigbee_scan_task.cancel()
-        try:
-            await zigbee_scan_task
-        except asyncio.CancelledError:
-            pass
         logger.info("Shutting down scheduler")
         scheduler.shutdown()
 
