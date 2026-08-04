@@ -1,10 +1,11 @@
 import asyncio
 from pathlib import Path
 import sys
-import bellows.zigbee.application
+from zigpy.device import Device
+from zigpy.endpoint import Endpoint
+from zigpy.zcl import Cluster
+from zigpy.application import ControllerApplication as ZigPyController
 from bellows.zigbee.application import ControllerApplication
-import zigpy.application
-import zigpy
 
 from utils.get_logger import get_logger
 from utils.misc import clamp, mutable_globals
@@ -15,23 +16,60 @@ logger = get_logger(__name__)
 
 SERIAL_PATH="/dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_1ef187a87c15f01198892bf7763d9da9-if00-port0"
 
+
+import asyncio
+
+class ZigbeeEventLogger:
+    """Logs asynchronous attribute updates and commands from a Zigbee cluster.
+    
+    Args:
+        ieee_address: The IEEE address of the device.
+        cluster_name: The name of the cluster emitting the event.
+    """
+    def __init__(self, ieee_address: str, cluster_name: str):
+        self.ieee_address = ieee_address
+        self.cluster_name = cluster_name
+        
+    def attribute_updated(self, attribute_id: int, attribute_value):
+        print(f"Device {self.ieee_address} updated {self.cluster_name} attribute {attribute_id} to {attribute_value}")
+        
+    def zcl_command(self, command_id: int, command_arguments: tuple):
+        print(f"Device {self.ieee_address} sent {self.cluster_name} command {command_id} with {command_arguments}")
+
+
+async def attach_zigbee_listeners(coordinator: ZigPyController) -> None:
+    """Iterates through all known devices and attaches listeners to their clusters.
+    
+    Args:
+        coordinator: The initialized Zigbee coordinator application.
+    """
+    for ieee_address, network_device in coordinator.devices.items():
+        for endpoint_id, endpoint in network_device.endpoints.items():
+            if endpoint_id == 0:
+                continue
+
+            assert isinstance(endpoint, Endpoint)
+            for cluster in endpoint.clusters:
+                event_logger = ZigbeeEventLogger(str(ieee_address), cluster.ep_attribute)
+                cluster.add_listener(event_logger)
+
 class ZigbeeNetworkListener:
     """Listener for Zigbee network events such as device joins and initialization."""
 
-    def device_joined(self, network_device):
+    def device_joined(self, network_device: Device) -> None:
         logger.info(f"Device joined: {network_device.ieee}")
 
-    def device_initialized(self, network_device):
-        logger.info(f"""Device initialized: {network_device.ieee}\n"
+    def device_initialized(self, network_device: Device) -> None:
+        logger.info(f"""Device initialized: {network_device.ieee}
     Manufacturer: {network_device.manufacturer}
     Model: {network_device.model}""")
 
-    def device_left(self, network_device):
+    def device_left(self, network_device: Device) -> None:
         logger.info(f"Device left: {network_device.ieee}")
 
 
 
-async def get_coordinator(serial_port_path = SERIAL_PATH) -> ControllerApplication:
+async def get_coordinator(serial_port_path = SERIAL_PATH) -> ZigPyController:
     coordinator_configuration = {
         "device": { "path": serial_port_path },
         "database_path": "zigbee_network.db"
@@ -44,29 +82,35 @@ async def get_coordinator(serial_port_path = SERIAL_PATH) -> ControllerApplicati
     return coordinator_application
 
 
-async def scan_devices(coordinator: ControllerApplication):
+async def scan_devices(coordinator: ZigPyController) -> None:
     """Connects to the Zigbee coordinator and prints cached attributes for all devices.
 
     Args:
         serial_port_path: The file path to the Zigbee adapter serial device.
     """
-
+    message=[]
+    indent_1 = " "*2
+    indent_2 = " "*4
+    
     for ieee_address, network_device in coordinator.devices.items():
-        logger.info(f"Device: {ieee_address}")
-        
+        message.append(f"Device: {ieee_address}")
+
         for endpoint_id, endpoint in network_device.endpoints.items():
             if endpoint_id == 0:
                 continue
 
-            assert isinstance(endpoint.in_clusters, dict)
-            for cluster_id, cluster in endpoint.in_clusters.items():
-                logger.info(f"  Cluster: {cluster.ep_attribute}")
+            assert isinstance(endpoint, Endpoint)
+            in_clusters: dict[int, Cluster] = endpoint.in_clusters
+            for cluster in in_clusters.values():
+                message.append(f"{indent_1}Cluster: {cluster.ep_attribute}")
                 
-                for attribute_id, attribute_record in cluster.attributes.items():
+                for attribute_record in cluster.attributes.values():
                     attribute_value = cluster.get(attribute_record.name)
                     
                     if attribute_value is not None:
-                        logger.info(f"    {attribute_record.name}: {attribute_value}")
+                        message.append(f"{indent_2}{attribute_record.name}: {attribute_value}")
+
+    logger.info("\n".join(message))
 
 
 async def open_pairing(permit_duration_seconds: int = 120):
