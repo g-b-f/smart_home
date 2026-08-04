@@ -12,7 +12,7 @@ from utils.misc import clamp, mutable_globals
 
 sys.path.append(str(Path(__file__).parent))
 
-logger = get_logger(__name__) 
+logger = get_logger(__name__, "DEBUG") 
 
 SERIAL_PATH="/dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_1ef187a87c15f01198892bf7763d9da9-if00-port0"
 
@@ -31,10 +31,10 @@ class ZigbeeEventLogger:
         self.cluster_name = cluster_name
         
     def attribute_updated(self, attribute_id: int, attribute_value):
-        print(f"Device {self.ieee_address} updated {self.cluster_name} attribute {attribute_id} to {attribute_value}")
+        logger.info(f"Device {self.ieee_address} updated {self.cluster_name} attribute {attribute_id} to {attribute_value}")
         
     def zcl_command(self, command_id: int, command_arguments: tuple):
-        print(f"Device {self.ieee_address} sent {self.cluster_name} command {command_id} with {command_arguments}")
+        logger.info(f"Device {self.ieee_address} sent {self.cluster_name} command {command_id} with {command_arguments}")
 
 
 async def attach_zigbee_listeners(coordinator: ZigPyController) -> None:
@@ -50,6 +50,7 @@ async def attach_zigbee_listeners(coordinator: ZigPyController) -> None:
 
             assert isinstance(endpoint, Endpoint)
             for cluster in endpoint.clusters:
+                logger.debug(f"Attaching listener to device {ieee_address}, endpoint {endpoint_id}, cluster {cluster.ep_attribute}")
                 event_logger = ZigbeeEventLogger(str(ieee_address), cluster.ep_attribute)
                 cluster.add_listener(event_logger)
 
@@ -82,7 +83,7 @@ async def get_coordinator(serial_port_path = SERIAL_PATH) -> ZigPyController:
     return coordinator_application
 
 
-async def scan_devices(coordinator: ZigPyController) -> None:
+async def scan_devices(coordinator: ZigPyController):
     """Connects to the Zigbee coordinator and prints cached attributes for all devices.
 
     Args:
@@ -91,7 +92,7 @@ async def scan_devices(coordinator: ZigPyController) -> None:
     message=[]
     indent_1 = " "*2
     indent_2 = " "*4
-    
+
     for ieee_address, network_device in coordinator.devices.items():
         message.append(f"Device: {ieee_address}")
 

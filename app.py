@@ -19,7 +19,7 @@ from utils.misc import config_to_bool_function, format_time, mutable_globals
 from wrappers.all import AllObjects
 from zigbee_example import attach_zigbee_listeners, get_coordinator, scan_devices
 
-logger = get_logger(__name__)
+logger = get_logger(__name__, "DEBUG")
 logger.debug("beginning smart home app")
 
 # https://sleep.urbandroid.org/docs/services/automation.html#events
