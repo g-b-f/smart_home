@@ -1,5 +1,11 @@
 # Todo list
 
+Useful next agent customizations (suggested by AI)
+
+- `/create-instruction async-wrapper-tests`: create focused instructions for wrapper/test files to enforce mocking hardware calls and preserving async wrapper conventions when editing `wrappers/**` or `tests/**`
+- `/create-prompt add-device-wrapper`: create a reusable prompt for adding a new smart-home device wrapper, including updates to `objects.yaml`, wrapper code, config toggles, and tests
+- `/create-skill raspberry-pi-deploy-check`: create a deployment-check workflow skill to verify startup scripts, `uv` commands, logs, and Raspberry Pi-specific assumptions before deployment changes
+
 Errors and logging
 
 - Change all loggers to fit basicConfig

@@ -47,12 +47,15 @@ async def attach_zigbee_listeners(coordinator: ZigPyController) -> None:
         for endpoint_id, endpoint in network_device.endpoints.items():
             if endpoint_id == 0:
                 continue
+            message = []
 
             assert isinstance(endpoint, Endpoint)
+            message.append(f"Attaching listeners for device {ieee_address}, endpoint {endpoint_id}")
             for cluster in endpoint.clusters:
-                logger.debug(f"Attaching listener to device {ieee_address}, endpoint {endpoint_id}, cluster {cluster.ep_attribute}")
+                message.append(f"  cluster {cluster.ep_attribute}")
                 event_logger = ZigbeeEventLogger(str(ieee_address), cluster.ep_attribute)
                 cluster.add_listener(event_logger)
+            logger.debug("\n".join(message))
 
 class ZigbeeNetworkListener:
     """Listener for Zigbee network events such as device joins and initialization."""
