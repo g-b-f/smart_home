@@ -6,6 +6,7 @@ from zigpy.endpoint import Endpoint
 from zigpy.zcl import Cluster
 from zigpy.application import ControllerApplication as ZigPyController
 from bellows.zigbee.application import ControllerApplication
+import asyncio
 
 from utils.get_logger import get_logger
 from utils.misc import clamp, mutable_globals
@@ -16,8 +17,10 @@ logger = get_logger(__name__, "DEBUG")
 
 SERIAL_PATH="/dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_1ef187a87c15f01198892bf7763d9da9-if00-port0"
 
-
-import asyncio
+device_mapping = {
+    "a4:c1:38:7a:5b:c7:98:91":"mmWave 4in1",
+    "94:a0:81:ff:fe:d2:ea:46":"dial?"
+    }
 
 class ZigbeeEventLogger:
     """Logs asynchronous attribute updates and commands from a Zigbee cluster.
@@ -29,12 +32,13 @@ class ZigbeeEventLogger:
     def __init__(self, ieee_address: str, cluster_name: str):
         self.ieee_address = ieee_address
         self.cluster_name = cluster_name
+        self.name = device_mapping.get(ieee_address, ieee_address)
         
     def attribute_updated(self, attribute_id: int, attribute_value):
-        logger.info(f"Device {self.ieee_address} updated {self.cluster_name} attribute {attribute_id} to {attribute_value}")
+        logger.info(f"Device {self.name} updated {self.cluster_name} attribute {attribute_id} to {attribute_value}")
         
     def zcl_command(self, command_id: int, command_arguments: tuple):
-        logger.info(f"Device {self.ieee_address} sent {self.cluster_name} command {command_id} with {command_arguments}")
+        logger.info(f"Device {self.name} sent {self.cluster_name} command {command_id} with {command_arguments}")
 
 
 async def attach_zigbee_listeners(coordinator: ZigPyController) -> None:
@@ -47,15 +51,16 @@ async def attach_zigbee_listeners(coordinator: ZigPyController) -> None:
         for endpoint_id, endpoint in network_device.endpoints.items():
             if endpoint_id == 0:
                 continue
-            message = []
 
             assert isinstance(endpoint, Endpoint)
-            message.append(f"Attaching listeners for device {ieee_address}, endpoint {endpoint_id}")
+            attach_msg = f"Attaching listeners for device {ieee_address}, endpoint {endpoint_id}\n"
+            clusters = []
             for cluster in endpoint.clusters:
-                message.append(f"  cluster {cluster.ep_attribute}")
+                clusters.append(cluster.ep_attribute)
                 event_logger = ZigbeeEventLogger(str(ieee_address), cluster.ep_attribute)
                 cluster.add_listener(event_logger)
-            logger.debug("\n".join(message))
+            
+            logger.debug(attach_msg + ", ".join(clusters))
 
 class ZigbeeNetworkListener:
     """Listener for Zigbee network events such as device joins and initialization."""
