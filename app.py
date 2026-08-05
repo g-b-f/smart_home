@@ -12,12 +12,18 @@ from apscheduler.triggers.interval import IntervalTrigger
 from hypercorn.asyncio import serve
 from hypercorn.config import Config as HypercornConfig
 
+import global_vars as gbl
 import lighting_routines as Routine
 from periodic_tasks import periodic_light_check
 from utils.get_logger import get_logger
 from utils.misc import config_to_bool_function, format_time, mutable_globals
 from wrappers.all import AllObjects
-from zigbee_example import attach_zigbee_listeners, get_coordinator, scan_devices
+from zigbee_example import (
+    ZigbeeNetworkListener,
+    attach_zigbee_listeners,
+    get_coordinator,
+    scan_devices,
+)
 
 logger = get_logger(__name__, "DEBUG")
 logger.debug("beginning smart home app")
@@ -169,8 +175,10 @@ async def start():
     scheduler.start()
     logger.debug("scheduler started")
 
-    coordinator = await get_coordinator()
-    await attach_zigbee_listeners(coordinator)
+    if gbl.USE_ZIGBEE:
+        coordinator = await get_coordinator()
+        coordinator.add_listener(ZigbeeNetworkListener())
+        await attach_zigbee_listeners(coordinator)
 
     try:
         logger.debug("setting up server")

@@ -22,6 +22,8 @@ BEDTIME_COLORTEMP = 1320
 MIN_COLORTEMP = 2200
 MAX_COLORTEMP = 6500
 
+USE_ZIGBEE = False
+
 ZENITH_WAYPOINTS = {
     0.0: 6500,    # Solar noon (Cool Daylight)
     60.0: 5500,   # Afternoon 

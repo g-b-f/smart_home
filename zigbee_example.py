@@ -1,25 +1,27 @@
 import asyncio
-from pathlib import Path
 import sys
+from pathlib import Path
+
+import zhaquirks
+from bellows.zigbee.application import ControllerApplication
+from zigpy.application import ControllerApplication as ZigPyController
 from zigpy.device import Device
 from zigpy.endpoint import Endpoint
 from zigpy.zcl import Cluster
-from zigpy.application import ControllerApplication as ZigPyController
-from bellows.zigbee.application import ControllerApplication
-import asyncio
 
 from utils.get_logger import get_logger
-from utils.misc import clamp, mutable_globals
 
 sys.path.append(str(Path(__file__).parent))
+zhaquirks.setup()
 
 logger = get_logger(__name__, "DEBUG") 
 
 SERIAL_PATH="/dev/serial/by-id/usb-Itead_Sonoff_Zigbee_3.0_USB_Dongle_Plus_V2_1ef187a87c15f01198892bf7763d9da9-if00-port0"
 
 device_mapping = {
-    "a4:c1:38:7a:5b:c7:98:91":"mmWave 4in1",
-    "94:a0:81:ff:fe:d2:ea:46":"dial?"
+    "a4:c1:38:7a:5b:c7:98:91":"dial",
+    "94:a0:81:ff:fe:d2:ea:46":"mmWave 4in1",
+    "a4:c1:38:ab:e3:14:e8:05":"idk"
     }
 
 class ZigbeeEventLogger:
