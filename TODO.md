@@ -39,3 +39,8 @@ Refactor routines
 - or of objects/ classes
 - if objects then could call other functions as appropriate
 - regardless, as much stuff as possible should be abstracted away into config etc
+
+Update `auto_colortemp` so that setting it to True calla the function
+- maybe put that in `json_wrapper`?
+- though that might cause import loops
+
