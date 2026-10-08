@@ -41,8 +41,8 @@ ZENITH_WAYPOINTS = {
 TIME_WAYPOINTS = {
     time(6, 0): 2700,
     time(9, 0): 4500,
-    time(12, 0): 6500,
-    time(15, 0): 5000,
+    time(12, 0): MAX_COLORTEMP,
+    time(15, 0): 5500,
     time(17, 0): 4500,
     time(19, 0): 3500, 
     time(20, 0): 2700,
