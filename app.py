@@ -84,10 +84,16 @@ async def sleep() -> tuple[str, int]:
     
 
 
-@app.route("/test", methods=["POST"])
+@app.route("/test", methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"])
 async def test() -> tuple[str, int]:
-    logger.info("test endpoint hit with args:\n%s", flask.request.get_json() or {})
-    return http_ok
+    args = flask.request.get_json() or {}
+    method = flask.request.method
+    if args:
+        logger.info("test endpoint hit with method %s and args:\n%s", method, args)
+        return f"Recieved data: {args}", HTTPStatus.OK.value
+    else:
+        logger.info("test endpoint hit with method %s and no args", method)
+        return "Request OK, no data received", HTTPStatus.OK.value
 
 
 @app.route("/set_lights", methods=["POST"])
