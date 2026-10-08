@@ -86,7 +86,11 @@ async def sleep() -> tuple[str, int]:
 
 @app.route("/test", methods=["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS", "HEAD"])
 async def test() -> tuple[str, int]:
-    args = flask.request.get_json() or {}
+    try:
+        args = flask.request.get_json() or {}
+    except:
+        args = None
+    
     method = flask.request.method
     if args:
         logger.info("test endpoint hit with method %s and args:\n%s", method, args)
