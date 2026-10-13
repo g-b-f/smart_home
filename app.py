@@ -18,7 +18,7 @@ from periodic_tasks import periodic_light_check
 from utils.get_logger import get_logger
 from utils.misc import config_to_bool_function, format_time, mutable_globals
 from wrappers.all import AllObjects
-from zigbee_example import (
+from zigbee.zigbee_example import (
     ZigbeeNetworkListener,
     attach_zigbee_listeners,
     get_coordinator,
