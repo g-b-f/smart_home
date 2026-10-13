@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Literal, Optional, Protocol, TypedDict, TypeVar
+from typing import Any, Callable, Literal, Mapping, Optional, Protocol, TypedDict, TypeVar
 
 from pydantic import BaseModel, Field
 
@@ -14,7 +14,7 @@ class WayPointProtocol(Protocol):
     def __add__(self, other: Any, /) -> Any: ...
 
 WayPointType = TypeVar("WayPointType", bound=WayPointProtocol)
-
+InterpolateFuncType = Callable[[WayPointType, Mapping[WayPointType, int]], int]
 
 class MutableGlobals(BaseModel):
     visitor_present: bool = Field(default=False, description="Whether a visitor is currently present")
@@ -134,3 +134,7 @@ class WLEDResponse(TypedDict):
     info: Info
     effects: list[str]
     palettes: list[str]
+
+class ConfigJsonType(TypedDict):
+    constants: dict[str, int]
+    waypoints: dict[str, int|str]
