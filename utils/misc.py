@@ -7,12 +7,11 @@ import astral.sun
 import humanize
 
 import global_vars as gbl
-from extra_types import ConfigJsonType, InterpolateFuncType, WayPointType
+from extra_types import InterpolateFuncType, WayPointType
 from utils.get_logger import get_logger
 from utils.json_wrapper import MutableGlobalsWrapper
 
 logger = get_logger(__name__)
-config_path = Path(__file__).parents[1] / "config.json"
 mutable_globals = MutableGlobalsWrapper(Path(__file__).parent / "mutable_globals.json")
 
 def format_time(t: datetime| timedelta | time) -> str:
@@ -144,28 +143,12 @@ def _time_to_seconds(t: time) -> int:
     """Converts a datetime.time object into total seconds since midnight."""
     return t.hour * 3600 + t.minute * 60 + t.second
 
-def get_time_waypoints() -> dict[time, int]:
-    config: ConfigJsonType = json.loads(config_path.read_text())
-    waypoints = config["waypoints"]
-    ret: dict[time, int] = {}
-
-    for k, v in waypoints.items():
-        if isinstance(v, str):
-            try:
-                v = config["constants"][v]
-            except KeyError as e:
-                raise KeyError(f"Constant '{v}' not found in config.json") from e
-
-        hour, minute = map(int, k.split(":"))
-        ret[time(hour, minute)] = v
-    
-    return ret
 
 def colourtemp_from_time(t: time | None = None, func: InterpolateFuncType = lerp_color_temp) -> int:
     time_input = t or datetime.now().time()
     seconds_now = _time_to_seconds(time_input)
 
-    waypoints = get_time_waypoints().items()
+    waypoints = gbl.get_time_waypoints().items()
     seconds_waypoints = { _time_to_seconds(t): temp for t, temp in waypoints }
     return func(seconds_now, seconds_waypoints)
 

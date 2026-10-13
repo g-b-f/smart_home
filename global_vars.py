@@ -1,4 +1,10 @@
 from datetime import time, timedelta
+import json
+from pathlib import Path
+from extra_types import ConfigJsonType
+
+config_path = Path(__file__).parent / "config.json"
+
 
 LOG_LEVEL = "INFO"
 
@@ -39,14 +45,33 @@ ZENITH_WAYPOINTS = {
 # def zenith_to_temp(zen):
 #     return 4100 - 2500/ 2**((90-zen)/8.5)
 
-TIME_WAYPOINTS = {
-    time(6, 0): 2700,
-    time(9, 0): 4500,
-    time(12, 0): MAX_COLORTEMP,
-    # time(15, 0): 5500,
-    time(15, 0): MAX_COLORTEMP,
-    time(17, 0): 4500,
-    time(19, 0): 3500, 
-    time(20, 0): 2700,
-    time(23, 00): 1600,
-}
+# TIME_WAYPOINTS = {
+#     time(6, 0): 2700,
+#     time(9, 0): 4500,
+#     time(12, 0): MAX_COLORTEMP,
+#     # time(15, 0): 5500,
+#     time(15, 0): MAX_COLORTEMP,
+#     time(17, 0): 4500,
+#     time(19, 0): 3500, 
+#     time(20, 0): 2700,
+#     time(23, 00): 1600,
+# }
+
+def get_time_waypoints() -> dict[time, int]:
+    config: ConfigJsonType = json.loads(config_path.read_text())
+    waypoints = config["waypoints"]
+    ret: dict[time, int] = {}
+
+    for k, v in waypoints.items():
+        if isinstance(v, str):
+            try:
+                v = config["constants"][v]
+            except KeyError as e:
+                raise KeyError(f"Constant '{v}' not found in config.json") from e
+
+        hour, minute = map(int, k.split(":"))
+        ret[time(hour, minute)] = v
+    
+    return ret
+
+TIME_WAYPOINTS = get_time_waypoints()
