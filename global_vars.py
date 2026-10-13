@@ -9,7 +9,8 @@ EARLIEST_SLEEP_TIME = time(20, 0) # 8:00 PM
 
 MINIMUM_SLEEP_LENGTH = timedelta(hours=7, minutes=30)
 
-CHILL_COLOURTEMP = 2500
+CHILL_COLOURTEMP = 2200
+EVENING_COLOURTEMP = 2500
 SUNRISE_COLOURTEMP = 3000
 DAY_COLOURTEMP = 6500
 SUNSET_COLOURTEMP = 3000
@@ -42,7 +43,8 @@ TIME_WAYPOINTS = {
     time(6, 0): 2700,
     time(9, 0): 4500,
     time(12, 0): MAX_COLORTEMP,
-    time(15, 0): 5500,
+    # time(15, 0): 5500,
+    time(15, 0): MAX_COLORTEMP,
     time(17, 0): 4500,
     time(19, 0): 3500, 
     time(20, 0): 2700,
