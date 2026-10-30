@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Flask Slider JSON Demo</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.6; }
+        .container { max-width: 400px; }
+        .control-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 5px; font-weight: bold; }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="control-group">
+            <label for="my-slider">Adjust Value: <span id="slider-display">50</span></label>
+            <input type="range" id="my-slider" min="0" max="100" value="50">
+        </div>
+
+        <button id="my-button">Send Value to Python</button>
+        
+        <p id="response-text" style="color: blue; font-weight: bold; margin-top: 20px;"></p>
+    </div>
+
+    <script>
+        const slider = document.getElementById('my-slider');
+        const sliderDisplay = document.getElementById('slider-display');
+        const button = document.getElementById('my-button');
+        const responseText = document.getElementById('response-text');
+
+        // Update the number on the screen as user moves the slider
+        slider.addEventListener('input', function() {
+            sliderDisplay.innerText = slider.value;
+        });
+
+        button.addEventListener('click', function() {
+            const payload = { slider_value: slider.value };
+
+            fetch('/set-lights', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(response => response.json())
+            .then(data => { responseText.innerText = data.message })
+            .catch(error => {
+                console.error('Error:', error);
+                responseText.innerText = 'An error occurred payload delivery.';
+            });
+        });
+    </script>
+
+</body>
+</html>

@@ -176,6 +176,10 @@ async def config() -> tuple[str, int]:
 
     return f"Updated {len(valid_requests)} config options", HTTPStatus.OK.value
 
+@app.route("/")
+async def index():
+    return flask.render_template('index.html', title="Home Page")
+
 
 async def start():
     logger.info("starting scheduler")
