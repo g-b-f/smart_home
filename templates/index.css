@@ -21,6 +21,13 @@ body {
     box-sizing: border-box;
 }
 
+input {
+    width: clamp(200px, 90%, 800px);
+}
+/* #track {
+    height: clamp(60px, 10vh, 200px);
+} */
+
 .control-group {
     /* margin-bottom: 28px; */
     width: 100%;
@@ -54,64 +61,6 @@ label {
     cursor: pointer;
 }
 
-input[type="range"] {
-    --track-height: max(20px, 1.25rem);
-    --thumb-size: max(36px, 2.25rem);
-    width: 100%;
-    height: max(56px, 3.5rem);
-    cursor: pointer;
-    -webkit-appearance: none;
-    appearance: none;
-    background: transparent;
-}
-
-input[type="range"]::-webkit-slider-runnable-track {
-    height: var(--track-height);
-    background: #d3d3d3;
-    border-radius: 999px;
-}
-
-input[type="range"]::-moz-range-track {
-    height: var(--track-height);
-    background: #d3d3d3;
-    border-radius: 999px;
-}
-
-input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    appearance: none;
-    margin-top: calc((var(--track-height) - var(--thumb-size)) / 2);
-    height: var(--thumb-size);
-    width: var(--thumb-size);
-    border-radius: 50%;
-    background: #007acc;
-    cursor: pointer;
-}
-
-input[type="range"]::-moz-range-thumb {
-    height: var(--thumb-size);
-    width: var(--thumb-size);
-    border-radius: 50%;
-    background: #007acc;
-    cursor: pointer;
-    border: none;
-}
-
-button {
-    width: 100%;
-    /* padding: max(16px, 1.1rem); */
-    font-size: max(20px, 1.4rem);
-    cursor: pointer;
-    font-weight: bold;
-}
-
-#response-text {
-    color: blue;
-    font-weight: bold;
-    margin-top: 20px;
-    font-size: max(16px, 1.2rem);
-    text-align: center;
-}
 
 @media (max-width: 600px) {
 
