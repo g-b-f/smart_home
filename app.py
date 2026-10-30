@@ -27,7 +27,9 @@ from zigbee.zigbee_example import (
     scan_devices,
 )
 
-logger = get_logger(__name__, "DEBUG")
+ON_WINDOWS = sys.platform == "win32"
+
+logger = get_logger(__name__, "DEBUG" if ON_WINDOWS else "INFO")
 logger.debug("beginning smart home app")
 
 # https://sleep.urbandroid.org/docs/services/automation.html#events
@@ -209,7 +211,7 @@ async def start():
         config.errorlog = get_logger("hypercorn.error", level="WARNING")
 
         hostname = platform.node() + ".local"
-        if sys.platform == "win32":
+        if ON_WINDOWS:
             import socket
             s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             s.connect(("8.8.8.8", 80))
@@ -237,7 +239,7 @@ def get_args() -> argparse.Namespace:
 
 
 def main():
-    if sys.platform == "win32":
+    if ON_WINDOWS:
         asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
     try:
         args = get_args()
