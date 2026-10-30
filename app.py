@@ -1,5 +1,6 @@
 import argparse
 import asyncio
+from pathlib import Path
 import sys
 from datetime import datetime
 from http import HTTPStatus
@@ -182,7 +183,8 @@ async def config() -> tuple[str, int]:
 @app.route("/index")
 async def index():
     logger.info("accessed %s", flask.request.path)
-    return flask.render_template('index.html', title="Home Page")
+    css_path = Path(__file__).parent.resolve() / "templates/index.css"
+    return flask.render_template('index.html', title="Home Page", css=css_path.read_text())
 
 
 async def start():
