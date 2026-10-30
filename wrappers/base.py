@@ -5,7 +5,7 @@ from typing import Optional
 
 import yaml
 
-from extra_types import ColourType, RGBtype, RGBWWtype
+from lib.extra_types import ColourType, RGBtype, RGBWWtype
 from utils.conversions import temp_to_rgb
 from utils.get_logger import get_logger
 

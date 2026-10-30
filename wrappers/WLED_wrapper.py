@@ -3,7 +3,7 @@ from typing import Optional
 
 import requests
 
-from extra_types import ColourType, RGBtype, RGBWtype, WLEDResponse
+from lib.extra_types import ColourType, RGBtype, RGBWtype, WLEDResponse
 from utils.get_logger import get_logger
 from utils.misc import clamp, mutable_globals
 from wrappers.base import WrapperBase

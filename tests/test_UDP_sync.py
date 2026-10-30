@@ -1,6 +1,6 @@
 import pytest
 
-from UDP_sync import Colour, Effect, Nightlight, WLEDPacket
+from scripts.UDP_sync import Colour, Effect, Nightlight, WLEDPacket
 
 
 @pytest.fixture

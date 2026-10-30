@@ -5,7 +5,7 @@ from pywizlight import (  # type: ignore[import-untyped]
     PilotBuilder,
 )
 
-import lighting_routines as Routine
+import lib.lighting_routines as Routine
 from utils.get_logger import get_logger
 from wrappers.bulb_wrapper import Bulb
 

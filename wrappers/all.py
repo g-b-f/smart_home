@@ -8,7 +8,7 @@ from wrappers.bulb_wrapper import Bulb
 from wrappers.WLED_wrapper import WLED
 
 sys.path.append(str(Path(__file__).parent))
-from extra_types import RGBtype
+from lib.extra_types import RGBtype
 from wrappers.base import WrapperBase
 
 

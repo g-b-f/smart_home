@@ -5,7 +5,7 @@ from typing import Generic, MutableMapping, TypeVar
 
 from pydantic import BaseModel, ValidationError
 
-from extra_types import MutableGlobals
+from lib.extra_types import MutableGlobals
 from utils.get_logger import get_logger
 
 ModelType = TypeVar("ModelType", bound=BaseModel)

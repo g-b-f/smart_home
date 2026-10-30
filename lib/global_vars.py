@@ -1,9 +1,9 @@
 from datetime import time, timedelta
 import json
 from pathlib import Path
-from extra_types import ConfigJsonType
+from lib.extra_types import ConfigJsonType
 
-config_path = Path(__file__).parent / "config.json"
+config_path = Path(__file__).parents[1] / "config.json"
 
 
 LOG_LEVEL = "INFO"

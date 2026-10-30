@@ -6,8 +6,8 @@ from typing import Callable, Mapping
 import astral.sun
 import humanize
 
-import global_vars as gbl
-from extra_types import InterpolateFuncType, WayPointType
+import lib.global_vars as gbl
+from lib.extra_types import InterpolateFuncType, WayPointType
 from utils.get_logger import get_logger
 from utils.json_wrapper import MutableGlobalsWrapper
 

@@ -2,7 +2,7 @@ import logging
 from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
-import global_vars as gbl
+import lib.global_vars as gbl
 
 MAX_LOG_SIZE_BYTES = 1024 * 1024 # 1 MB
 

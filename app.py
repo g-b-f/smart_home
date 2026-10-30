@@ -12,9 +12,9 @@ from apscheduler.triggers.interval import IntervalTrigger
 from hypercorn.asyncio import serve
 from hypercorn.config import Config as HypercornConfig
 
-import global_vars as gbl
-import lighting_routines as Routine
-from periodic_tasks import periodic_light_check
+import lib.global_vars as gbl
+import lib.lighting_routines as Routine
+from lib.periodic_tasks import periodic_light_check
 from utils.get_logger import get_logger
 from utils.misc import config_to_bool_function, format_time, mutable_globals
 from wrappers.all import AllObjects
@@ -66,7 +66,7 @@ async def zigbee_scan_loop(interval_seconds: int = 30) -> None:
             logger.warning("Zigbee scan failed: %s", exc)
         await asyncio.sleep(interval_seconds)
 
-# point to http://192.168.1.117:5000/sleep
+# point to http://rasperrypi.local:5000/sleep
 @app.route("/sleep", methods=["POST"])
 async def sleep() -> tuple[str, int]:
     request_data = flask.request.get_json() or {}
