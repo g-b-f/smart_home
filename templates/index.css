@@ -63,6 +63,11 @@ label {
     cursor: pointer;
 }
 
+button {
+    margin-top: 10px;
+    padding: 10px 60px;
+}
+
 
 @media (max-width: 600px) {
 
