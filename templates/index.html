@@ -8,34 +8,68 @@
         .container { max-width: 400px; }
         .control-group { margin-bottom: 20px; }
         label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .toggle { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .toggle input { width: 20px; height: 20px; cursor: pointer; }
     </style>
 </head>
 
 <body>
     <div class="container">
         <div class="control-group">
-            <label for="my-slider">Adjust Value: <span id="slider-display">50</span></label>
+            <label for="my-slider">Brightness: <span id="slider-display">50</span></label>
             <input type="range" id="my-slider" min="0" max="100" value="50">
         </div>
 
+        <div class="control-group">
+            <label for="colortemp-slider">Color Temperature: <span id="colortemp-display">3750</span>K</label>
+            <input type="range" id="colortemp-slider" min="1000" max="6500" value="3750">
+        </div>
+
+        <div class="control-group">
+            <label class="toggle">
+                <input type="checkbox" id="on-toggle">
+                On
+            </label>
+        </div>
+
         <button id="my-button">Send Value to Python</button>
-        
+
         <p id="response-text" style="color: blue; font-weight: bold; margin-top: 20px;"></p>
     </div>
 
     <script>
         const slider = document.getElementById('my-slider');
         const sliderDisplay = document.getElementById('slider-display');
+        const colortempSlider = document.getElementById('colortemp-slider');
+        const colortempDisplay = document.getElementById('colortemp-display');
+        const onToggle = document.getElementById('on-toggle');
         const button = document.getElementById('my-button');
         const responseText = document.getElementById('response-text');
 
-        // Update the number on the screen as user moves the slider
+        let onToggled = false;
+
         slider.addEventListener('input', function() {
             sliderDisplay.innerText = slider.value;
         });
 
+        colortempSlider.addEventListener('input', function() {
+            colortempDisplay.innerText = colortempSlider.value;
+        });
+
+        onToggle.addEventListener('change', function() {
+            onToggled = true;
+        });
+
         button.addEventListener('click', function() {
-            const payload = { brightness: Number(slider.value) };
+            const payload = {
+                brightness: Number(slider.value),
+                colortemp: Number(colortempSlider.value)
+            };
+
+            if (onToggled) {
+                payload.on = onToggle.checked;
+            }
+
             console.info(`Sending payload: ${JSON.stringify(payload)}`);
 
             fetch('/set_lights', {
@@ -43,7 +77,7 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             })
-            .then(response => response)
+            // .then(response => response.json())
             .then(data => { responseText.innerText = data.message })
             .catch(error => {
                 console.error('Error:', error);
