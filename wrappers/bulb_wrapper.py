@@ -173,7 +173,7 @@ class Bulb(WrapperBase):
 
     def clamp_brightness(self, value: int) -> int:
         """Clamp brightness value between 10 and 100."""
-        return clamp(value, 10, 100)
+        return clamp(value, 10, 255)
 
     def clamp_speed(self, value: int) -> int:
         """Clamp speed value between 10 and 200."""
