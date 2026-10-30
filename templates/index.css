@@ -8,6 +8,8 @@ body {
     padding-top: 8vh;
     box-sizing: border-box;
     line-height: 1.6;
+    background-color: black;
+    color: white;
 }
 
 .container {
