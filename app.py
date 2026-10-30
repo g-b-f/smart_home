@@ -3,6 +3,7 @@ import asyncio
 import sys
 from datetime import datetime
 from http import HTTPStatus
+import platform
 
 import flask
 from apscheduler.schedulers.asyncio import (
@@ -177,7 +178,9 @@ async def config() -> tuple[str, int]:
     return f"Updated {len(valid_requests)} config options", HTTPStatus.OK.value
 
 @app.route("/")
+@app.route("/index")
 async def index():
+    logger.info("accessed %s", flask.request.path)
     return flask.render_template('index.html', title="Home Page")
 
 
@@ -196,12 +199,13 @@ async def start():
 
     try:
         logger.debug("setting up server")
+        port=5000
         config = HypercornConfig()
-        config.bind = ["0.0.0.0:5000"] # Binds to all interfaces on port 5000
+        config.bind = [f"0.0.0.0:{port}"] # Binds to all interfaces on port 5000
         config.accesslog = get_logger("hypercorn.access", level="WARNING")
         config.errorlog = get_logger("hypercorn.error", level="WARNING")
 
-        logger.info("Starting Hypercorn ASGI server at http://%s", config.bind[0])
+        logger.info(f"Starting Hypercorn ASGI server at http://{platform.node()}.local:{port}")
         await serve(app, config)
         logger.debug("finished serving")
     except Exception as e: # noqa: BLE001
