@@ -37,7 +37,7 @@
         button.addEventListener('click', function() {
             const payload = { slider_value: slider.value };
 
-            fetch('/set-lights', {
+            fetch('/set_lights', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
@@ -46,7 +46,7 @@
             .then(data => { responseText.innerText = data.message })
             .catch(error => {
                 console.error('Error:', error);
-                responseText.innerText = 'An error occurred payload delivery.';
+                responseText.innerText = `Error: ${error}`;
             });
         });
     </script>
