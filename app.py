@@ -104,6 +104,7 @@ async def test() -> tuple[str, int]:
 @app.route("/set_lights", methods=["POST"])
 async def set_lights() -> tuple[str, int]:
     request_data = flask.request.get_json() or {}
+    logger.debug(request_data)
     valid_requests = {"on", "brightness", "rgb", "colortemp"}
     if not valid_requests & request_data.keys():
         logger.warning("No valid light control options provided in request\n%s", request_data)
@@ -201,11 +202,19 @@ async def start():
         logger.debug("setting up server")
         port=5000
         config = HypercornConfig()
-        config.bind = [f"0.0.0.0:{port}"] # Binds to all interfaces on port 5000
+        config.bind = [f"0.0.0.0:{port}"] # Bind to all interfaces on port 5000
         config.accesslog = get_logger("hypercorn.access", level="WARNING")
         config.errorlog = get_logger("hypercorn.error", level="WARNING")
 
-        logger.info(f"Starting Hypercorn ASGI server at http://{platform.node()}.local:{port}")
+        hostname = platform.node() + ".local"
+        if sys.platform == "win32":
+            import socket
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            s.connect(("8.8.8.8", 80))
+            hostname = s.getsockname()[0]
+            s.close()
+
+        logger.info(f"Starting server at http://{hostname}:{port}")
         await serve(app, config)
         logger.debug("finished serving")
     except Exception as e: # noqa: BLE001
