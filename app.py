@@ -184,7 +184,7 @@ async def config() -> tuple[str, int]:
 @app.route("/")
 @app.route("/index")
 async def index():
-    logger.info("accessed %s", flask.request.path)
+    logger.debug("accessed index via '%s'", flask.request.path)
     css_path = Path(__file__).parent.resolve() / "templates/index.css"
     return flask.render_template('index.html', title="Home Page", css=css_path.read_text())
 
