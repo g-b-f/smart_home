@@ -35,7 +35,8 @@
         });
 
         button.addEventListener('click', function() {
-            const payload = { slider_value: slider.value };
+            const payload = { brightness: slider.value };
+            console.info(`Sending payload: ${JSON.stringify(payload)}`);
 
             fetch('/set_lights', {
                 method: 'POST',
