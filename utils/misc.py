@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Callable, Mapping
 
 import astral.sun
+import flask
 import humanize
 
 import lib.global_vars as gbl
@@ -167,6 +168,9 @@ class Sun:
 
     def __repr__(self):
         return f"Sun({self.location}): {self.sun}"
+
+def render_index(css_path: Path) -> str:
+    return flask.render_template('index.html', title="Home Page", css=css_path.read_text())
 
 
 if __name__ == "__main__":

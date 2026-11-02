@@ -18,7 +18,7 @@ import lib.global_vars as gbl
 import lib.lighting_routines as Routine
 from lib.periodic_tasks import periodic_light_check
 from utils.get_logger import get_logger
-from utils.misc import config_to_bool_function, format_time, mutable_globals
+from utils.misc import config_to_bool_function, format_time, mutable_globals, render_index
 from wrappers.all import AllObjects
 from zigbee.zigbee_example import (
     ZigbeeNetworkListener,
@@ -186,7 +186,7 @@ async def config() -> tuple[str, int]:
 async def index():
     logger.debug("accessed index via '%s'", flask.request.path)
     css_path = Path(__file__).parent.resolve() / "templates/index.css"
-    return flask.render_template('index.html', title="Home Page", css=css_path.read_text())
+    return render_index(css_path)
 
 
 async def start():
