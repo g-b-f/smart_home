@@ -1,13 +1,11 @@
 from pathlib import Path
 import sys
 import os
-
-import flask
 import logging
 
+import flask
 
 root = Path(__file__).parent.parent.resolve()
-
 sys.path.append(root.as_posix())
 from utils.misc import render_index
 

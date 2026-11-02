@@ -27,22 +27,30 @@
                 On
             </label>
         </div> -->
+        <button id="switch-button">Turn On</button>
+        <button id="send-button">Send</button>
 
-        <button id="my-button">Send</button>
 
         <p id="response-text"></p>
     </div>
 
     <script>
+        var isOn = true;
+
         const slider = document.getElementById('my-slider');
         const sliderDisplay = document.getElementById('slider-display');
         const colortempSlider = document.getElementById('colortemp-slider');
         const colortempDisplay = document.getElementById('colortemp-display');
-        const onToggle = document.getElementById('on-toggle');
-        const button = document.getElementById('my-button');
+        const sendButton = document.getElementById('send-button');
+        const switchButton = document.getElementById('switch-button');
         const responseText = document.getElementById('response-text');
 
-        let onToggled = false;
+        if (isOn) {
+            switchButton.innerText = 'Turn Off';
+        } else {
+            switchButton.innerText = 'Turn On';
+        }
+
 
         slider.addEventListener('input', function() {
             sliderDisplay.innerText = slider.value;
@@ -52,19 +60,11 @@
             colortempDisplay.innerText = colortempSlider.value;
         });
 
-        //onToggle.addEventListener('change', function() {
-        //    onToggled = true;
-        //});
-
-        button.addEventListener('click', function() {
+        sendButton.addEventListener('click', function() {
             const payload = {
                 brightness: Number(slider.value),
                 colortemp: Number(colortempSlider.value)
             };
-
-            if (onToggled) {
-                payload.on = onToggle.checked;
-            }
 
             console.info(`Sending payload: ${JSON.stringify(payload)}`);
 
@@ -73,13 +73,37 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             })
-            // .then(response => response.json())
-            .then(data => { responseText.innerText = data.message })
             .catch(error => {
                 console.error('Error:', error);
                 responseText.innerText = `Error: ${error}`;
             });
         });
+
+    switchButton.addEventListener('click', function() {
+        const payload = {
+            on: !isOn
+        };
+
+        console.info(`Sending toggle action: ${JSON.stringify(payload)}`);
+
+        fetch('/set_lights', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(data => {
+            isOn = !isOn;
+            if (isOn) {
+                switchButton.innerText = 'Turn Off';
+            } else {
+                switchButton.innerText = 'Turn On';
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            responseText.innerText = `Error: ${error}`;
+        });
+    });
     </script>
 
 </body>
